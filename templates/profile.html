@@ -4,28 +4,31 @@
     <div class="col-lg-3 col-md-4">
         {% include "_sidebar.html" %}
     </div>
-<div class="container py-4" style="max-width: 500px;">
-    <h3 class="mb-4"><i class="fas fa-user-edit me-2"></i>Chỉnh sửa thông tin cá nhân</h3>
-    <form method="POST">
-        <div class="mb-3">
-            <label class="form-label">Tên hiển thị</label>
-            <input type="text" class="form-control" name="display_name" value="{{ user.display_name }}" required>
+
+    <div class="card-body">
+        <div class="container py-4" style="max-width: 500px;">
+            <h3 class="mb-4"><i class="fas fa-user-edit me-2"></i>Chỉnh sửa thông tin cá nhân</h3>
+            <form method="POST">
+                <div class="mb-3">
+                    <label class="form-label">Tên hiển thị</label>
+                    <input type="text" class="form-control" name="display_name" value="{{ user.display_name }}" required>
+                </div>
+                <hr>
+                <h5 class="mb-3"><i class="fas fa-key me-2"></i>Đổi mật khẩu</h5>
+                <div class="mb-3">
+                    <label class="form-label">Mật khẩu hiện tại</label>
+                    <input type="password" class="form-control" name="password_current" autocomplete="current-password">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Mật khẩu mới</label>
+                    <input type="password" class="form-control" name="password_new" autocomplete="new-password">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Xác nhận mật khẩu mới</label>
+                    <input type="password" class="form-control" name="password_confirm" autocomplete="new-password">
+                </div>
+                <button type="submit" class="btn btn-success"><i class="fas fa-save me-2"></i>Lưu thay đổi</button>
+            </form>
         </div>
-        <hr>
-        <h5 class="mb-3"><i class="fas fa-key me-2"></i>Đổi mật khẩu</h5>
-        <div class="mb-3">
-            <label class="form-label">Mật khẩu hiện tại</label>
-            <input type="password" class="form-control" name="password_current" autocomplete="current-password">
-        </div>
-        <div class="mb-3">
-            <label class="form-label">Mật khẩu mới</label>
-            <input type="password" class="form-control" name="password_new" autocomplete="new-password">
-        </div>
-        <div class="mb-3">
-            <label class="form-label">Xác nhận mật khẩu mới</label>
-            <input type="password" class="form-control" name="password_confirm" autocomplete="new-password">
-        </div>
-        <button type="submit" class="btn btn-success"><i class="fas fa-save me-2"></i>Lưu thay đổi</button>
-    </form>
-</div>
+    </div>
 {% endblock %}
