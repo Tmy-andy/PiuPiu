@@ -50,40 +50,6 @@ def init_db():
             FOREIGN KEY (admin_id) REFERENCES users (id)
         )
     ''')
-    
-    # Insert sample data
-    cursor.execute("SELECT COUNT(*) FROM users WHERE role = 'admin'")
-    if cursor.fetchone()[0] == 0:
-        # Create admin account
-        admin_hash = generate_password_hash('admin123')
-        cursor.execute('''
-            INSERT INTO users (member_id, display_name, password_hash, role, points)
-            VALUES (?, ?, ?, ?, ?)
-        ''', ('ADMIN-001', 'Administrator', admin_hash, 'admin', 0))
-        
-        admin_id = cursor.lastrowid
-        
-        for mid, name, password, points in sample_members:
-            member_hash = generate_password_hash(password)
-            cursor.execute('''
-                INSERT INTO users (member_id, display_name, password_hash, role, points, assigned_admin_id)
-                VALUES (?, ?, ?, ?, ?, ?)
-            ''', (mid, name, member_hash, 'member', points, admin_id))
-            
-            member_user_id = cursor.lastrowid
-            
-            # Mark member ID as used
-            cursor.execute('UPDATE member_ids SET is_used = TRUE, used_by = ? WHERE member_id = ?', 
-                         (member_user_id, mid))
-            
-            # Add sample point logs
-            cursor.execute('''
-                INSERT INTO point_logs (member_id, points_change, reason, admin_id)
-                VALUES (?, ?, ?, ?)
-            ''', (member_user_id, points, 'Điểm khởi tạo ban đầu', admin_id))
-    
-    conn.commit()
-    conn.close()
 
 # Helper functions
 def get_db_connection():
@@ -95,9 +61,20 @@ def login_required(f):
     def decorated_function(*args, **kwargs):
         if 'user_id' not in session:
             return redirect(url_for('login'))
+
+        conn = get_db_connection()
+        user = conn.execute('SELECT * FROM users WHERE id = ?', (session['user_id'],)).fetchone()
+        conn.close()
+        
+        if not user:
+            session.clear()
+            flash('Tài khoản không tồn tại hoặc đã bị xóa.', 'error')
+            return redirect(url_for('login'))
+
         return f(*args, **kwargs)
     decorated_function.__name__ = f.__name__
     return decorated_function
+
 
 def admin_required(f):
     def decorated_function(*args, **kwargs):
@@ -133,6 +110,7 @@ def login():
         conn.close()
         
         if user and check_password_hash(user['password_hash'], password):
+            session.permanent = True  # Cho phép giữ cookie lâu hơn
             session['user_id'] = user['id']
             session['user_role'] = user['role']
             session['display_name'] = user['display_name']
