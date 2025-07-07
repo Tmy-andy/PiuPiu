@@ -2,22 +2,22 @@ FROM python:3.11-slim
 
 WORKDIR /app
 
-# Copy requirements first for better caching
+# Cài thư viện Python
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy application code
+# Copy toàn bộ project
 COPY . .
 
-# Create database directory
-RUN mkdir -p /app/data
+# Khởi tạo DB nếu chưa có
+# (nên tách logic tạo DB sang 1 script riêng nếu bạn không muốn tạo lại mỗi lần khởi động)
 
-# Expose port
+# Expose port Flask
 EXPOSE 5000
 
-# Set environment variables
+# Biến môi trường Flask
 ENV FLASK_APP=app.py
 ENV FLASK_ENV=production
 
-# Run the application
+# Chạy ứng dụng
 CMD ["python", "app.py"]
