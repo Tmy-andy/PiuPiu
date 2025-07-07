@@ -25,37 +25,49 @@
             </nav>
         </div>
     </div>
-    <div class="container mt-4">
-        <h2 class="mb-4">Danh sách Admin</h2>
-        <table class="table table-bordered">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Tên hiển thị</th>
-                    <th>Ngày tạo</th>
-                    {% if can_edit %}
-                    <th>Thao tác</th>
-                    {% endif %}
-                </tr>
-            </thead>
-            <tbody>
-                {% for admin in admins %}
-                <tr>
-                    <td>{{ admin.member_id }}</td>
-                    <td>{{ admin.display_name }}</td>
-                    <td>{{ admin.created_at }}</td>
-                    {% if can_edit %}
-                    <td>
-                        <form method="POST" action="{{ url_for('delete_admin', user_id=admin.id) }}"
-                            onsubmit="return confirm('Bạn có chắc muốn xóa admin này không?');">
-                            <button type="submit" class="btn btn-danger btn-sm">Xóa</button>
-                        </form>
-                    </td>
-                    {% endif %}
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+    <!-- Main Content -->
+    <div class="col-lg-9 col-md-8">
+        <div class="card mb-4">
+            <div class="card-header bg-white">
+                <h5 class="card-title fw-bold mb-0">
+                    <i class="fas fa-plus me-2 text-primary"></i>
+                    Danh sách Admin
+                </h5>
+            </div>
+            <div class="card-body"> 
+                <div class="container mt-4">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Tên hiển thị</th>
+                                <th>Ngày tạo</th>
+                                {% if can_edit %}
+                                <th>Thao tác</th>
+                                {% endif %}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for admin in admins %}
+                            <tr>
+                                <td>{{ admin.member_id }}</td>
+                                <td>{{ admin.display_name }}</td>
+                                <td>{{ admin.created_at }}</td>
+                                {% if can_edit %}
+                                <td>
+                                    <form method="POST" action="{{ url_for('delete_admin', user_id=admin.id) }}"
+                                        onsubmit="return confirm('Bạn có chắc muốn xóa admin này không?');">
+                                        <button type="submit" class="btn btn-danger btn-sm">Xóa</button>
+                                    </form>
+                                </td>
+                                {% endif %}
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 {% endblock %}
