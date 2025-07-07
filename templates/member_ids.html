@@ -87,10 +87,7 @@
                 </h5>
                 <div>
                     <span class="badge bg-success me-2">
-                        {{ member_ids|selectattr('is_used')|list|length }} đã dùng
-                    </span>
-                    <span class="badge bg-secondary">
-                        {{ member_ids|rejectattr('is_used')|list|length }} trống
+                        {{ member_ids|selectattr('is_used')|list|length }} <i class="fa-solid fa-user-check" style="color: #63E6BE;"></i>
                     </span>
                 </div>
             </div>
