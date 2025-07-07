@@ -5,9 +5,10 @@ import sqlite3
 import os
 from datetime import timedelta
 
-app.permanent_session_lifetime = timedelta(days=30)
+
 app = Flask(__name__)
 app.secret_key = os.environ.get('SECRET_KEY', 'dev-secret-key-change-in-production')
+app.permanent_session_lifetime = timedelta(days=30)
 
 # Database setup
 def init_db():
