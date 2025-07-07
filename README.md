@@ -124,4 +124,4 @@ python app.py
 
 ## 📝 License
 
-PiuPiu License - Độc quyền PiuPiu sử dụng hệ thống này.
+PiuPiu License - Độc quyền Piu Piu sử dụng hệ thống này.
