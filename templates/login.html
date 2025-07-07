@@ -201,12 +201,28 @@
         color: #a0aec0;
         font-size: 0.9rem;
     }
+    .login-logo {
+        width: 200px;
+        height: 200px;
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+    }
 
     @media (max-width: 768px) {
+        .login-left-content {
+            text-align: center;
+            z-index: 2;
+            position: relative;
+        }
         .login-wrapper {
             flex-direction: column;
             height: auto;
             max-width: 100%;
+        }
+        .login-container {
+            padding-top: 270px;
+            margin-bottom: 20px;
         }
 
         .login-left {
@@ -215,7 +231,11 @@
         }
 
         .login-left-content h2 {
-            font-size: 2rem;
+            font-size: 1.8rem;
+        }
+
+        .login-left-content p {
+            font-size: 1rem;
         }
 
         .login-left-content i {
@@ -230,13 +250,8 @@
             max-width: 100%;
         }
         .login-logo {
-            width: 90px;
-            height: 90px;
-            object-fit: cover;
-            border-radius: 50%;
-            box-shadow: 0 4px 16px rgba(0,0,0,0.10);
-            border: 3px solid #fff;
-            background: #fff;
+            width: 100px;
+            height: 100px;
             display: block;
             margin-left: auto;
             margin-right: auto;
@@ -248,8 +263,7 @@
     <div class="login-wrapper">
         <div class="login-left">
             <div class="login-left-content">
-                <div class="login-left-content">
-                <img src="{{ url_for('static', filename='icon.png') }}" alt="Logo" class="login-logo mb-4">
+                <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" class="login-logo mb-4">
                 <h2>Chào mừng trở lại!</h2>
                 <p>Đăng nhập để truy cập vào hệ thống quản lý của Piu Piu ❤️</p>
             </div>
