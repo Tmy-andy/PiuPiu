@@ -200,30 +200,28 @@
                         <i class="fas fa-user me-1"></i>
                         {{ session.display_name }}
                     </a>
+                    {% if session.display_name %}
                     <ul class="dropdown-menu">
-                        {% if session.display_name and session.user_id %}
-                            {% set is_admin001 = session.user_role == 'admin' and session.display_name and session.get('user_id') %}
-                        {% endif %}
                         <li><a class="dropdown-item" href="{{ url_for('dashboard') }}">
                             <i class="fas fa-tachometer-alt me-2"></i>Dashboard
                         </a></li>
                         <li><a class="dropdown-item" href="{{ url_for('profile') }}">
                             <i class="fas fa-user-cog me-2"></i>Thông tin cá nhân
                         </a></li>
-                        <li><a class="dropdown-item" href="{{ url_for('profile') }}">
-                            <i class="fas fa-user-cog me-2"></i>Thông tin cá nhân
-                        </a></li>
-                        {% if session.member_id == 'ADMIN-001' %}
+
+                        {% if session.user_role == 'admin' and session.display_name == 'Administrator' %}
                         <li><a class="dropdown-item" href="{{ url_for('download_db') }}">
                             <i class="fas fa-database me-2"></i>Tải database
                         </a></li>
                         {% endif %}
+
                         <li><hr class="dropdown-divider"></li>
                         <li><a class="dropdown-item" href="{{ url_for('logout') }}">
                             <i class="fas fa-sign-out-alt me-2"></i>Đăng xuất
                         </a></li>
-                        
                     </ul>
+                    {% endif %}
+
                 </div> 
             </div>
             {% endif %}
