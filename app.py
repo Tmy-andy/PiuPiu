@@ -465,6 +465,24 @@ def delete_admin(user_id):
     flash('Đã xóa admin thành công.', 'success')
     return redirect(url_for('admins'))
 
+from flask import send_file
+
+@app.route('/download_db')
+def download_db():
+    if 'user_id' not in session:
+        flash('Bạn cần đăng nhập để truy cập.', 'error')
+        return redirect(url_for('login'))
+
+    conn = get_db_connection()
+    user = conn.execute('SELECT * FROM users WHERE id = ?', (session['user_id'],)).fetchone()
+    conn.close()
+
+    if user and user['member_id'] == 'ADMIN-001':
+        return send_file('database.db', as_attachment=True)
+    else:
+        flash('Bạn không có quyền tải xuống cơ sở dữ liệu.', 'error')
+        return redirect(url_for('dashboard'))
+
 
 if __name__ == '__main__':
     if not os.path.exists('database.db'):
