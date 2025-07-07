@@ -1,23 +1,7 @@
 {% extends "base.html" %}
 {% block title %}Đăng nhập - Hệ thống quản lý thành viên{% endblock %}
-
 {% block content %}
-<header>
-    <title>Hệ thống điểm thành viên Piu Piu</title>
 
-    <!-- Meta cơ bản -->
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <!-- Open Graph (Facebook, Zalo, Discord) -->
-    <meta property="og:title" content="Hệ thống quản lý điểm thành viên Piu Piu">
-    <meta property="og:description" content="Quản lý điểm số và hoạt động của các thành viên Piu Piu một cách dễ dàng.">
-    <meta property="og:image" content="{{ url_for('static', filename='static/logo.png', _external=True) }}">
-    <meta property="og:url" content="{{ request.url }}">
-    <meta property="og:type" content="website">
-    <title>{% block title %}Hệ thống quản lý thành viên Piu Piu{% endblock %}</title>
-    <link rel="icon" type="image/png" href="{{ url_for('static', filename='static/logo.png') }}">
-</header>
 <style>
     /* Ẩn header/navigation nếu có */
     header, nav, .navbar, .header {
