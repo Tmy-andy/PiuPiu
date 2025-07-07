@@ -229,6 +229,18 @@
         .login-form {
             max-width: 100%;
         }
+        .login-logo {
+            width: 90px;
+            height: 90px;
+            object-fit: cover;
+            border-radius: 50%;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.10);
+            border: 3px solid #fff;
+            background: #fff;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
     }
 </style>
 
@@ -236,7 +248,8 @@
     <div class="login-wrapper">
         <div class="login-left">
             <div class="login-left-content">
-                <i class="fas fa-shield-alt"></i>
+                <div class="login-left-content">
+                <img src="{{ url_for('static', filename='icon.png') }}" alt="Logo" class="login-logo mb-4">
                 <h2>Chào mừng trở lại!</h2>
                 <p>Đăng nhập để truy cập vào hệ thống quản lý của Piu Piu ❤️</p>
             </div>
