@@ -63,20 +63,6 @@ def init_db():
         
         admin_id = cursor.lastrowid
         
-        # Create sample member IDs
-        sample_ids = [f'MEM-{str(i).zfill(3)}' for i in range(1, 21)]
-        for mid in sample_ids:
-            cursor.execute('INSERT OR IGNORE INTO member_ids (member_id) VALUES (?)', (mid,))
-        
-        # Create sample members
-        sample_members = [
-            ('MEM-001', 'Nguyễn Văn An', 'member123', 85),
-            ('MEM-002', 'Trần Thị Bình', 'member123', 92),
-            ('MEM-003', 'Lê Hoàng Cường', 'member123', 78),
-            ('MEM-004', 'Phạm Thị Dung', 'member123', 88),
-            ('MEM-005', 'Hoàng Văn Em', 'member123', 95)
-        ]
-        
         for mid, name, password, points in sample_members:
             member_hash = generate_password_hash(password)
             cursor.execute('''
