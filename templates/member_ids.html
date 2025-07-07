@@ -97,10 +97,10 @@
                     <table class="table table-hover">
                         <thead>
                             <tr>
-                                <th>Mã thành viên</th>
-                                <th>Trạng thái</th>
-                                <th>Người dùng</th>
-                                <th>Ngày tạo</th>
+                                <th>ID</th>
+                                <th>Status</th>
+                                <th>Tên</th>
+                                <th>Date</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -112,11 +112,11 @@
                                 <td>
                                     {% if mid.is_used %}
                                         <span class="badge bg-success">
-                                            <i class="fas fa-check me-1"></i>Đã sử dụng
+                                            <i class="fas fa-check me-1"></i>
                                         </span>
                                     {% else %}
                                         <span class="badge bg-secondary">
-                                            <i class="fas fa-clock me-1"></i>Chưa sử dụng
+                                            <i class="fas fa-clock me-1"></i>
                                         </span>
                                     {% endif %}
                                 </td>
