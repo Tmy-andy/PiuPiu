@@ -328,11 +328,29 @@ def logout():
 @app.route('/delete_member/<int:user_id>', methods=['POST'])
 def delete_member(user_id):
     conn = get_db_connection()
-    conn.execute('DELETE FROM users WHERE id = ?', (user_id,))
-    conn.commit()
+
+    # Lấy member_id của user bị xóa (nếu cần dùng)
+    user = conn.execute('SELECT member_id FROM users WHERE id = ?', (user_id,)).fetchone()
+    if user:
+        member_id = user['member_id']
+        
+        # Cập nhật lại member_ids để đánh dấu là chưa dùng
+        conn.execute('''
+            UPDATE member_ids
+            SET is_used = FALSE, used_by = NULL
+            WHERE member_id = ?
+        ''', (member_id,))
+
+        # Xóa user
+        conn.execute('DELETE FROM users WHERE id = ?', (user_id,))
+        conn.commit()
+        flash('Đã xóa thành viên và giải phóng mã thành viên.', 'success')
+    else:
+        flash('Không tìm thấy người dùng.', 'error')
+
     conn.close()
-    flash('Đã xóa thành viên thành công.', 'success')
     return redirect(url_for('members'))
+
 
 @app.route('/register_admin', methods=['GET', 'POST'])
 @admin_required  # Chỉ admin mới được tạo admin mới, hoặc bạn có thể bỏ nếu muốn ai cũng đăng ký admin
