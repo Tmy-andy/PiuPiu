@@ -11,14 +11,17 @@
                 <i class="fas fa-tachometer-alt me-2"></i>Menu Admin
             </h5>
             <nav class="nav flex-column">
-                <a class="nav-link" href="{{ url_for('dashboard') }}">
+                <a class="nav-link active" href="{{ url_for('dashboard') }}">
                     <i class="fas fa-chart-bar"></i>Thống kê
                 </a>
                 <a class="nav-link" href="{{ url_for('members') }}">
                     <i class="fas fa-users"></i>Quản lý thành viên
                 </a>
-                <a class="nav-link active" href="{{ url_for('member_ids') }}">
+                <a class="nav-link" href="{{ url_for('member_ids') }}">
                     <i class="fas fa-id-card"></i>Mã thành viên
+                </a>
+                <a class="nav-link" href="{{ url_for('admins') }}">
+                    <i class="fa-solid fa-user-tie"></i>Danh sách admin
                 </a>
             </nav>
         </div>
