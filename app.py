@@ -425,20 +425,17 @@ def profile():
 @app.route('/admins')
 def admins():
     conn = get_db_connection()
-    admins = conn.execute('SELECT * FROM users WHERE role = "admin"').fetchall()
+    admins = conn.execute('SELECT * FROM users WHERE role = "admin" ORDER BY created_at DESC').fetchall()
+    members = conn.execute('SELECT * FROM users WHERE role = "member"').fetchall()
+    current_user = conn.execute('SELECT * FROM users WHERE id = ?', (session['user_id'],)).fetchone()
     conn.close()
-    
-    # Kiểm tra quyền sửa: chỉ ADMIN-030 mới có thể chỉnh sửa
-    current_user_id = session.get('user_id')
-    can_edit = False
-    if current_user_id:
-        conn = get_db_connection()
-        user = conn.execute('SELECT member_id FROM users WHERE id = ?', (current_user_id,)).fetchone()
-        conn.close()
-        if user and user['member_id'] == 'ADMIN-001':
-            can_edit = True
 
-    return render_template('admins.html', admins=admins, can_edit=can_edit)
+    # Tất cả admin đều có thể tạo
+    can_create = current_user['role'] == 'admin'
+    # Chỉ ADMIN-001 mới được xóa
+    can_edit = current_user['member_id'] == 'ADMIN-001'
+
+    return render_template('admins.html', admins=admins, members=members, can_create=can_create, can_edit=can_edit)
 
 @app.route('/delete_admin/<int:user_id>', methods=['POST'])
 def delete_admin(user_id):
