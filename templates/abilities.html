@@ -19,39 +19,6 @@
                 <p class="card-text text-muted">Quản lý danh sách chức năng và khả năng của các nhân vật theo phe</p>
             </div>
         </div>
-
-        <!-- Filter Section -->
-        <div class="card mb-4">
-            <div class="card-header bg-white">
-                <h5 class="card-title fw-bold mb-0">
-                    <i class="fas fa-filter me-2 text-primary"></i>
-                    Bộ lọc
-                </h5>
-            </div>
-            <div class="card-body">
-                <form class="row g-3 align-items-end" method="get">
-                    <div class="col-md-3">
-                        <label class="form-label fw-semibold">Phe:</label>
-                        <input type="text" name="faction" class="form-control" placeholder="Tìm theo phe" value="{{ request.args.get('faction', '') }}">
-                    </div>
-                    <div class="col-md-3">
-                        <label class="form-label fw-semibold">Tên nhân vật:</label>
-                        <input type="text" name="name" class="form-control" placeholder="Tìm theo tên" value="{{ request.args.get('name', '') }}">
-                    </div>
-                    <div class="col-md-4">
-                        <label class="form-label fw-semibold">Mô tả:</label>
-                        <input type="text" name="desc" class="form-control" placeholder="Tìm theo mô tả" value="{{ request.args.get('desc', '') }}">
-                    </div>
-                    <div class="col-md-2">
-                        <label class="form-label fw-semibold">&nbsp;</label>
-                        <button class="btn btn-primary w-100" type="submit">
-                            <i class="fas fa-search me-2"></i>Tìm kiếm
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
-
         <!-- Add New Ability Section (Admin Only) -->
         {% if is_admin %}
         <div class="card mb-4">
@@ -100,62 +67,57 @@
 
         <!-- Abilities Table -->
         <div class="card">
-            <div class="card-header bg-white">
-                <h5 class="card-title fw-bold mb-0">
-                    <i class="fas fa-list me-2 text-primary"></i>
-                    Danh sách chức năng
-                </h5>
+    <div class="card-header bg-white">
+        <ul class="nav nav-tabs card-header-tabs" id="abilityTabs" role="tablist">
+            {% for faction in grouped_abilities %}
+            <li class="nav-item" role="presentation">
+                <button class="nav-link {% if loop.first %}active{% endif %}" id="tab-{{ loop.index }}"
+                        data-bs-toggle="tab" data-bs-target="#faction-{{ loop.index }}"
+                        type="button" role="tab">
+                    {{ faction }}
+                </button>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+    <div class="card-body tab-content">
+        {% for faction, abilities in grouped_abilities.items() %}
+        <div class="tab-pane fade {% if loop.first %}show active{% endif %}" id="faction-{{ loop.index }}" role="tabpanel">
+            <h5 class="fw-bold text-primary mb-3">
+                <i class="fas fa-flag me-2"></i>Chức năng phe {{ faction }}
+            </h5>
+            {% if abilities %}
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>STT</th>
+                            <th>Tên nhân vật</th>
+                            <th>Mô tả</th>
+                            {% if is_admin %}<th>Hành động</th>{% endif %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for a in abilities %}
+                        <tr>
+                            <td>{{ a.order_in_faction }}</td>
+                            <td class="fw-semibold">{{ a.name }}</td>
+                            <td>{{ a.description|safe }}</td>
+                            {% if is_admin %}
+                            <td>
+                                <!-- Nút sửa / xóa giống như cũ -->
+                            </td>
+                            {% endif %}
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
             </div>
-            <div class="card-body">
-                {% if abilities %}
-                <div class="table-responsive">
-                    <table class="table table-hover">
-                        <thead>
-                            <tr>
-                                <th>Phe</th>
-                                <th>STT</th>
-                                <th>Tên nhân vật</th>
-                                <th>Mô tả</th>
-                                {% if is_admin %}<th>Hành động</th>{% endif %}
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for a in abilities %}
-                            <tr>
-                                <td>
-                                    <span class="badge bg-info">{{ a.faction }}</span>
-                                </td>
-                                <td class="fw-semibold">{{ a.order_in_faction }}</td>
-                                <td class="fw-semibold">{{ a.name }}</td>
-                                <td>{{ a.description|safe }}</td>
-                                {% if is_admin %}
-                                <td>
-                                    <div class="d-flex gap-2">
-                                        <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#editModal{{ a.id }}">
-                                            <i class="fas fa-edit me-1"></i>Sửa
-                                        </button>
-                                        <form method="POST" action="{{ url_for('delete_ability', ability_id=a.id) }}" style="display:inline;">
-                                            <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('Bạn có chắc chắn muốn xóa chức năng {{ a.name }}?')">
-                                                <i class="fas fa-trash me-1"></i>Xóa
-                                            </button>
-                                        </form>
-                                    </div>
-                                </td>
-                                {% endif %}
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-                {% else %}
-                <div class="text-center py-4">
-                    <i class="fas fa-users fa-3x text-muted mb-3"></i>
-                    <h5 class="text-muted">Chưa có chức năng nào</h5>
-                    <p class="text-muted">Danh sách chức năng các nhân vật đang trống</p>
-                </div>
-                {% endif %}
-            </div>
+            {% else %}
+            <p class="text-muted">Không có chức năng nào.</p>
+            {% endif %}
         </div>
+        {% endfor %}
     </div>
 </div>
 

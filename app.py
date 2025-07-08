@@ -486,10 +486,11 @@ def export_rules():
 # Character abilities
 FACTIONS = ["Dân", "Sói", "3", "Đổi"]
 
+from collections import defaultdict
+
 @app.route('/abilities')
 @login_required
 def abilities():
-    # Lọc
     search_faction = request.args.get('faction', '').strip()
     search_name = request.args.get('name', '').strip()
     search_desc = request.args.get('desc', '').strip()
@@ -502,16 +503,24 @@ def abilities():
     if search_desc:
         query = query.filter(CharacterAbility.description.ilike(f"%{search_desc}%"))
 
-    abilities = query.order_by(CharacterAbility.faction, CharacterAbility.order_in_faction).all()
+    all_abilities = query.order_by(CharacterAbility.faction, CharacterAbility.order_in_faction).all()
+
+    # Group abilities by faction
+    grouped_abilities = defaultdict(list)
+    for a in all_abilities:
+        grouped_abilities[a.faction].append(a)
+
     is_admin = session.get('user_role') == 'admin'
+    next_orders = {
+        faction: (db.session.query(db.func.max(CharacterAbility.order_in_faction))
+                  .filter_by(faction=faction).scalar() or 0) + 1
+        for faction in ['Dân', 'Sói', '3', 'Đổi']
+    }
 
-    # Tính STT tiếp theo cho từng phe
-    next_orders = {}
-    for faction in FACTIONS:
-        max_order = db.session.query(db.func.max(CharacterAbility.order_in_faction)).filter_by(faction=faction).scalar()
-        next_orders[faction] = (max_order or 0) + 1
-
-    return render_template('abilities.html', abilities=abilities, is_admin=is_admin, next_orders=next_orders, factions=FACTIONS)
+    return render_template('abilities.html',
+                           grouped_abilities=grouped_abilities,
+                           is_admin=is_admin,
+                           next_orders=next_orders)
 
 
 @app.route('/abilities/add', methods=['POST'])
