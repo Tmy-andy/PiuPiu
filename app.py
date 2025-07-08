@@ -1,6 +1,7 @@
 print("✅ Flask khởi động...")
 import os
 import traceback
+print("✅ Flask đang được yêu cầu chạy ở cổng:", os.environ.get("PORT"))
 print("📦 Environment:", dict(os.environ))
 
 from flask import Flask, render_template, request, redirect, url_for, flash, session, send_file, Response
