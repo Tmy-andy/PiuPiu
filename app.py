@@ -615,9 +615,9 @@ def edit_blacklist_author(entry_id):
     return redirect(url_for('blacklist'))
 
 
-if __name__ == '__main__':
-    print("🚀 Đang chạy Flask bằng Gunicorn")
-    app.run(debug=True, host='0.0.0.0', port=5000)
+# if __name__ == '__main__':
+#     print("🚀 Đang chạy Flask bằng Gunicorn")
+#     app.run(debug=True, host='0.0.0.0', port=5000)
 
 
 
