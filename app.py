@@ -629,6 +629,7 @@ def update_kim_bai(user_id):
 @app.route('/blacklist', methods=['GET', 'POST'])
 @login_required
 def blacklist():
+    current_user = User.query.get(session['user_id'])
     role_filter = request.args.get('role')
     user_filter_id = request.args.get('user_id')
 
@@ -638,7 +639,7 @@ def blacklist():
     if role_filter == 'admin':
         query = query.join(User).filter(User.role == 'admin')
     elif role_filter == 'member':
-        query = query.join(User).filter(User.role == 'member', User.active == True)
+        query = query.join(User).filter(User.role == 'member')
 
     if user_filter_id:
         query = query.filter(BlacklistEntry.created_by_id == int(user_filter_id))
@@ -649,7 +650,7 @@ def blacklist():
     creators = (
         db.session.query(User)
         .join(BlacklistEntry, BlacklistEntry.created_by_id == User.id)
-        .filter((User.role == 'admin') | ((User.role == 'member') & (User.active == True)))
+        .filter(User.role.in_(['admin', 'member']))
         .distinct()
         .all()
     )
