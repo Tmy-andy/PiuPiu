@@ -12,11 +12,11 @@ from datetime import timedelta
 from database import init_app, db
 from models import User, MemberID, PointLog, Rule, CharacterAbility, BlacklistEntry
 from functools import wraps
+from sqlalchemy.orm import aliased
+from flask_sqlalchemy import SQLAlchemy
 import logging
 import csv
 import io
-from sqlalchemy.orm import aliased
-from flask_sqlalchemy import SQLAlchemy
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -191,7 +191,6 @@ def members():
      .filter(User.role == 'member') \
      .order_by(User.created_at.desc()).all()
 
-    # Gắn admin_name vào mỗi user để Jinja dùng trực tiếp
     members = []
     for user, admin_name in results:
         user.admin_name = admin_name
