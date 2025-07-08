@@ -33,6 +33,7 @@
                                 <th>ID</th>
                                 <th>Tên hiển thị</th>
                                 <th>Ngày tạo</th>
+                                <th>Điểm</th>
                                 {% if can_edit %}
                                 <th>Thao tác</th>
                                 {% endif %}
@@ -43,7 +44,17 @@
                             <tr>
                                 <td>{{ admin.member_id }}</td>
                                 <td>{{ admin.display_name }}</td>
-                                <td>{{ admin.created_at }}</td>
+                                <td>{{ admin.created_at.strftime('%Y-%m-%d') }}</td>
+                                <td>
+                                    {% if can_edit %}
+                                    <form method="POST" action="{{ url_for('update_admin_points', user_id=admin.id) }}" class="d-flex gap-1">
+                                        <input type="number" name="points" value="{{ admin.points }}" class="form-control form-control-sm" style="width: 80px;" required>
+                                        <button type="submit" class="btn btn-sm btn-primary">✔</button>
+                                    </form>
+                                    {% else %}
+                                    {{ admin.points }}
+                                    {% endif %}
+                                </td>
                                 {% if can_edit %}
                                 <td>
                                     <form method="POST" action="{{ url_for('delete_admin', user_id=admin.id) }}"

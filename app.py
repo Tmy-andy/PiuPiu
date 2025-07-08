@@ -402,6 +402,29 @@ def delete_admin(user_id):
 
     return redirect(url_for('admins'))
 
+@app.route('/update_admin_points/<int:user_id>', methods=['POST'])
+@admin_required
+def update_admin_points(user_id):
+    current_user = User.query.get(session['user_id'])
+
+    if not current_user or current_user.member_id != 'ADMIN-001':
+        flash('Bạn không có quyền cập nhật điểm admin.', 'danger')
+        return redirect(url_for('admins'))
+
+    admin = User.query.get(user_id)
+    if admin and admin.role == 'admin':
+        try:
+            points = int(request.form['points'])
+            admin.points = points
+            db.session.commit()
+            flash('Cập nhật điểm thành công.', 'success')
+        except ValueError:
+            flash('Giá trị điểm không hợp lệ.', 'danger')
+    else:
+        flash('Không tìm thấy admin.', 'danger')
+
+    return redirect(url_for('admins'))
+
 @app.route('/download_db')
 @admin_required
 def download_db():
