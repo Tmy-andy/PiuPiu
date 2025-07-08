@@ -623,3 +623,7 @@ def edit_blacklist_author(entry_id):
         flash('Không tìm thấy người dùng hoặc mục!', 'danger')
 
     return redirect(url_for('blacklist'))
+
+if __name__ == "__main__":
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port)
