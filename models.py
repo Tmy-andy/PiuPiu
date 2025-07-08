@@ -5,7 +5,6 @@ db = SQLAlchemy()
 
 class User(db.Model):
     __tablename__ = 'users'
-
     id = db.Column(db.Integer, primary_key=True)
     member_id = db.Column(db.String(100), unique=True, nullable=False)
     display_name = db.Column(db.String(100), nullable=False)
@@ -14,28 +13,19 @@ class User(db.Model):
     points = db.Column(db.Integer, default=0)
     assigned_admin_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=True)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
-
-    # ✨ Các trường mới
     death_count = db.Column(db.Integer, default=0)
     has_kim_bai = db.Column(db.Boolean, default=False)
 
-    # Quan hệ với bảng blacklist
-    blacklist_entries = db.relationship('BlacklistEntry', backref='created_by', lazy=True)
-
-
 class MemberID(db.Model):
     __tablename__ = 'member_ids'
-
     id = db.Column(db.Integer, primary_key=True)
     member_id = db.Column(db.String(100), unique=True, nullable=False)
     is_used = db.Column(db.Boolean, default=False)
     used_by = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=True)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
-
 class PointLog(db.Model):
     __tablename__ = 'point_logs'
-
     id = db.Column(db.Integer, primary_key=True)
     member_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     points_change = db.Column(db.Integer, nullable=False)
@@ -43,31 +33,24 @@ class PointLog(db.Model):
     admin_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
-
 class BlacklistEntry(db.Model):
     __tablename__ = 'blacklist'
-
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(200), nullable=False)
     facebook_link = db.Column(db.String(500))
     created_by_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
-
+    created_by = db.relationship('User', backref='blacklist_entries')
 
 class CharacterAbility(db.Model):
-    __tablename__ = 'character_abilities'
-
     id = db.Column(db.Integer, primary_key=True)
-    faction = db.Column(db.String(100), nullable=False)              # Phe
-    order_in_faction = db.Column(db.Integer, nullable=False)         # Số thứ tự trong phe
-    name = db.Column(db.String(100), nullable=False)                 # Tên nhân vật
-    description = db.Column(db.Text, nullable=True)                  # Mô tả
+    faction = db.Column(db.String(100), nullable=False)
+    order_in_faction = db.Column(db.Integer, nullable=False)
+    name = db.Column(db.String(100), nullable=False)
+    description = db.Column(db.Text, nullable=True)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
-
 class Rule(db.Model):
-    __tablename__ = 'rules'
-
     id = db.Column(db.Integer, primary_key=True)
     content = db.Column(db.Text, nullable=False)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
