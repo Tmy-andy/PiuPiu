@@ -604,7 +604,7 @@ def delete_ability(ability_id):
 
 # Kim Bài Miễn Tử
 @app.route('/kim_bai', methods=['GET', 'POST'])
-@admin_required
+@login_required
 def kim_bai():
     members = User.query.filter_by(role='member').order_by(User.display_name).all()
     return render_template('kim_bai.html', members=members)
