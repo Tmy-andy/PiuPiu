@@ -1,4 +1,6 @@
-print("✅ Flask app đang chạy...")
+print("✅ Flask khởi động...")
+import os
+print("📦 Environment:", dict(os.environ))
 
 from flask import Flask, render_template, request, redirect, url_for, flash, session, send_file, Response
 from docx import Document
@@ -11,7 +13,6 @@ from functools import wraps
 import logging
 import csv
 import io
-import os
 from dotenv import load_dotenv
 
 app = Flask(__name__)
@@ -619,7 +620,7 @@ def edit_blacklist_author(entry_id):
 #     print("🚀 Đang chạy Flask bằng Gunicorn")
 #     app.run(debug=True, host='0.0.0.0', port=5000)
 
-
+print("✅ Flask app được tạo:", app)
 
 
 
