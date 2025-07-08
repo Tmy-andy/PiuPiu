@@ -53,7 +53,7 @@
                                         <span class="text-muted">Chưa phân công</span>
                                     {% endif %}
                                 </td>
-                                <td class="text-muted">{{ member.created_at[:10] }}</td>
+                                <td class="text-muted">{{ member.created_at.strftime('%Y-%m-%d') }}</td>
                                 <td>
                                     <div class="btn-group" role="group">
                                         <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" 
