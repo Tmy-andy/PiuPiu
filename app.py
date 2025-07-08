@@ -214,26 +214,38 @@ def members():
 @app.route('/assign_member/<int:user_id>', methods=['POST'])
 @admin_required
 def assign_member(user_id):
-    new_admin_id = request.form.get('admin_id')
+    try:
+        new_admin_id = request.form.get('admin_id')
 
-    user = User.query.get(user_id)
-    if not user or user.role != 'member':
-        flash('Không tìm thấy thành viên hợp lệ.', 'danger')
-        return redirect(url_for('members'))
-
-    if new_admin_id:
-        new_admin = User.query.get(int(new_admin_id))
-        if not new_admin or new_admin.role != 'admin':
-            flash('Admin không hợp lệ.', 'danger')
+        user = User.query.get(user_id)
+        if not user or user.role != 'member':
+            flash('Không tìm thấy thành viên hợp lệ.', 'danger')
             return redirect(url_for('members'))
 
-        user.assigned_admin_id = new_admin.id
-    else:
-        user.assigned_admin_id = None
+        if new_admin_id:
+            try:
+                new_admin_id = int(new_admin_id)
+                new_admin = User.query.get(new_admin_id)
+            except ValueError:
+                flash('ID admin không hợp lệ.', 'danger')
+                return redirect(url_for('members'))
 
-    db.session.commit()
-    flash(f'Đã cập nhật admin phụ trách cho {user.display_name}.', 'success')
-    return redirect(url_for('members'))
+            if not new_admin or new_admin.role != 'admin':
+                flash('Admin không hợp lệ.', 'danger')
+                return redirect(url_for('members'))
+
+            user.assigned_admin_id = new_admin.id
+        else:
+            user.assigned_admin_id = None
+
+        db.session.commit()
+        flash(f'Đã cập nhật admin phụ trách cho {user.display_name}.', 'success')
+        return redirect(url_for('members'))
+
+    except Exception as e:
+        print("Lỗi ở /assign_member:", e)
+        flash('Đã xảy ra lỗi nội bộ.', 'danger')
+        return redirect(url_for('members'))
 
 @app.route('/member_ids')
 @admin_required
