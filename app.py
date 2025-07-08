@@ -37,10 +37,6 @@ except Exception as e:
 
 load_dotenv()
 
-# Cấu hình cơ sở dữ liệu
-
-init_app(app)
-
 # Tạo các bảng nếu chưa có
 with app.app_context():
     db.create_all()
