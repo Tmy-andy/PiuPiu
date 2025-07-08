@@ -218,19 +218,34 @@
     }
 </style>
 <script>
+    // Ngăn copy, cut, chuột phải nếu không phải admin
     document.addEventListener("copy", e => e.preventDefault());
     document.addEventListener("cut", e => e.preventDefault());
     document.addEventListener("contextmenu", e => e.preventDefault());
-    const nextOrders = {{ next_orders | tojson }};
-    
+
+    // Danh sách STT kế tiếp theo phe (từ Flask)
+    const nextOrders = {{ next_orders | tojson | safe }};
+
+    // Hàm cập nhật STT khi chọn phe
     function updateOrder() {
-        const faction = document.getElementById('faction-select').value;
+        const factionSelect = document.getElementById('faction-select');
         const orderInput = document.getElementById('order-input');
-        orderInput.value = nextOrders[faction] || 1;
+        if (factionSelect && orderInput) {
+            const selectedFaction = factionSelect.value;
+            orderInput.value = nextOrders[selectedFaction] || 1;
+        }
     }
 
-    document.addEventListener("DOMContentLoaded", updateOrder);
+    // Gọi khi DOM load và khi phe thay đổi
+    document.addEventListener("DOMContentLoaded", () => {
+        updateOrder();
+        const factionSelect = document.getElementById('faction-select');
+        if (factionSelect) {
+            factionSelect.addEventListener('change', updateOrder);
+        }
+    });
 </script>
+
 {% endif %}
 
 {% endblock %}
