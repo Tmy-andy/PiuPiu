@@ -227,6 +227,7 @@ def add_member_ids():
     flash(f'Đã thêm mã thành viên từ MEM-{str(start_num).zfill(3)} đến MEM-{str(end_num).zfill(3)}', 'success')
     return redirect(url_for('member_ids'))
 
+
 @app.route('/update_points/<int:member_id>', methods=['POST'])
 @admin_required
 def update_points(member_id):
@@ -235,31 +236,23 @@ def update_points(member_id):
 
     user = User.query.get(member_id)
     if user:
+        # Nếu không cho tự cộng điểm, bật đoạn này
+        # if user.id == session['user_id']:
+        #     flash('Bạn không thể tự cộng điểm cho chính mình.', 'warning')
+        #     return redirect(request.referrer or url_for('dashboard'))
+
         user.points += points_change
-        log = PointLog(member_id=member_id, points_change=points_change,
-                       reason=reason, admin_id=session['user_id'])
+        log = PointLog(member_id=member_id,
+                       points_change=points_change,
+                       reason=reason,
+                       admin_id=session['user_id'])
         db.session.add(log)
         db.session.commit()
         flash('Cập nhật điểm thành công!', 'success')
     else:
-        flash('Không tìm thấy thành viên.', 'error')
+        flash('Không tìm thấy người dùng.', 'danger')
 
-    return redirect(url_for('members'))
-
-@app.route('/assign_member/<int:member_id>', methods=['POST'])
-@admin_required
-def assign_member(member_id):
-    admin_id = request.form['admin_id'] or None
-
-    user = User.query.get(member_id)
-    if user:
-        user.assigned_admin_id = admin_id
-        db.session.commit()
-        flash('Phân công thành viên thành công!', 'success')
-    else:
-        flash('Không tìm thấy thành viên.', 'error')
-
-    return redirect(url_for('members'))
+    return redirect(request.referrer or url_for('dashboard'))
 
 @app.route('/logout')
 def logout():
