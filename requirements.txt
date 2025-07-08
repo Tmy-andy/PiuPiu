@@ -6,3 +6,4 @@ psycopg2-binary
 python-docx
 flask-login
 python-dotenv
+SQLAlchemy>=1.4
