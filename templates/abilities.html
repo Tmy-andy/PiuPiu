@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+{% block title %}Chức năng các nhân vật{% endblock %}
+{% block content %}
+<h3>Chức năng các nhân vật</h3>
+
+<!-- Tìm kiếm -->
+<form class="form-inline mb-3" method="get">
+  <input type="text" name="faction" class="form-control mr-2" placeholder="Phe" value="{{ request.args.get('faction', '') }}">
+  <input type="text" name="name" class="form-control mr-2" placeholder="Tên" value="{{ request.args.get('name', '') }}">
+  <input type="text" name="desc" class="form-control mr-2" placeholder="Mô tả" value="{{ request.args.get('desc', '') }}">
+  <button class="btn btn-primary" type="submit">Tìm</button>
+</form>
+
+<!-- Chặn member bôi đen, copy -->
+{% if not is_admin %}
+<style>
+  body {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
+  }
+</style>
+{% endif %}
+<!-- Chặn member copy, cut, context menu -->
+{% if not is_admin %}
+<script>
+  document.addEventListener("copy", e => e.preventDefault());
+  document.addEventListener("cut", e => e.preventDefault());
+  document.addEventListener("contextmenu", e => e.preventDefault());
+</script>
+{% endif %}
+
+<!-- Danh sách chức năng -->
+<table class="table table-bordered">
+  <thead>
+    <tr>
+      <th>Phe</th>
+      <th>STT</th>
+      <th>Tên nhân vật</th>
+      <th>Mô tả</th>
+      {% if is_admin %}<th>Hành động</th>{% endif %}
+    </tr>
+  </thead>
+  <tbody>
+    {% for a in abilities %}
+    <tr>
+      <td>{{ a.faction }}</td>
+      <td>{{ a.order_in_faction }}</td>
+      <td>{{ a.name }}</td>
+      <td>{{ a.description|safe }}</td>
+      {% if is_admin %}
+      <td>
+        <!-- Nút sửa -->
+        <button class="btn btn-sm btn-info" data-toggle="modal" data-target="#editModal{{ a.id }}">Sửa</button>
+        <form method="POST" action="{{ url_for('delete_ability', ability_id=a.id) }}" class="d-inline">
+          <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Xóa thật không?')">Xóa</button>
+        </form>
+
+        <!-- Modal sửa -->
+        <div class="modal fade" id="editModal{{ a.id }}" tabindex="-1">
+          <div class="modal-dialog">
+            <form method="POST" action="{{ url_for('edit_ability', ability_id=a.id) }}">
+              <div class="modal-content">
+                <div class="modal-header"><h5>Sửa chức năng</h5></div>
+                <div class="modal-body">
+                  <input name="faction" value="{{ a.faction }}" class="form-control mb-2" required>
+                  <input name="order" value="{{ a.order_in_faction }}" type="number" class="form-control mb-2" required>
+                  <input name="name" value="{{ a.name }}" class="form-control mb-2" required>
+                  <textarea name="description" id="editor{{ a.id }}">{{ a.description }}</textarea>
+                  <script>CKEDITOR.replace('editor{{ a.id }}');</script>
+                </div>
+                <div class="modal-footer">
+                  <button type="submit" class="btn btn-success">Lưu</button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </td>
+      {% endif %}
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<!-- Form thêm mới -->
+{% if is_admin %}
+<h5>Thêm chức năng mới</h5>
+<form method="POST" action="{{ url_for('add_ability') }}">
+  <input name="faction" class="form-control mb-2" placeholder="Phe" required>
+  <input name="order" type="number" class="form-control mb-2" placeholder="STT" required>
+  <input name="name" class="form-control mb-2" placeholder="Tên nhân vật" required>
+  <textarea name="description" id="editor_new"></textarea>
+  <script>CKEDITOR.replace('editor_new');</script>
+  <button type="submit" class="btn btn-primary mt-2">Thêm</button>
+</form>
+{% endif %}
+
+{% endblock %}

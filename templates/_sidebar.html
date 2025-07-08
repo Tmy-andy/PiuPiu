@@ -16,5 +16,13 @@
         <a class="nav-link {% if request.endpoint == 'admins' %}active{% endif %}" href="{{ url_for('admins') }}">
             <i class="fa-solid fa-user-tie"></i>Danh sách admin
         </a>
+        <a class="nav-link {% if request.endpoint == 'rules' %}active{% endif %}" href="{{ url_for('rules') }}">
+            <i class="fas fa-gavel"></i>Luật
+        </a>
+        <a class="nav-link {% if request.endpoint == 'abilities' %}active{% endif %}" href="{{ url_for('abilities') }}">
+            <i class="fas fa-bolt"></i>Chức năng nhân vật
+        </a>
+        <a class="nav-link {% if request.endpoint == 'blacklist' %}active{% endif %}" href="{{ url_for('blacklist') }}">
+            <i class="fas fa-ban"></i>Blacklist
     </nav>
 </div>

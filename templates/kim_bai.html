@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %}Kim bài miễn tử{% endblock %}
+{% block content %}
+<h3>🛡️ Quản lý Kim bài miễn tử</h3>
+
+<table class="table table-bordered">
+  <thead>
+    <tr>
+      <th>Tên thành viên</th>
+      <th>Lượt chết</th>
+      <th>Có kim bài?</th>
+      <th>Hành động</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for m in members %}
+    <tr>
+      <td>{{ m.display_name }}</td>
+      <td>{{ m.death_count }}</td>
+      <td>
+        {% if m.has_kim_bai %}
+          ✅ Có
+        {% else %}
+          ❌ Không
+        {% endif %}
+      </td>
+      <td>
+        <form method="POST" action="{{ url_for('update_kim_bai', user_id=m.id) }}" class="form-inline">
+          <input type="number" name="death_count" class="form-control form-control-sm mr-2" value="{{ m.death_count }}" min="0" required>
+          <label class="mr-2">Kim bài:</label>
+          <select name="has_kim_bai" class="form-control form-control-sm mr-2">
+            <option value="true" {% if m.has_kim_bai %}selected{% endif %}>Có</option>
+            <option value="false" {% if not m.has_kim_bai %}selected{% endif %}>Không</option>
+          </select>
+          <button type="submit" class="btn btn-sm btn-primary">Lưu</button>
+        </form>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

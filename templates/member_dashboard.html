@@ -78,6 +78,35 @@
                 {% endif %}
             </div>
         </div>
+        <!-- Kim Bài Miễn Tử -->
+        {% if user.death_count >= 2 %}
+        <div class="row mb-4">
+            <div class="col-md-8 mx-auto">
+                <div class="card border-{{ 'success' if user.has_kim_bai else 'danger' }}">
+                    <div class="card-body d-flex align-items-center">
+                        <i class="fas fa-shield-alt fa-2x me-3 text-{{ 'success' if user.has_kim_bai else 'danger' }}"></i>
+                        <div>
+                            <h5 class="mb-1 fw-bold">
+                                Kim bài miễn tử: 
+                                {% if user.has_kim_bai %}
+                                    <span class="text-success">Đã cấp</span>
+                                {% else %}
+                                    <span class="text-danger">Chưa có</span>
+                                {% endif %}
+                            </h5>
+                            <p class="mb-0 text-muted">
+                                Bạn đã "chết" <strong>{{ user.death_count }}</strong> lần.
+                                {% if not user.has_kim_bai %}
+                                    Hãy liên hệ admin để được cấp kim bài nếu đủ điều kiện.
+                                {% endif %}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
     </div>
 </div>
 {% endblock %}
