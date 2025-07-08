@@ -73,6 +73,14 @@ def admin_required(f):
         return f(*args, **kwargs)
     return decorated_function
 
+@app.context_processor
+def inject_user():
+    user_id = session.get('user_id')
+    if user_id:
+        user = User.query.get(user_id)
+        return dict(user=user)
+    return dict(user=None)
+
 # Routes
 @app.route('/ping')
 def ping():
