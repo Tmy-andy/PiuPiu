@@ -1,5 +1,6 @@
 {% extends "base.html" %}
-{% block title %}Kim bài miễn tử{% endblock %}
+
+{% block title %}Kim bài miễn tử - Hệ thống quản lý thành viên{% endblock %}
 
 {% block content %}
 <div class="row">
@@ -10,11 +11,11 @@
 
     <!-- Main Content -->
     <div class="col-lg-9 col-md-8">
-        <!-- Header Section -->
+        <!-- Welcome Section -->
         <div class="card mb-4">
             <div class="card-body">
                 <h1 class="card-title fw-bold">
-                    <i class="fas fa-shield-alt me-2 text-warning"></i>
+                    <i class="fas fa-shield-alt me-2 text-primary"></i>
                     Quản lý Kim bài miễn tử
                 </h1>
                 <p class="card-text text-muted">Quản lý tình trạng kim bài miễn tử và số lần chết của thành viên</p>
@@ -78,6 +79,7 @@
                     <table class="table table-hover">
                         <thead>
                             <tr>
+                                <th>Mã thành viên</th>
                                 <th>Tên thành viên</th>
                                 <th>Lượt chết</th>
                                 <th>Tình trạng kim bài</th>
@@ -87,6 +89,9 @@
                         <tbody>
                             {% for m in members %}
                             <tr>
+                                <td>
+                                    <span class="badge bg-primary">{{ m.member_id }}</span>
+                                </td>
                                 <td class="fw-semibold">{{ m.display_name }}</td>
                                 <td>
                                     <span class="badge bg-{{ 'danger' if m.death_count > 2 else 'warning' if m.death_count > 0 else 'success' }}">
@@ -129,6 +134,9 @@
                     <i class="fas fa-users fa-3x text-muted mb-3"></i>
                     <h5 class="text-muted">Chưa có thành viên nào</h5>
                     <p class="text-muted">Hãy thêm thành viên vào hệ thống</p>
+                    <a href="{{ url_for('members') }}" class="btn btn-primary">
+                        <i class="fas fa-plus me-2"></i>Thêm thành viên
+                    </a>
                 </div>
                 {% endif %}
             </div>

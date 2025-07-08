@@ -25,5 +25,8 @@
         <a class="nav-link {% if request.endpoint == 'blacklist' %}active{% endif %}" href="{{ url_for('blacklist') }}">
             <i class="fas fa-ban"></i>Blacklist
         </a>
+        <a class="nav-link {% if request.endpoint == 'kim_bai' %}active{% endif %}" href="{{ url_for('kim_bai') }}">
+            <i class="fas fa-ban"></i>Kim Bài Miễn Tử
+        </a>
     </nav>
 </div>
