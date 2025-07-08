@@ -630,5 +630,5 @@ def edit_blacklist_author(entry_id):
 #     app.run(debug=True, host='0.0.0.0', port=port)
 # print(f"🚀 Đang chạy Flask trên cổng {port}")
 
-  if __name__ == "__main__":
-      app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
