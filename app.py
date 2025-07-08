@@ -211,6 +211,30 @@ def members():
 
     return render_template('members.html', members=members, all_admins=all_admins)
 
+@app.route('/assign_member/<int:user_id>', methods=['POST'])
+@admin_required
+def assign_member(user_id):
+    new_admin_id = request.form.get('admin_id')
+
+    user = User.query.get(user_id)
+    if not user or user.role != 'member':
+        flash('Không tìm thấy thành viên hợp lệ.', 'danger')
+        return redirect(url_for('members'))
+
+    if new_admin_id:
+        new_admin = User.query.get(int(new_admin_id))
+        if not new_admin or new_admin.role != 'admin':
+            flash('Admin không hợp lệ.', 'danger')
+            return redirect(url_for('members'))
+
+        user.assigned_admin_id = new_admin.id
+    else:
+        user.assigned_admin_id = None
+
+    db.session.commit()
+    flash(f'Đã cập nhật admin phụ trách cho {user.display_name}.', 'success')
+    return redirect(url_for('members'))
+
 @app.route('/member_ids')
 @admin_required
 def member_ids():
