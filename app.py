@@ -535,13 +535,19 @@ def update_kim_bai(user_id):
 @login_required
 def blacklist():
     user = User.query.get(session['user_id'])
-    
+    role_filter = request.args.get('role')
+
     if user.role == 'admin':
-        entries = BlacklistEntry.query.order_by(BlacklistEntry.created_at.desc()).all()
+        if role_filter == 'member':
+            entries = BlacklistEntry.query.join(User).filter(User.role == 'member').order_by(BlacklistEntry.created_at.desc()).all()
+        elif role_filter == 'admin':
+            entries = BlacklistEntry.query.join(User).filter(User.role == 'admin').order_by(BlacklistEntry.created_at.desc()).all()
+        else:
+            entries = BlacklistEntry.query.order_by(BlacklistEntry.created_at.desc()).all()
     else:
         entries = BlacklistEntry.query.filter_by(created_by_id=user.id).order_by(BlacklistEntry.created_at.desc()).all()
-    
-    return render_template('blacklist.html', entries=entries, user=user)
+
+    return render_template('blacklist.html', entries=entries, user=user, role_filter=role_filter)
 
 @app.route('/add_blacklist', methods=['POST'])
 @login_required
@@ -576,25 +582,6 @@ def delete_blacklist(entry_id):
         flash('Bạn không có quyền xoá mục này.', 'danger')
 
     return redirect(url_for('blacklist'))
-
-@app.route('/blacklist')
-@login_required
-def blacklist():
-    user = User.query.get(session['user_id'])
-
-    role_filter = request.args.get('role')
-
-    if user.role == 'admin':
-        if role_filter == 'member':
-            entries = BlacklistEntry.query.join(User).filter(User.role == 'member').order_by(BlacklistEntry.created_at.desc()).all()
-        elif role_filter == 'admin':
-            entries = BlacklistEntry.query.join(User).filter(User.role == 'admin').order_by(BlacklistEntry.created_at.desc()).all()
-        else:
-            entries = BlacklistEntry.query.order_by(BlacklistEntry.created_at.desc()).all()
-    else:
-        entries = BlacklistEntry.query.filter_by(created_by_id=user.id).order_by(BlacklistEntry.created_at.desc()).all()
-
-    return render_template('blacklist.html', entries=entries, user=user, role_filter=role_filter)
 
 @app.route('/edit_blacklist_author/<int:entry_id>', methods=['POST'])
 @admin_required
