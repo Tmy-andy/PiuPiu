@@ -15,6 +15,8 @@ from functools import wraps
 from sqlalchemy.orm import aliased
 from flask_sqlalchemy import SQLAlchemy
 import logging
+from zipfile import ZipFile
+import tempfile
 import csv
 import io
 from dotenv import load_dotenv
@@ -437,35 +439,59 @@ def update_admin_points(user_id):
 @admin_required
 def download_db():
     user = User.query.get(session['user_id'])
-    if not user or user.member_id != 'ADMIN-001':
+    if not user or user.member_id not in ['ADMIN-001', 'ADMIN-030']:
         flash('Bạn không có quyền tải xuống cơ sở dữ liệu.', 'error')
         return redirect(url_for('dashboard'))
 
-    users = User.query.all()
+    temp_dir = tempfile.TemporaryDirectory()
+    zip_path = os.path.join(temp_dir.name, "full_database_export.zip")
 
-    # Tạo file CSV trên bộ nhớ
-    si = io.StringIO()
-    writer = csv.writer(si)
-    # Header
-    writer.writerow(['ID', 'Member ID', 'Display Name', 'Role', 'Points', 'Assigned Admin ID', 'Created At'])
-    # Data
-    for u in users:
-        writer.writerow([
-            u.id, u.member_id, u.display_name, u.role, u.points,
-            u.assigned_admin_id, u.created_at.strftime('%Y-%m-%d %H:%M:%S')
-        ])
+    with ZipFile(zip_path, 'w') as zipf:
+        def add_csv(filename, headers, rows):
+            buffer = io.StringIO()
+            writer = csv.writer(buffer)
+            writer.writerow(headers)
+            writer.writerows(rows)
+            zipf.writestr(filename, buffer.getvalue())
+            buffer.close()
 
-    output = si.getvalue()
-    si.close()
+        # 1. Users
+        users = User.query.all()
+        add_csv("users.csv",
+                ['ID', 'Member ID', 'Display Name', 'Role', 'Points', 'Assigned Admin ID', 'Death Count', 'Has Kim Bài', 'Created At'],
+                [[u.id, u.member_id, u.display_name, u.role, u.points, u.assigned_admin_id, u.death_count, u.has_kim_bai, u.created_at.strftime('%Y-%m-%d %H:%M:%S')] for u in users])
 
-    # Trả file về dạng response CSV
-    return Response(
-        output,
-        mimetype='text/csv',
-        headers={
-            "Content-Disposition": "attachment;filename=users_export.csv"
-        }
-    )
+        # 2. Member IDs
+        members = MemberID.query.all()
+        add_csv("member_ids.csv",
+                ['ID', 'Member ID', 'Is Used', 'Used By', 'Created At'],
+                [[m.id, m.member_id, m.is_used, m.used_by, m.created_at.strftime('%Y-%m-%d %H:%M:%S')] for m in members])
+
+        # 3. Point Logs
+        logs = PointLog.query.all()
+        add_csv("point_logs.csv",
+                ['ID', 'Member ID', 'Points Change', 'Reason', 'Admin ID', 'Created At'],
+                [[l.id, l.member_id, l.points_change, l.reason, l.admin_id, l.created_at.strftime('%Y-%m-%d %H:%M:%S')] for l in logs])
+
+        # 4. Blacklist
+        entries = BlacklistEntry.query.all()
+        add_csv("blacklist.csv",
+                ['ID', 'Name', 'Facebook Link', 'Created By ID', 'Created At'],
+                [[b.id, b.name, b.facebook_link, b.created_by_id, b.created_at.strftime('%Y-%m-%d %H:%M:%S')] for b in entries])
+
+        # 5. Character Abilities
+        abilities = CharacterAbility.query.all()
+        add_csv("character_ability.csv",
+                ['ID', 'Faction', 'Order', 'Name', 'Description', 'Created At'],
+                [[a.id, a.faction, a.order_in_faction, a.name, a.description, a.created_at.strftime('%Y-%m-%d %H:%M:%S')] for a in abilities])
+
+        # 6. Rules
+        rules = Rule.query.all()
+        add_csv("rules.csv",
+                ['ID', 'Content', 'Updated At'],
+                [[r.id, r.content, r.updated_at.strftime('%Y-%m-%d %H:%M:%S')] for r in rules])
+
+    return send_file(zip_path, as_attachment=True, download_name="full_database_export.zip")
 
 # Luật sử dụng
 @app.route('/rules', methods=['GET', 'POST'])
