@@ -153,9 +153,11 @@
                     <div class="mb-3">
                         <label for="admin_id" class="form-label fw-semibold">Phân công cho Admin:</label>
                         <select class="form-select" id="admin_id" name="admin_id">
-                            <option value="">-- Chưa phân công --</option>
-                            <option value="{{ session.user_id }}">{{ session.display_name }} (Tôi)</option>
-                        </select>
+                        <option value="">-- Chưa phân công --</option>
+                        {% for admin in all_admins %}
+                            <option value="{{ admin.id }}">{{ admin.display_name }}{% if admin.id == session.user_id %} (Tôi){% endif %}</option>
+                        {% endfor %}
+                    </select>
                     </div>
                 </div>
                 <div class="modal-footer">

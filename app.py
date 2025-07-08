@@ -206,7 +206,10 @@ def members():
         user.admin_name = admin_name
         members.append(user)
 
-    return render_template('members.html', members=members)
+    # ✅ Lấy tất cả admin để hiện trong modal chọn
+    all_admins = User.query.filter_by(role='admin').order_by(User.display_name).all()
+
+    return render_template('members.html', members=members, all_admins=all_admins)
 
 @app.route('/member_ids')
 @admin_required
