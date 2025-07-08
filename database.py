@@ -4,8 +4,8 @@ from flask_sqlalchemy import SQLAlchemy
 db = SQLAlchemy()
 
 def init_app(app):
-    db_url = os.environ.get("DATABASE_URL")
-    
+    db_url = os.environ.get("DATABASE_URL", "postgresql://postgres:FYHeCzYArCUwcRZtmrYXGUFUzYsKYpiu@postgres.railway.internal:5432/railway")
+
     if not db_url:
         raise RuntimeError("❌ DATABASE_URL không được tìm thấy trong biến môi trường.")
 
