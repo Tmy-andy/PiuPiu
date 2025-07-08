@@ -9,13 +9,18 @@ from functools import wraps
 import csv
 import io
 import os
+from dotenv import load_dotenv
+load_dotenv()
 
 app = Flask(__name__)
 app.secret_key = os.environ.get('SECRET_KEY', 'dev-secret-key')
 app.permanent_session_lifetime = timedelta(days=30)
 
+# Cấu hình cơ sở dữ liệu
+
 init_app(app)
 
+# Tạo các bảng nếu chưa có
 with app.app_context():
     db.create_all()
 
