@@ -83,7 +83,9 @@
                                 <th>Tên thành viên</th>
                                 <th>Lượt chết</th>
                                 <th>Tình trạng kim bài</th>
+                                {% if admins %}
                                 <th>Hành động</th>
+                                {% endif %}
                             </tr>
                         </thead>
                         <tbody>
@@ -109,6 +111,7 @@
                                         </span>
                                     {% endif %}
                                 </td>
+                                {% if admins %}
                                 <td>
                                     <form method="POST" action="{{ url_for('update_kim_bai', user_id=m.id) }}" class="d-flex gap-2 align-items-center">
                                         <div class="input-group input-group-sm" style="width: 100px;">
@@ -124,6 +127,7 @@
                                         </button>
                                     </form>
                                 </td>
+                                {% endif %}
                             </tr>
                             {% endfor %}
                         </tbody>
