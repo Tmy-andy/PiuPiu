@@ -484,13 +484,12 @@ def export_rules():
     return send_file(output, as_attachment=True, download_name="luat.docx")
 
 # Character abilities
-FACTIONS = ["Dân", "Sói", "3", "Đổi"]
-
-from collections import defaultdict
+FACTIONS = ["Phe Dân", "Phe Sói", "Phe Ba", "Đổi Phe"]
 
 @app.route('/abilities')
 @login_required
 def abilities():
+    # Lọc
     search_faction = request.args.get('faction', '').strip()
     search_name = request.args.get('name', '').strip()
     search_desc = request.args.get('desc', '').strip()
@@ -503,24 +502,32 @@ def abilities():
     if search_desc:
         query = query.filter(CharacterAbility.description.ilike(f"%{search_desc}%"))
 
-    all_abilities = query.order_by(CharacterAbility.faction, CharacterAbility.order_in_faction).all()
-
-    # Group abilities by faction
-    grouped_abilities = defaultdict(list)
-    for a in all_abilities:
-        grouped_abilities[a.faction].append(a)
-
+    abilities = query.order_by(CharacterAbility.faction, CharacterAbility.order_in_faction).all()
     is_admin = session.get('user_role') == 'admin'
+
+    # Tính STT kế tiếp cho từng phe
+    FACTIONS = ['Phe Dân', 'Phe Sói', 'Phe Ba', 'Đổi Phe']
     next_orders = {
         faction: (db.session.query(db.func.max(CharacterAbility.order_in_faction))
                   .filter_by(faction=faction).scalar() or 0) + 1
-        for faction in ['Dân', 'Sói', '3', 'Đổi']
+        for faction in FACTIONS
     }
 
-    return render_template('abilities.html',
-                           grouped_abilities=grouped_abilities,
-                           is_admin=is_admin,
-                           next_orders=next_orders)
+    # Nhóm chức năng theo phe và sắp xếp theo thứ tự FACTIONS
+    grouped_abilities = {f: [] for f in FACTIONS}
+    for a in abilities:
+        grouped_abilities.setdefault(a.faction, []).append(a)
+
+    # Đảm bảo thứ tự phe khi truyền vào template
+    grouped_abilities_ordered = {f: grouped_abilities.get(f, []) for f in FACTIONS}
+
+    return render_template(
+        'abilities.html',
+        abilities=abilities,
+        is_admin=is_admin,
+        next_orders=next_orders,
+        grouped_abilities=grouped_abilities_ordered
+    )
 
 
 @app.route('/abilities/add', methods=['POST'])
