@@ -16,6 +16,7 @@ import logging
 import csv
 import io
 from sqlalchemy.orm import aliased
+from flask_sqlalchemy import SQLAlchemy
 from dotenv import load_dotenv
 
 load_dotenv()
