@@ -19,6 +19,21 @@
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+
+    <!-- Meta cho iOS và Progressive Web App -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="Piu Piu System">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <link rel="apple-touch-icon" href="{{ url_for('static', filename='icon.png', _external=True) }}">
+
+    <!-- Favicon + Android -->
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='logo.png') }}">
+    <link rel="shortcut icon" type="image/png" href="{{ url_for('static', filename='logo.png') }}">
+
+    <!-- Theme & Background color khi mở app -->
+    <meta name="theme-color" content="#730015"> <!-- Màu viền thanh trên Android -->
+    <meta name="background-color" content="#ffffff"> <!-- Màu nền khi khởi chạy trên iOS -->
+
     <style>
         :root {
             --primary-color: #2563eb;
