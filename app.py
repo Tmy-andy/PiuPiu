@@ -630,3 +630,5 @@ def edit_blacklist_author(entry_id):
 # if __name__ == '__main__':
 #     print("✅ Flask khởi chạy trực tiếp (không qua Gunicorn)")
 #     app.run(debug=True, host="0.0.0.0", port=int(os.environ.get("PORT", 8080)))
+
+print(f"📌 Flask app = {app}")
