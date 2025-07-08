@@ -75,10 +75,11 @@ def admin_required(f):
 def ping():
     return "pong"
 
-@app.route("/")
+@app.route('/')
 def index():
-    return "✅ App is alive!"
-
+    if 'user_id' in session:
+        return redirect(url_for('dashboard'))
+    return redirect(url_for('login'))
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -628,10 +629,8 @@ def edit_blacklist_author(entry_id):
 
     return redirect(url_for('blacklist'))
 
-# import time
-
-# if __name__ == '__main__':
-#     print("✅ Flask khởi chạy trực tiếp (không qua Gunicorn)")
-#     app.run(debug=True, host="0.0.0.0", port=int(os.environ.get("PORT", 8080)))
+if __name__ == '__main__':
+    port = int(os.environ.get("PORT", 8080))  # Railway sẽ truyền PORT=8080
+    app.run(host='0.0.0.0', port=port)
 
 print(f"📌 Flask app = {app}")
