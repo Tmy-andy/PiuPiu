@@ -1,5 +1,6 @@
 print("✅ Flask khởi động...")
 import os
+import traceback
 print("📦 Environment:", dict(os.environ))
 
 from flask import Flask, render_template, request, redirect, url_for, flash, session, send_file, Response
@@ -15,10 +16,24 @@ import csv
 import io
 from dotenv import load_dotenv
 
-app = Flask(__name__)
-app.logger.setLevel(logging.DEBUG)
-app.secret_key = os.environ.get('SECRET_KEY', 'dev-secret-key')
-app.permanent_session_lifetime = timedelta(days=30)
+try:
+    app = Flask(__name__)
+    app.logger.setLevel(logging.DEBUG)
+    app.secret_key = os.environ.get('SECRET_KEY', 'dev-secret-key')
+    app.permanent_session_lifetime = timedelta(days=30)
+
+    load_dotenv()
+
+    init_app(app)
+
+    with app.app_context():
+        db.create_all()
+
+    print("✅ Flask khởi động...")
+
+except Exception as e:
+    print("🛑 Lỗi khi khởi tạo Flask app:")
+    traceback.print_exc()
 
 load_dotenv()
 
