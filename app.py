@@ -11,12 +11,13 @@ import csv
 import io
 import os
 from dotenv import load_dotenv
-load_dotenv()
 
 app = Flask(__name__)
 app.logger.setLevel(logging.DEBUG)
 app.secret_key = os.environ.get('SECRET_KEY', 'dev-secret-key')
 app.permanent_session_lifetime = timedelta(days=30)
+
+load_dotenv()
 
 # Cấu hình cơ sở dữ liệu
 
