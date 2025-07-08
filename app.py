@@ -35,8 +35,6 @@ except Exception as e:
     print("🛑 Lỗi khi khởi tạo Flask app:")
     traceback.print_exc()
 
-load_dotenv()
-
 # Tạo các bảng nếu chưa có
 with app.app_context():
     db.create_all()
