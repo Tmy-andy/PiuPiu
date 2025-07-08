@@ -9,12 +9,14 @@ from flask_login import login_required
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import timedelta
 from database import init_app, db
-from models import User, MemberID, PointLog
+from models import User, MemberID, PointLog, Rule, CharacterAbility, BlacklistEntry
 from functools import wraps
 import logging
 import csv
 import io
 from dotenv import load_dotenv
+
+load_dotenv()
 
 try:
     app = Flask(__name__)
@@ -22,7 +24,6 @@ try:
     app.secret_key = os.environ.get('SECRET_KEY', 'dev-secret-key')
     app.permanent_session_lifetime = timedelta(days=30)
 
-    load_dotenv()
 
     init_app(app)
 
@@ -624,8 +625,8 @@ def edit_blacklist_author(entry_id):
 
     return redirect(url_for('blacklist'))
 
-import time
+# import time
 
-if __name__ == '__main__':
-    print("✅ Flask khởi chạy trực tiếp (không qua Gunicorn)")
-    app.run(debug=True, host="0.0.0.0", port=int(os.environ.get("PORT", 8080)))
+# if __name__ == '__main__':
+#     print("✅ Flask khởi chạy trực tiếp (không qua Gunicorn)")
+#     app.run(debug=True, host="0.0.0.0", port=int(os.environ.get("PORT", 8080)))
