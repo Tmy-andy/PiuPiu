@@ -1,31 +1,29 @@
 {% extends "base.html" %}
 {% block title %}Chức năng các nhân vật{% endblock %}
+
 {% block content %}
 <div class="row">
-    <!-- Sidebar -->
     <div class="col-lg-3 col-md-4">
         {% include "_sidebar.html" %}
     </div>
 
-    <!-- Main Content -->
     <div class="col-lg-9 col-md-8">
-        <!-- Header Section -->
+        <!-- Header -->
         <div class="card mb-4">
             <div class="card-body">
                 <h1 class="card-title fw-bold">
-                    <i class="fas fa-users me-2 text-primary"></i>
-                    Chức năng các nhân vật
+                    <i class="fas fa-users me-2 text-primary"></i>Chức năng các nhân vật
                 </h1>
-                <p class="card-text text-muted">Quản lý danh sách chức năng và khả năng của các nhân vật theo phe</p>
+                <p class="text-muted">Quản lý chức năng của các nhân vật theo phe</p>
             </div>
         </div>
-        <!-- Add New Ability Section (Admin Only) -->
+
+        <!-- Thêm chức năng mới -->
         {% if is_admin %}
         <div class="card mb-4">
             <div class="card-header bg-white">
                 <h5 class="card-title fw-bold mb-0">
-                    <i class="fas fa-plus me-2 text-primary"></i>
-                    Thêm chức năng mới
+                    <i class="fas fa-plus me-2 text-primary"></i>Thêm chức năng mới
                 </h5>
             </div>
             <div class="card-body">
@@ -33,16 +31,16 @@
                     <div class="row g-3">
                         <div class="col-md-3">
                             <label class="form-label fw-semibold">Phe <span class="text-danger">*</span></label>
-                            <select name="faction" id="faction-select" class="form-select" onchange="updateOrder()" required>
-                                {% for f in factions %}
-                                    <option value="{{ f }}">{{ f }}</option>
-                                {% endfor %}
+                            <select name="faction" id="faction-select" class="form-select" required>
+                                <option value="Dân">Dân</option>
+                                <option value="Sói">Sói</option>
+                                <option value="3">3</option>
+                                <option value="Đổi">Đổi</option>
                             </select>
-
                         </div>
                         <div class="col-md-2">
                             <label class="form-label fw-semibold">STT <span class="text-danger">*</span></label>
-                            <input name="order" id="order-input" type="number" class="form-control" readonly required>
+                            <input name="order" id="order-input" type="number" class="form-control" placeholder="Tự động" required>
                         </div>
                         <div class="col-md-4">
                             <label class="form-label fw-semibold">Tên nhân vật <span class="text-danger">*</span></label>
@@ -65,120 +63,68 @@
         </div>
         {% endif %}
 
-        <!-- Abilities Table -->
+        <!-- Tabs chia phe -->
         <div class="card">
-    <div class="card-header bg-white">
-        <ul class="nav nav-tabs card-header-tabs" id="abilityTabs" role="tablist">
-            {% for faction in grouped_abilities %}
-            <li class="nav-item" role="presentation">
-                <button class="nav-link {% if loop.first %}active{% endif %}" id="tab-{{ loop.index }}"
-                        data-bs-toggle="tab" data-bs-target="#faction-{{ loop.index }}"
-                        type="button" role="tab">
-                    {{ faction }}
-                </button>
-            </li>
-            {% endfor %}
-        </ul>
-    </div>
-    <div class="card-body tab-content">
-        {% for faction, abilities in grouped_abilities.items() %}
-        <div class="tab-pane fade {% if loop.first %}show active{% endif %}" id="faction-{{ loop.index }}" role="tabpanel">
-            <h5 class="fw-bold text-primary mb-3">
-                <i class="fas fa-flag me-2"></i>Chức năng phe {{ faction }}
-            </h5>
-            {% if abilities %}
-            <div class="table-responsive">
-                <table class="table table-hover">
-                    <thead>
-                        <tr>
-                            <th>STT</th>
-                            <th>Tên nhân vật</th>
-                            <th>Mô tả</th>
-                            {% if is_admin %}<th>Hành động</th>{% endif %}
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for a in abilities %}
-                        <tr>
-                            <td>{{ a.order_in_faction }}</td>
-                            <td class="fw-semibold">{{ a.name }}</td>
-                            <td>{{ a.description|safe }}</td>
-                            {% if is_admin %}
-                            <td>
-                                <!-- Nút sửa / xóa giống như cũ -->
-                            </td>
-                            {% endif %}
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
+            <div class="card-header bg-white">
+                <ul class="nav nav-tabs card-header-tabs" id="abilityTabs" role="tablist">
+                    {% for faction in grouped_abilities %}
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link {% if loop.first %}active{% endif %}" id="tab-{{ loop.index }}"
+                                data-bs-toggle="tab" data-bs-target="#faction-{{ loop.index }}"
+                                type="button" role="tab">
+                            {{ faction }}
+                        </button>
+                    </li>
+                    {% endfor %}
+                </ul>
             </div>
-            {% else %}
-            <p class="text-muted">Không có chức năng nào.</p>
-            {% endif %}
-        </div>
-        {% endfor %}
-    </div>
-</div>
-
-<!-- Edit Modals (Admin Only) -->
-{% if is_admin %}
-{% for a in abilities %}
-<div class="modal fade" id="editModal{{ a.id }}" tabindex="-1" aria-labelledby="editModalLabel{{ a.id }}" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <form method="POST" action="{{ url_for('edit_ability', ability_id=a.id) }}">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title fw-bold" id="editModalLabel{{ a.id }}">
-                        <i class="fas fa-edit me-2"></i>Sửa chức năng: {{ a.name }}
+            <div class="card-body tab-content">
+                {% for faction, abilities in grouped_abilities.items() %}
+                <div class="tab-pane fade {% if loop.first %}show active{% endif %}" id="faction-{{ loop.index }}" role="tabpanel">
+                    <h5 class="fw-bold text-primary mb-3">
+                        <i class="fas fa-flag me-2"></i>Chức năng phe {{ faction }}
                     </h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="row g-3">
-                        <div class="col-md-6">
-                            <label class="form-label fw-semibold">Phe <span class="text-danger">*</span></label>
-                            <input name="faction" value="{{ a.faction }}" class="form-control" required>
-                        </div>
-                        <div class="col-md-3">
-                            <label class="form-label fw-semibold">STT <span class="text-danger">*</span></label>
-                            <input name="order" value="{{ a.order_in_faction }}" type="number" class="form-control" required>
-                        </div>
-                        <div class="col-md-3">
-                            <label class="form-label fw-semibold">Tên nhân vật <span class="text-danger">*</span></label>
-                            <input name="name" value="{{ a.name }}" class="form-control" required>
-                        </div>
+                    {% if abilities %}
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>STT</th>
+                                    <th>Tên nhân vật</th>
+                                    <th>Mô tả</th>
+                                    {% if is_admin %}<th>Hành động</th>{% endif %}
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for a in abilities %}
+                                <tr>
+                                    <td>{{ a.order_in_faction }}</td>
+                                    <td class="fw-semibold">{{ a.name }}</td>
+                                    <td>{{ a.description|safe }}</td>
+                                    {% if is_admin %}
+                                    <td>
+                                        <form method="POST" action="{{ url_for('delete_ability', ability_id=a.id) }}" onsubmit="return confirm('Xóa {{ a.name }}?')">
+                                            <button class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></button>
+                                        </form>
+                                    </td>
+                                    {% endif %}
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
                     </div>
-                    <div class="mt-3">
-                        <label class="form-label fw-semibold">Mô tả chức năng <span class="text-danger">*</span></label>
-                        <textarea name="description" id="editor{{ a.id }}" class="form-control" rows="6">{{ a.description }}</textarea>
-                        <script>CKEDITOR.replace('editor{{ a.id }}');</script>
-                    </div>
+                    {% else %}
+                    <p class="text-muted">Không có chức năng nào.</p>
+                    {% endif %}
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                        <i class="fas fa-times me-2"></i>Hủy
-                    </button>
-                    <button type="submit" class="btn btn-success">
-                        <i class="fas fa-save me-2"></i>Lưu thay đổi
-                    </button>
-                </div>
+                {% endfor %}
             </div>
-        </form>
+        </div>
     </div>
 </div>
-{% endfor %}
-{% endif %}
+{% endblock %}
 
-<!-- Protection for non-admin users -->
-{% if not is_admin %}
-<style>
-    body {
-        -webkit-user-select: none;
-        -moz-user-select: none;
-        user-select: none;
-    }
-</style>
+{% block scripts %}
 <script>
     // Ngăn copy, cut, chuột phải nếu không phải admin
     document.addEventListener("copy", e => e.preventDefault());
@@ -207,8 +153,5 @@
         }
     });
 </script>
-
-
-{% endif %}
 
 {% endblock %}
