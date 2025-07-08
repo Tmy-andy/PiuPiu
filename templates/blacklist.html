@@ -35,10 +35,13 @@
                     <div class="row g-3 align-items-end">
                         <div class="col-md-4">
                             <label class="form-label fw-semibold">Lọc theo người nhập:</label>
-                            <select name="role" class="form-select" onchange="this.form.submit()">
+                            <select name="user_id" class="form-select" onchange="this.form.submit()">
                                 <option value="">Tất cả</option>
-                                <option value="admin" {% if role_filter == 'admin' %}selected{% endif %}>Chỉ Admin</option>
-                                <option value="member" {% if role_filter == 'member' %}selected{% endif %}>Chỉ Member</option>
+                                {% for creator in all_users %}
+                                    <option value="{{ creator.id }}" {% if user_filter_id|int == creator.id %}selected{% endif %}>
+                                        {{ creator.display_name }} ({{ creator.role }})
+                                    </option>
+                                {% endfor %}
                             </select>
                         </div>
                     </div>

@@ -626,23 +626,42 @@ def update_kim_bai(user_id):
     return redirect(url_for('kim_bai'))
 
 # Blacklist management
-@app.route('/blacklist')
+@app.route('/blacklist', methods=['GET', 'POST'])
 @login_required
 def blacklist():
-    user = User.query.get(session['user_id'])
     role_filter = request.args.get('role')
+    user_filter_id = request.args.get('user_id')
 
-    if user.role == 'admin':
-        if role_filter == 'member':
-            entries = BlacklistEntry.query.join(User).filter(User.role == 'member').order_by(BlacklistEntry.created_at.desc()).all()
-        elif role_filter == 'admin':
-            entries = BlacklistEntry.query.join(User).filter(User.role == 'admin').order_by(BlacklistEntry.created_at.desc()).all()
-        else:
-            entries = BlacklistEntry.query.order_by(BlacklistEntry.created_at.desc()).all()
-    else:
-        entries = BlacklistEntry.query.filter_by(created_by_id=user.id).order_by(BlacklistEntry.created_at.desc()).all()
+    # Lọc danh sách blacklist
+    query = BlacklistEntry.query
 
-    return render_template('blacklist.html', entries=entries, user=user, role_filter=role_filter)
+    if role_filter == 'admin':
+        query = query.join(User).filter(User.role == 'admin')
+    elif role_filter == 'member':
+        query = query.join(User).filter(User.role == 'member', User.active == True)
+
+    if user_filter_id:
+        query = query.filter(BlacklistEntry.created_by_id == int(user_filter_id))
+
+    entries = query.order_by(BlacklistEntry.id.desc()).all()
+
+    # Danh sách người đã từng tạo entry
+    creators = (
+        db.session.query(User)
+        .join(BlacklistEntry, BlacklistEntry.created_by_id == User.id)
+        .filter((User.role == 'admin') | ((User.role == 'member') & (User.active == True)))
+        .distinct()
+        .all()
+    )
+
+    return render_template(
+        'blacklist.html',
+        entries=entries,
+        all_users=creators,
+        role_filter=role_filter,
+        user_filter_id=user_filter_id,
+        user=current_user
+    )
 
 @app.route('/add_blacklist', methods=['POST'])
 @login_required
