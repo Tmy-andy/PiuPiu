@@ -162,19 +162,20 @@ def dashboard():
 
         assigned_members = User.query.filter_by(role='member', assigned_admin_id=user.id).order_by(User.points.desc()).all()
 
-        return render_template('admin_dashboard.html',
-                               total_members=total_members,
-                               total_points=total_points,
-                               avg_points=round(avg_points, 1),
-                               assigned_members=assigned_members)
+        return render_template(
+            'admin_dashboard.html',
+            total_members=total_members,
+            total_points=total_points,
+            avg_points=round(avg_points, 1),
+            assigned_members=assigned_members,
+            admin_points=user.points  # 👈 thêm dòng này
+        )
     else:
         point_logs = db.session.query(PointLog).join(User, PointLog.admin_id == User.id) \
             .filter(PointLog.member_id == user.id) \
             .order_by(PointLog.created_at.desc()).all()
 
         return render_template('member_dashboard.html', user=user, point_logs=point_logs)
-
-from sqlalchemy.orm import aliased
 
 @app.route('/members')
 @admin_required
