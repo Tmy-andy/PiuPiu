@@ -195,6 +195,19 @@ def member_ids():
 
     return render_template('member_ids.html', member_ids=member_ids)
 
+@app.route('/member_ids')
+@admin_required
+def member_ids():
+    from sqlalchemy.orm import aliased
+    UsedBy = aliased(User)
+
+    member_ids = db.session.query(MemberID, UsedBy.display_name.label("used_by_name")) \
+        .outerjoin(UsedBy, MemberID.used_by == UsedBy.id) \
+        .order_by(MemberID.member_id).all()
+
+    return render_template('member_ids.html', member_ids=member_ids)
+
+
 @app.route('/add_member_ids', methods=['POST'])
 @admin_required
 def add_member_ids():

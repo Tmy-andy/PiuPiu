@@ -104,7 +104,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            {% for mid in member_ids %}
+                            {% for mid, used_by_name in member_ids %}
                             <tr>
                                 <td>
                                     <span class="badge bg-primary">{{ mid.member_id }}</span>
@@ -128,7 +128,9 @@
                                         <span class="text-muted">--</span>
                                     {% endif %}
                                 </td>
-                                <td class="text-muted">{{ mid.created_at[:10] }}</td>
+                                <td class="text-muted">
+                                    {{ mid.created_at.strftime('%Y-%m-%d') if mid.created_at else '' }} 
+                                </td>
                             </tr>
                             {% endfor %}
                         </tbody>
