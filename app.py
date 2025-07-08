@@ -1,3 +1,5 @@
+print("✅ Flask app đang chạy...")
+
 from flask import Flask, render_template, request, redirect, url_for, flash, session, send_file, Response
 from docx import Document
 from flask_login import login_required
@@ -613,9 +615,10 @@ def edit_blacklist_author(entry_id):
     return redirect(url_for('blacklist'))
 
 
-
 if __name__ == '__main__':
+    print("🚀 Đang chạy Flask bằng Gunicorn")
     app.run(debug=True, host='0.0.0.0', port=5000)
+
 
 
 
