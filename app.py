@@ -15,6 +15,7 @@ from functools import wraps
 import logging
 import csv
 import io
+from sqlalchemy.orm import aliased
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -200,7 +201,6 @@ def members():
 @app.route('/member_ids')
 @admin_required
 def member_ids():
-    from sqlalchemy.orm import aliased
     UsedBy = aliased(User)
 
     member_ids = db.session.query(MemberID, UsedBy.display_name.label("used_by_name")) \
