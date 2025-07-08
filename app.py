@@ -75,11 +75,10 @@ def admin_required(f):
 def ping():
     return "pong"
 
-@app.route('/')
+@app.route("/")
 def index():
-    if 'user_id' in session:
-        return redirect(url_for('dashboard'))
-    return redirect(url_for('login'))
+    return "✅ App is alive!"
+
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
