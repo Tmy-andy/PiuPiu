@@ -174,13 +174,26 @@ def dashboard():
 
         return render_template('member_dashboard.html', user=user, point_logs=point_logs)
 
+from sqlalchemy.orm import aliased
+
 @app.route('/members')
 @admin_required
 def members():
-    members = db.session.query(User).filter_by(role='member') \
-        .outerjoin(User, User.id == User.assigned_admin_id) \
-        .order_by(User.created_at.desc()).all()
-    
+    Admin = aliased(User)
+
+    results = db.session.query(
+        User,
+        Admin.display_name.label("admin_name")
+    ).outerjoin(Admin, User.assigned_admin_id == Admin.id) \
+     .filter(User.role == 'member') \
+     .order_by(User.created_at.desc()).all()
+
+    # Gắn admin_name vào mỗi user để Jinja dùng trực tiếp
+    members = []
+    for user, admin_name in results:
+        user.admin_name = admin_name
+        members.append(user)
+
     return render_template('members.html', members=members)
 
 @app.route('/member_ids')
