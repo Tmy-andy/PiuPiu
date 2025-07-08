@@ -792,4 +792,12 @@ def edit_blacklist_author(entry_id):
 
     return redirect(url_for('blacklist'))
 
+@app.route('/fix_sequence')
+def fix_sequence():
+    from sqlalchemy import text
+    db.session.execute(text("SELECT setval('users_id_seq', (SELECT MAX(id) FROM users))"))
+    db.session.commit()
+    return "✅ Đã cập nhật sequence users_id_seq!"
+
+
 print(f"📌 Flask app = {app}")
