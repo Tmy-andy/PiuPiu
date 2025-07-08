@@ -503,13 +503,27 @@ def abilities():
     abilities = query.order_by(CharacterAbility.faction, CharacterAbility.order_in_faction).all()
     is_admin = session.get('user_role') == 'admin'
 
-    return render_template('abilities.html', abilities=abilities, is_admin=is_admin)
+    # Tính STT tiếp theo cho từng phe
+    next_orders = {}
+    for faction in FACTIONS:
+        max_order = db.session.query(db.func.max(CharacterAbility.order_in_faction)).filter_by(faction=faction).scalar()
+        next_orders[faction] = (max_order or 0) + 1
+
+    return render_template('abilities.html', abilities=abilities, is_admin=is_admin, next_orders=next_orders, factions=FACTIONS)
+
 
 @app.route('/abilities/add', methods=['POST'])
 @admin_required
 def add_ability():
     faction = request.form['faction']
-    order_in_faction = int(request.form['order'])
+    order_in_faction = request.form.get('order')
+    
+    if not order_in_faction or order_in_faction.strip() == '':
+        max_order = db.session.query(db.func.max(CharacterAbility.order_in_faction)).filter_by(faction=faction).scalar()
+        order_in_faction = (max_order or 0) + 1
+    else:
+        order_in_faction = int(order_in_faction)
+
     name = request.form['name']
     description = request.form['description']
 
@@ -524,6 +538,7 @@ def add_ability():
     flash('Đã thêm chức năng.', 'success')
     return redirect(url_for('abilities'))
 
+
 @app.route('/abilities/edit/<int:ability_id>', methods=['POST'])
 @admin_required
 def edit_ability(ability_id):
@@ -535,7 +550,10 @@ def edit_ability(ability_id):
         ability.description = request.form['description']
         db.session.commit()
         flash('Đã cập nhật.', 'success')
+    else:
+        flash('Không tìm thấy chức năng.', 'danger')
     return redirect(url_for('abilities'))
+
 
 @app.route('/abilities/delete/<int:ability_id>', methods=['POST'])
 @admin_required
@@ -545,6 +563,8 @@ def delete_ability(ability_id):
         db.session.delete(ability)
         db.session.commit()
         flash('Đã xóa chức năng.', 'success')
+    else:
+        flash('Không tìm thấy chức năng.', 'danger')
     return redirect(url_for('abilities'))
 
 # Kim Bài Miễn Tử
