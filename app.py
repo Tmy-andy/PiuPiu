@@ -6,6 +6,7 @@ from datetime import timedelta
 from database import init_app, db
 from models import User, MemberID, PointLog
 from functools import wraps
+import logging
 import csv
 import io
 import os
@@ -13,6 +14,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 app = Flask(__name__)
+app.logger.setLevel(logging.DEBUG)
 app.secret_key = os.environ.get('SECRET_KEY', 'dev-secret-key')
 app.permanent_session_lifetime = timedelta(days=30)
 
