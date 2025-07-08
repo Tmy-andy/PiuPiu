@@ -1,9 +1,13 @@
-from flask import Flask, render_template, request, redirect, url_for, flash, session
+from flask import Flask, render_template, request, redirect, url_for, flash, session, send_file, Response
+from docx import Document
+from flask_login import login_required
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import timedelta
 from database import init_app, db
 from models import User, MemberID, PointLog
 from functools import wraps
+import csv
+import io
 import os
 
 app = Flask(__name__)
@@ -299,8 +303,6 @@ def delete_member_ids():
     flash(f'Đã xóa {deleted} mã thành viên chưa sử dụng.', 'success')
     return redirect(url_for('member_ids'))
 
-from werkzeug.security import check_password_hash, generate_password_hash
-
 @app.route('/profile', methods=['GET', 'POST'])
 @login_required
 def profile():
@@ -366,28 +368,6 @@ def delete_admin(user_id):
 
     return redirect(url_for('admins'))
 
-from flask import send_file
-
-@app.route('/download_db')
-def download_db():
-    if 'user_id' not in session:
-        flash('Bạn cần đăng nhập để truy cập.', 'error')
-        return redirect(url_for('login'))
-
-    conn = get_db_connection()
-    user = conn.execute('SELECT * FROM users WHERE id = ?', (session['user_id'],)).fetchone()
-    conn.close()
-
-    if user and user['member_id'] == 'ADMIN-001':
-        return send_file('database.db', as_attachment=True)
-    else:
-        flash('Bạn không có quyền tải xuống cơ sở dữ liệu.', 'error')
-        return redirect(url_for('dashboard'))
-
-import csv
-import io
-from flask import Response
-
 @app.route('/download_db')
 @admin_required
 def download_db():
@@ -423,9 +403,6 @@ def download_db():
     )
 
 # Luật sử dụng
-from flask import render_template, request, redirect, url_for, flash
-from flask_login import login_required
-
 @app.route('/rules', methods=['GET', 'POST'])
 @admin_required
 def rules():
@@ -447,10 +424,6 @@ def rules():
 def public_rules():
     rule = Rule.query.first()
     return render_template('public_rules.html', rule=rule)
-
-from docx import Document
-from flask import send_file
-import io
 
 @app.route('/export_rules')
 @admin_required
