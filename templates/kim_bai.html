@@ -1,42 +1,138 @@
 {% extends "base.html" %}
 {% block title %}Kim bài miễn tử{% endblock %}
-{% block content %}
-<h3>🛡️ Quản lý Kim bài miễn tử</h3>
 
-<table class="table table-bordered">
-  <thead>
-    <tr>
-      <th>Tên thành viên</th>
-      <th>Lượt chết</th>
-      <th>Có kim bài?</th>
-      <th>Hành động</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for m in members %}
-    <tr>
-      <td>{{ m.display_name }}</td>
-      <td>{{ m.death_count }}</td>
-      <td>
-        {% if m.has_kim_bai %}
-          ✅ Có
-        {% else %}
-          ❌ Không
-        {% endif %}
-      </td>
-      <td>
-        <form method="POST" action="{{ url_for('update_kim_bai', user_id=m.id) }}" class="form-inline">
-          <input type="number" name="death_count" class="form-control form-control-sm mr-2" value="{{ m.death_count }}" min="0" required>
-          <label class="mr-2">Kim bài:</label>
-          <select name="has_kim_bai" class="form-control form-control-sm mr-2">
-            <option value="true" {% if m.has_kim_bai %}selected{% endif %}>Có</option>
-            <option value="false" {% if not m.has_kim_bai %}selected{% endif %}>Không</option>
-          </select>
-          <button type="submit" class="btn btn-sm btn-primary">Lưu</button>
-        </form>
-      </td>
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
+{% block content %}
+<div class="row">
+    <!-- Sidebar -->
+    <div class="col-lg-3 col-md-4">
+        {% include "_sidebar.html" %}
+    </div>
+
+    <!-- Main Content -->
+    <div class="col-lg-9 col-md-8">
+        <!-- Header Section -->
+        <div class="card mb-4">
+            <div class="card-body">
+                <h1 class="card-title fw-bold">
+                    <i class="fas fa-shield-alt me-2 text-warning"></i>
+                    Quản lý Kim bài miễn tử
+                </h1>
+                <p class="card-text text-muted">Quản lý tình trạng kim bài miễn tử và số lần chết của thành viên</p>
+            </div>
+        </div>
+
+        <!-- Statistics Cards -->
+        <div class="row mb-4">
+            <div class="col-lg-4 col-md-6 mb-3">
+                <div class="card stats-card-warning text-white">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="card-title opacity-75">Có kim bài</h6>
+                                <h2 class="fw-bold mb-0">{{ members|selectattr('has_kim_bai')|list|length }}</h2>
+                            </div>
+                            <i class="fas fa-shield-alt fa-2x opacity-75"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6 mb-3">
+                <div class="card stats-card text-white">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="card-title opacity-75">Không có kim bài</h6>
+                                <h2 class="fw-bold mb-0">{{ members|rejectattr('has_kim_bai')|list|length }}</h2>
+                            </div>
+                            <i class="fas fa-skull fa-2x opacity-75"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6 mb-3">
+                <div class="card stats-card-info text-white">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="card-title opacity-75">Tổng thành viên</h6>
+                                <h2 class="fw-bold mb-0">{{ members|length }}</h2>
+                            </div>
+                            <i class="fas fa-users fa-2x opacity-75"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Members Table -->
+        <div class="card">
+            <div class="card-header bg-white">
+                <h5 class="card-title fw-bold mb-0">
+                    <i class="fas fa-user-friends me-2 text-primary"></i>
+                    Danh sách thành viên
+                </h5>
+            </div>
+            <div class="card-body">
+                {% if members %}
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Tên thành viên</th>
+                                <th>Lượt chết</th>
+                                <th>Tình trạng kim bài</th>
+                                <th>Hành động</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for m in members %}
+                            <tr>
+                                <td class="fw-semibold">{{ m.display_name }}</td>
+                                <td>
+                                    <span class="badge bg-{{ 'danger' if m.death_count > 2 else 'warning' if m.death_count > 0 else 'success' }}">
+                                        {{ m.death_count }} lần
+                                    </span>
+                                </td>
+                                <td>
+                                    {% if m.has_kim_bai %}
+                                        <span class="badge bg-warning text-dark">
+                                            <i class="fas fa-shield-alt me-1"></i>Có kim bài
+                                        </span>
+                                    {% else %}
+                                        <span class="badge bg-secondary">
+                                            <i class="fas fa-times me-1"></i>Không có
+                                        </span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <form method="POST" action="{{ url_for('update_kim_bai', user_id=m.id) }}" class="d-flex gap-2 align-items-center">
+                                        <div class="input-group input-group-sm" style="width: 100px;">
+                                            <input type="number" name="death_count" class="form-control" value="{{ m.death_count }}" min="0" required>
+                                            <span class="input-group-text">lần</span>
+                                        </div>
+                                        <select name="has_kim_bai" class="form-select form-select-sm" style="width: 120px;">
+                                            <option value="true" {% if m.has_kim_bai %}selected{% endif %}>Có kim bài</option>
+                                            <option value="false" {% if not m.has_kim_bai %}selected{% endif %}>Không có</option>
+                                        </select>
+                                        <button type="submit" class="btn btn-sm btn-primary">
+                                            <i class="fas fa-save me-1"></i>Lưu
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="text-center py-4">
+                    <i class="fas fa-users fa-3x text-muted mb-3"></i>
+                    <h5 class="text-muted">Chưa có thành viên nào</h5>
+                    <p class="text-muted">Hãy thêm thành viên vào hệ thống</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}

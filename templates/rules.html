@@ -2,18 +2,89 @@
 {% block title %}Quản lý Luật{% endblock %}
 
 {% block content %}
-<h3>Chỉnh sửa Luật</h3>
-<form method="POST">
-    <textarea name="content" id="editor">{{ rule.content if rule else "" }}</textarea>
-    <button type="submit" class="btn btn-primary mt-2">Lưu</button>
-</form>
+<div class="row">
+    <!-- Sidebar -->
+    <div class="col-lg-3 col-md-4">
+        {% include "_sidebar.html" %}
+    </div>
 
-<!-- Nút export Word -->
-<form method="GET" action="{{ url_for('export_rules') }}">
-    <button type="submit" class="btn btn-secondary mt-2">Xuất ra Word</button>
-</form>
+    <!-- Main Content -->
+    <div class="col-lg-9 col-md-8">
+        <!-- Header Section -->
+        <div class="card mb-4">
+            <div class="card-body">
+                <h1 class="card-title fw-bold">
+                    <i class="fas fa-gavel me-2 text-primary"></i>
+                    Chỉnh sửa Luật
+                </h1>
+                <p class="card-text text-muted">Quản lý và chỉnh sửa nội dung luật của hệ thống</p>
+            </div>
+        </div>
+
+        <!-- Editor Section -->
+        <div class="card mb-4">
+            <div class="card-header bg-white">
+                <h5 class="card-title fw-bold mb-0">
+                    <i class="fas fa-edit me-2 text-primary"></i>
+                    Nội dung Luật
+                </h5>
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    <div class="mb-3">
+                        <label for="editor" class="form-label fw-semibold">Nội dung:</label>
+                        <textarea name="content" id="editor" class="form-control" rows="15">{{ rule.content if rule else "" }}</textarea>
+                    </div>
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save me-2"></i>Lưu thay đổi
+                        </button>
+                        <button type="reset" class="btn btn-outline-secondary">
+                            <i class="fas fa-undo me-2"></i>Khôi phục
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Export Section -->
+        <div class="card">
+            <div class="card-header bg-white">
+                <h5 class="card-title fw-bold mb-0">
+                    <i class="fas fa-download me-2 text-primary"></i>
+                    Xuất dữ liệu
+                </h5>
+            </div>
+            <div class="card-body">
+                <p class="text-muted mb-3">Xuất nội dung luật ra các định dạng khác nhau</p>
+                <form method="GET" action="{{ url_for('export_rules') }}">
+                    <button type="submit" class="btn btn-secondary">
+                        <i class="fas fa-file-word me-2"></i>Xuất ra Word
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 
 <!-- CKEditor -->
 <script src="https://cdn.ckeditor.com/4.20.2/standard/ckeditor.js"></script>
-<script>CKEDITOR.replace('editor');</script>
+<script>
+    CKEDITOR.replace('editor', {
+        height: 400,
+        toolbar: [
+            { name: 'document', items: ['Source', '-', 'Save', 'NewPage', 'Preview', 'Print', '-', 'Templates'] },
+            { name: 'clipboard', items: ['Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord', '-', 'Undo', 'Redo'] },
+            { name: 'editing', items: ['Find', 'Replace', '-', 'SelectAll', '-', 'SpellChecker', 'Scayt'] },
+            '/',
+            { name: 'basicstyles', items: ['Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript', '-', 'RemoveFormat'] },
+            { name: 'paragraph', items: ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Blockquote', 'CreateDiv', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock', '-', 'BidiLtr', 'BidiRtl'] },
+            { name: 'links', items: ['Link', 'Unlink', 'Anchor'] },
+            '/',
+            { name: 'styles', items: ['Styles', 'Format', 'Font', 'FontSize'] },
+            { name: 'colors', items: ['TextColor', 'BGColor'] },
+            { name: 'tools', items: ['Maximize', 'ShowBlocks'] }
+        ]
+    });
+</script>
 {% endblock %}
