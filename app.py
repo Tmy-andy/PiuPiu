@@ -71,6 +71,10 @@ def admin_required(f):
     return decorated_function
 
 # Routes
+@app.route('/ping')
+def ping():
+    return "pong"
+
 @app.route('/')
 def index():
     if 'user_id' in session:
