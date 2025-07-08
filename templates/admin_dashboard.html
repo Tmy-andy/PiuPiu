@@ -87,7 +87,7 @@
                                         {{ member.points }} điểm
                                     </span>
                                 </td>
-                                <td class="text-muted">{{ member.created_at[:10] }}</td>
+                                <td class="text-muted">{{ member.created_at.strftime('%Y-%m-%d') }}</td>
                                 <td>
                                     <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" 
                                             data-bs-target="#updatePointsModal" 
