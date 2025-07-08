@@ -1,42 +1,35 @@
 import os
-import sqlite3
-from models import db, User, MemberID, PointLog
-from flask import Flask
-from database import init_app
+from sqlalchemy import create_engine, MetaData, Table
+from sqlalchemy.orm import sessionmaker
 
-# Setup Flask + PostgreSQL
-app = Flask(__name__)
-init_app(app)
-app.app_context().push()
+# SQLite source
+sqlite_url = 'sqlite:///database.db'
+sqlite_engine = create_engine(sqlite_url)
+sqlite_metadata = MetaData(bind=sqlite_engine)
+sqlite_metadata.reflect()
+SQLiteSession = sessionmaker(bind=sqlite_engine)
+sqlite_session = SQLiteSession()
 
-# Kết nối SQLite
-sqlite_conn = sqlite3.connect("database.db")
-sqlite_cursor = sqlite_conn.cursor()
+# PostgreSQL destination (Railway)
+postgres_url = os.environ.get("DATABASE_URL")
+if postgres_url.startswith("postgres://"):
+    postgres_url = postgres_url.replace("postgres://", "postgresql://")
 
-# Migrate users
-sqlite_cursor.execute("SELECT id, member_id, display_name, password_hash, role, points, assigned_admin_id, created_at FROM users")
-for row in sqlite_cursor.fetchall():
-    db.session.add(User(
-        id=row[0], member_id=row[1], display_name=row[2],
-        password_hash=row[3], role=row[4], points=row[5],
-        assigned_admin_id=row[6], created_at=row[7]
-    ))
+postgres_engine = create_engine(postgres_url)
+postgres_metadata = MetaData(bind=postgres_engine)
+postgres_metadata.reflect()
+PostgresSession = sessionmaker(bind=postgres_engine)
+postgres_session = PostgresSession()
 
-# Migrate member_ids
-sqlite_cursor.execute("SELECT id, member_id, is_used, used_by, created_at FROM member_ids")
-for row in sqlite_cursor.fetchall():
-    db.session.add(MemberID(
-        id=row[0], member_id=row[1], is_used=bool(row[2]),
-        used_by=row[3], created_at=row[4]
-    ))
+# Chuyển từng bảng
+for table_name in sqlite_metadata.tables:
+    print(f"🛠️ Đang chuyển bảng: {table_name}")
+    sqlite_table = Table(table_name, sqlite_metadata, autoload_with=sqlite_engine)
+    postgres_table = Table(table_name, postgres_metadata, autoload_with=postgres_engine)
 
-# Migrate point_logs
-sqlite_cursor.execute("SELECT id, member_id, points_change, reason, admin_id, created_at FROM point_logs")
-for row in sqlite_cursor.fetchall():
-    db.session.add(PointLog(
-        id=row[0], member_id=row[1], points_change=row[2],
-        reason=row[3], admin_id=row[4], created_at=row[5]
-    ))
+    rows = sqlite_session.execute(sqlite_table.select()).fetchall()
+    if rows:
+        postgres_session.execute(postgres_table.insert(), rows)
+        postgres_session.commit()
 
-db.session.commit()
-print("✅ Migrate hoàn tất.")
+print("✅ Hoàn tất chuyển dữ liệu từ SQLite sang PostgreSQL.")
