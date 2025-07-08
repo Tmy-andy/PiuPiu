@@ -484,6 +484,8 @@ def export_rules():
     return send_file(output, as_attachment=True, download_name="luat.docx")
 
 # Character abilities
+FACTIONS = ["Dân", "Sói", "3", "Đổi"]
+
 @app.route('/abilities')
 @login_required
 def abilities():

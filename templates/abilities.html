@@ -224,7 +224,7 @@
     document.addEventListener("contextmenu", e => e.preventDefault());
 
     // Danh sách STT kế tiếp theo phe (từ Flask)
-    const nextOrders = {{ next_orders | tojson | safe }};
+    const nextOrders = JSON.parse('{{ next_orders | tojson | safe }}');
 
     // Hàm cập nhật STT khi chọn phe
     function updateOrder() {
@@ -245,6 +245,7 @@
         }
     });
 </script>
+
 
 {% endif %}
 
