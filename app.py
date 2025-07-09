@@ -143,6 +143,10 @@ def not_found(e):
 def internal_server_error(e):
     return render_template("errors/500.html"), 500
 
+@app.errorhandler(401)
+def handle_unauthorized(error):
+    return render_template("errors/unauthorized.html"), error.code
+
 # Routes
 @app.route('/ping')
 def ping():
