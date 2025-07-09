@@ -39,8 +39,8 @@
                             </label>
                             <select class="form-select" name="user_id" required>
                                 <option disabled selected>-- Chọn người chơi --</option>
-                                {% for user in users %}
-                                    <option value="{{ user.id }}">{{ user.username }}</option>
+                                {% for u in users %}
+                                    <option value="{{ u.id }}">{{ u.username }}</option>
                                 {% endfor %}
                             </select>
                         </div>
