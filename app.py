@@ -6,7 +6,7 @@ print("📦 Environment:", dict(os.environ))
 
 from flask import Flask, render_template, request, redirect, url_for, flash, session, send_file, Response, abort
 from docx import Document
-from flask_login import login_required, LoginManager
+from flask_login import login_required, LoginManager, UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import timedelta
 from datetime import datetime
@@ -82,6 +82,12 @@ def admin_required(f):
 
         return f(*args, **kwargs)
     return decorated_function
+
+login_manager = LoginManager()
+login_manager.init_app(app)
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))
 
 @app.context_processor
 def inject_user():
