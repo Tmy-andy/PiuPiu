@@ -6,7 +6,7 @@ print("📦 Environment:", dict(os.environ))
 
 from flask import Flask, render_template, request, redirect, url_for, flash, session, send_file, Response, abort
 from docx import Document
-from flask_login import login_required
+from flask_login import login_required, LoginManager
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import timedelta
 from datetime import datetime
