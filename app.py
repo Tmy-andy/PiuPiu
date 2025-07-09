@@ -10,7 +10,7 @@ from flask_login import login_required
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import timedelta
 from datetime import datetime
-from database import init_app
+from database import init_app, db
 from models import User, MemberID, PointLog, Rule, CharacterAbility, BlacklistEntry, KimBaiLog
 from functools import wraps
 from sqlalchemy.orm import aliased
@@ -47,7 +47,6 @@ except Exception as e:
 
 from models import db
 
-db.init_app(app)
 migrate = Migrate(app, db)
 
 # Tạo các bảng nếu chưa có
