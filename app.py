@@ -558,41 +558,30 @@ def download_db():
             zipf.writestr(filename, buffer.getvalue())
             buffer.close()
 
-        # 1. Users
-        users = User.query.all()
-        add_csv("users.csv",
-                ['ID', 'Member ID', 'Display Name', 'Role', 'Points', 'Assigned Admin ID', 'Death Count', 'Has Kim Bài', 'Created At'],
-                [[u.id, u.member_id, u.display_name, u.role, u.points, u.assigned_admin_id, u.death_count, u.has_kim_bai, u.created_at.strftime('%Y-%m-%d %H:%M:%S')] for u in users])
+            # Lặp qua toàn bộ model
+            for class_name, model_class in db.Model._decl_class_registry.items():
+                if hasattr(model_class, '__tablename__'):
+                    table_name = model_class.__tablename__ + '.csv'
+                    instances = model_class.query.all()
+                    if not instances:
+                        continue
 
-        # 2. Member IDs
-        members = MemberID.query.all()
-        add_csv("member_ids.csv",
-                ['ID', 'Member ID', 'Is Used', 'Used By', 'Created At'],
-                [[m.id, m.member_id, m.is_used, m.used_by, m.created_at.strftime('%Y-%m-%d %H:%M:%S')] for m in members])
+                    # Lấy tên cột
+                    columns = [column.key for column in inspect(model_class).columns]
 
-        # 3. Point Logs
-        logs = PointLog.query.all()
-        add_csv("point_logs.csv",
-                ['ID', 'Member ID', 'Points Change', 'Reason', 'Admin ID', 'Created At'],
-                [[l.id, l.member_id, l.points_change, l.reason, l.admin_id, l.created_at.strftime('%Y-%m-%d %H:%M:%S')] for l in logs])
+                    # Lấy dữ liệu từng dòng
+                    rows = []
+                    for instance in instances:
+                        row = []
+                        for col in columns:
+                            val = getattr(instance, col)
+                            if isinstance(val, datetime):
+                                val = val.strftime('%Y-%m-%d %H:%M:%S')
+                            row.append(val)
+                        rows.append(row)
 
-        # 4. Blacklist
-        entries = BlacklistEntry.query.all()
-        add_csv("blacklist.csv",
-                ['ID', 'Name', 'Facebook Link', 'Created By ID', 'Created At'],
-                [[b.id, b.name, b.facebook_link, b.created_by_id, b.created_at.strftime('%Y-%m-%d %H:%M:%S')] for b in entries])
-
-        # 5. Character Abilities
-        abilities = CharacterAbility.query.all()
-        add_csv("character_ability.csv",
-                ['ID', 'Faction', 'Order', 'Name', 'Description', 'Created At'],
-                [[a.id, a.faction, a.order_in_faction, a.name, a.description, a.created_at.strftime('%Y-%m-%d %H:%M:%S')] for a in abilities])
-
-        # 6. Rules
-        rules = Rule.query.all()
-        add_csv("rules.csv",
-                ['ID', 'Content', 'Updated At'],
-                [[r.id, r.content, r.updated_at.strftime('%Y-%m-%d %H:%M:%S')] for r in rules])
+                    # Ghi vào ZIP
+                    add_csv(table_name, columns, rows)
 
     return send_file(zip_path, as_attachment=True, download_name="full_database_export.zip")
 
