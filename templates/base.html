@@ -229,8 +229,10 @@
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown">
-                            <i class="fas fa-user me-1"></i>{{ session.display_name }}
+                            <i class="fas fa-user me-1"></i>
+                            <span class="d-none d-sm-inline">{{ session.display_name }}</span>
                         </a>
+
                         <ul class="dropdown-menu dropdown-menu-end">
                             <li><a class="dropdown-item" href="{{ url_for('dashboard') }}">
                                 <i class="fas fa-tachometer-alt me-2"></i>Dashboard</a></li>
