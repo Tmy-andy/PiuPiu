@@ -97,7 +97,7 @@
                                         <div class="avatar-circle bg-success text-white me-2">
                                             {{ game.host.member_id[-2:].upper() }}
                                         </div>
-                                        <span class="fw-semibold">Thành viên {{ game.host.member_id[-2:] }}</span>
+                                        <span class="fw-semibold">{{ game.host.member_id[-2:] }}</span>
                                     </div>
                                 </td>
                                 <td>
@@ -168,7 +168,7 @@
                                                         <div class="avatar-circle bg-primary text-white me-2">
                                                             {{ u.member_id[-2:].upper() }}
                                                         </div>
-                                                        <span>Thành viên {{ u.member_id[-2:] }}</span>
+                                                        <span>Thành viên 1 {{ u.member_id[-2:] }}</span>
                                                     </div>
                                                     <div class="option-checkbox">
                                                         <i class="fas fa-check"></i>
@@ -182,7 +182,7 @@
                                 </div>
                                 <select class="form-select select2" name="players" id="players" multiple required>
                                     {% for user in users %}
-                                    <option value="{{ user.id }}" data-name="{{ user.member_id[-2:] }}">Thành viên {{ user.member_id[-2:] }}</option>
+                                    <option value="{{ user.id }}" data-name="{{ user.member_id[-2:] }}">Thành viên 2 {{ user.member_id[-2:] }}</option>
                                     {% endfor %}
                                 </select>
 
