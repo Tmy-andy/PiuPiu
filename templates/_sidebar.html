@@ -48,8 +48,8 @@
         <a class="nav-link {% if request.endpoint == 'game_history' %}active{% endif %}" href="{{ url_for('game_history') }}">
             <i class="fas fa-history"></i>Lịch sử game
         </a>
-        <a class="nav-link {% if request.endpoint == 'off_requests' %}active{% endif %}" href="{{ url_for('off_requests') }}">
-            <i class="fas fa-calendar-times"></i>Yêu cầu nghỉ
+        <a class="nav-link {% if request.endpoint == 'day_off' %}active{% endif %}" href="{{ url_for('day_off') }}">
+            <i class="fas fa-calendar-times"></i>Xin off
         </a>
 
         {% if user.role == 'admin' %}
