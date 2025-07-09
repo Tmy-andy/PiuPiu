@@ -241,9 +241,19 @@
 
 <script>
 document.addEventListener("DOMContentLoaded", function () {
-    $('.select2').select2({ 
-        width: '100%',
-        placeholder: 'Chọn...'
+    function initSelect2() {
+        $('.select2').select2({
+            width: '100%',
+            placeholder: 'Chọn...'
+        });
+    }
+
+    // Khởi tạo khi trang tải xong
+    initSelect2();
+
+    // Khởi tạo lại mỗi khi modal mở
+    $('#newGameModal').on('shown.bs.modal', function () {
+        initSelect2();
     });
 
     const btn = document.getElementById("randomizeBtn");
@@ -261,14 +271,13 @@ document.addEventListener("DOMContentLoaded", function () {
             return;
         }
 
-        // Random char
+        // Shuffle nhân vật
         let shuffledChars = chars.slice();
         for (let i = shuffledChars.length - 1; i > 0; i--) {
             let j = Math.floor(Math.random() * (i + 1));
             [shuffledChars[i], shuffledChars[j]] = [shuffledChars[j], shuffledChars[i]];
         }
 
-        listBox.innerHTML = "";
         players.forEach((player, index) => {
             let li = document.createElement("li");
             li.innerHTML = `<i class="fas fa-user-check text-success me-2"></i><strong>${player.dataset.name}</strong> làm <strong class="text-primary">${shuffledChars[index].dataset.name}</strong>`;
@@ -277,9 +286,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
         box.style.display = "block";
 
-        // Đảm bảo thứ tự char đúng trong form để gửi
+        // Đảm bảo thứ tự char đúng trong form
         let charSelect = document.getElementById("chars");
-        [...shuffledChars].forEach((opt) => {
+        shuffledChars.forEach((opt) => {
             charSelect.append(opt);
         });
     });
