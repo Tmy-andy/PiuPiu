@@ -62,3 +62,20 @@
         {% endif %}
     </nav>
 </div>
+
+{% block scripts %}
+    <script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const toggleHeader = document.getElementById("sidebarToggleHeader");
+        const sidebarNav = document.getElementById("sidebarNav");
+
+        if (toggleHeader && sidebarNav) {
+            toggleHeader.addEventListener("click", function () {
+                if (window.innerWidth <= 768) {
+                    sidebarNav.classList.toggle("show");
+                }
+            });
+        }
+    });
+    </script>
+{% endblock %}
