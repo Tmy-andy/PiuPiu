@@ -164,6 +164,7 @@ def login():
         user = User.query.filter_by(member_id=member_id).first()
 
         if user and check_password_hash(user.password_hash, password):
+            login_user(user)
             session.permanent = True
             session['user_id'] = user.id
             session['user_role'] = user.role
