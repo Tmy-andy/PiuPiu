@@ -6,7 +6,7 @@ print("📦 Environment:", dict(os.environ))
 
 from flask import Flask, render_template, request, redirect, url_for, flash, session, send_file, Response, abort
 from docx import Document
-from flask_login import login_required, LoginManager, login_user
+from flask_login import login_required, LoginManager, login_user, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import timedelta
 from datetime import datetime
@@ -22,7 +22,6 @@ from sqlalchemy.sql import func
 import csv
 import io
 from flask_migrate import Migrate
-from flask_login import current_user
 from dotenv import load_dotenv
 
 load_dotenv()
