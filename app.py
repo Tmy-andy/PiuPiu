@@ -121,7 +121,7 @@ def inject_user():
         if not last_play_time or (now - last_play_time).days > 7:
             warning_count += 1
 
-    return dict(user=user, warning_count=warning_count)
+    return dict(current_user=user, warning_count=warning_count)
 
 
 
