@@ -1,0 +1,149 @@
+{% extends "base.html" %}
+{% block title %}Tần suất chơi - Hệ thống quản lý thành viên{% endblock %}
+
+{% block content %}
+<div class="row">
+    <!-- Sidebar -->
+    <div class="col-lg-3 col-md-4">
+        {% include "_sidebar.html" %}
+    </div>
+
+    <!-- Main Content -->
+    <div class="col-lg-9 col-md-8">
+        <!-- Header Card -->
+        <div class="card mb-4">
+            <div class="card-body">
+                <h1 class="card-title fw-bold">
+                    <i class="bi bi-clock-history me-2 text-warning"></i>
+                    Tần suất tham gia trò chơi
+                </h1>
+                <p class="card-text text-muted">Theo dõi tình trạng tham gia của các thành viên</p>
+            </div>
+        </div>
+
+        <!-- Warning Alert -->
+        <div class="alert alert-warning d-flex align-items-center mb-4" role="alert">
+            <i class="fas fa-exclamation-triangle me-2"></i>
+            <div>
+                <strong>Lưu ý:</strong> Chỉ hiển thị những người không tham gia trên 1 tuần và không có yêu cầu nghỉ.
+            </div>
+        </div>
+
+        <!-- Statistics Cards -->
+        <div class="row mb-4">
+            <div class="col-lg-4 col-md-6 mb-3">
+                <div class="card bg-danger text-white">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="card-title opacity-75">Cảnh báo</h6>
+                                <h2 class="fw-bold mb-0">{{ warning_count if warning_count is defined else 0 }}</h2>
+                            </div>
+                            <i class="fas fa-exclamation-triangle fa-2x opacity-75"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Members Table -->
+        <div class="card">
+            <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                <h5 class="card-title fw-bold mb-0">
+                    <i class="fas fa-users me-2 text-primary"></i>
+                    Danh sách thành viên cần cảnh báo
+                </h5>
+                {% if data %}
+                <span class="badge bg-danger">{{ data|selectattr('inactive')|selectattr('on_leave', 'false')|list|length }} thành viên</span>
+                {% endif %}
+            </div>
+            <div class="card-body">
+                {% set inactive_members = data|selectattr('inactive')|selectattr('on_leave', 'false')|list if data else [] %}
+                
+                {% if inactive_members %}
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead class="table-light">
+                            <tr>
+                                <th><i class="fas fa-user me-1"></i>Thành viên</th>
+                                <th><i class="fas fa-gamepad me-1"></i>Số lần chơi</th>
+                                <th><i class="fas fa-calendar me-1"></i>Lần gần nhất</th>
+                                <th><i class="fas fa-info-circle me-1"></i>Trạng thái</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for entry in inactive_members %}
+                            <tr class="table-danger">
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <div class="avatar-circle bg-danger text-white me-2">
+                                            {{ entry.user.username[0].upper() }}
+                                        </div>
+                                        <span class="fw-semibold">{{ entry.user.username }}</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="badge bg-secondary">{{ entry.play_count }} lần</span>
+                                </td>
+                                <td>
+                                    {% if entry.last_play %}
+                                        <span class="text-muted">
+                                            <i class="fas fa-calendar-alt me-1"></i>
+                                            {{ entry.last_play.strftime("%d/%m/%Y") }}
+                                        </span>
+                                    {% else %}
+                                        <span class="text-muted fst-italic">
+                                            <i class="fas fa-question-circle me-1"></i>
+                                            Chưa từng chơi
+                                        </span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <span class="badge bg-danger">
+                                        <i class="fas fa-exclamation-triangle me-1"></i>
+                                        Không tham gia hơn 1 tuần
+                                    </span>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="text-center py-5">
+                    <i class="fas fa-smile-beam fa-4x text-success mb-3"></i>
+                    <h4 class="text-success fw-bold">Tuyệt vời!</h4>
+                    <p class="text-muted mb-4">Không có thành viên nào bị cảnh báo</p>
+                    <div class="d-flex justify-content-center">
+                        <div class="badge bg-success fs-6 px-3 py-2">
+                            <i class="fas fa-check-circle me-2"></i>
+                            Tất cả thành viên đều tham gia tích cực
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.avatar-circle {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.stats-card {
+    background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+    border: none;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+</style>
+{% endblock %}

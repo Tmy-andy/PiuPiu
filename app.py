@@ -21,6 +21,8 @@ import tempfile
 from sqlalchemy.sql import func
 import csv
 import io
+from flask_migrate import Migrate
+from flask_login import current_user
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -42,6 +44,11 @@ try:
 except Exception as e:
     print("🛑 Lỗi khi khởi tạo Flask app:")
     traceback.print_exc()
+
+from models import db
+
+db.init_app(app)
+migrate = Migrate(app, db)
 
 # Tạo các bảng nếu chưa có
 with app.app_context():
@@ -80,10 +87,43 @@ def admin_required(f):
 @app.context_processor
 def inject_user():
     user_id = session.get('user_id')
-    if user_id:
-        user = User.query.get(user_id)
-        return dict(user=user)
-    return dict(user=None)
+    user = User.query.get(user_id) if user_id else None
+
+    from datetime import datetime
+
+    warning_count = 0
+    now = datetime.utcnow()
+
+    users = User.query.all()
+    for u in users:
+        if not u.is_active:
+            continue
+
+        # Đang xin nghỉ?
+        on_leave = PlayerOffRequest.query.filter(
+            PlayerOffRequest.user_id == u.id,
+            PlayerOffRequest.start_date <= now.date(),
+            PlayerOffRequest.end_date >= now.date()
+        ).first()
+        if on_leave:
+            continue
+
+        # Lần chơi gần nhất
+        last_game = (
+            GamePlayer.query
+            .filter_by(player_id=u.id)
+            .join(GameHistory)
+            .order_by(GameHistory.created_at.desc())
+            .first()
+        )
+        last_play_time = last_game.game.created_at if last_game else None
+
+        if not last_play_time or (now - last_play_time).days > 7:
+            warning_count += 1
+
+    # ✅ Giữ nguyên user và thêm warning_count
+    return dict(user=user, warning_count=warning_count)
+
 
 # Error handlers
 @app.errorhandler(403)
@@ -433,7 +473,7 @@ def profile():
 @app.route('/admins')
 @admin_required
 def admins():
-    current_user = User.query.get(session['user_id'])
+
     admins = User.query.filter_by(role='admin').order_by(User.created_at.desc()).all()
     members = User.query.filter_by(role='member').all()
 
@@ -446,7 +486,7 @@ def admins():
 @app.route('/delete_admin/<int:user_id>', methods=['POST'])
 @admin_required
 def delete_admin(user_id):
-    current_user = User.query.get(session['user_id'])
+
 
     if not current_user or current_user.member_id != 'ADMIN-001':
         flash('Bạn không có quyền xóa admin.', 'danger')
@@ -469,7 +509,7 @@ def delete_admin(user_id):
 @app.route('/update_admin_points/<int:user_id>', methods=['POST'])
 @admin_required
 def update_admin_points(user_id):
-    current_user = User.query.get(session['user_id'])
+
 
     if not current_user or current_user.member_id != 'ADMIN-001':
         flash('Bạn không có quyền cập nhật điểm admin.', 'danger')
@@ -773,7 +813,7 @@ def top_tier():
 @app.route('/blacklist', methods=['GET', 'POST'])
 @login_required
 def blacklist():
-    current_user = User.query.get(session['user_id'])
+
     role_filter = request.args.get('role')
     user_filter_id = request.args.get('user_id')
 
@@ -831,7 +871,7 @@ def add_blacklist():
 @login_required
 def delete_blacklist(entry_id):
     entry = BlacklistEntry.query.get(entry_id)
-    current_user = User.query.get(session['user_id'])
+
 
     if entry and (entry.created_by_id == current_user.id or current_user.member_id == 'ADMIN-001'):
         db.session.delete(entry)
@@ -845,7 +885,7 @@ def delete_blacklist(entry_id):
 @app.route('/edit_blacklist_author/<int:entry_id>', methods=['POST'])
 @admin_required
 def edit_blacklist_author(entry_id):
-    current_user = User.query.get(session['user_id'])
+
     if current_user.member_id != 'ADMIN-001':
         flash('Bạn không có quyền sửa người nhập!', 'danger')
         return redirect(url_for('blacklist'))
@@ -869,6 +909,164 @@ def fix_sequence():
     db.session.execute(text("SELECT setval('users_id_seq', (SELECT MAX(id) FROM users))"))
     db.session.commit()
     return "✅ Đã cập nhật sequence users_id_seq!"
+
+@app.route("/game_history")
+def game_history():
+    from models import GameHistory, User, CharacterAbility
+    games = GameHistory.query.order_by(GameHistory.created_at.desc()).all()
+    users = User.query.all()
+    chars = CharacterAbility.query.all()
+    return render_template("game_history.html", games=games, users=users, chars=chars)
+
+import random
+from flask import request, redirect, url_for, flash
+
+@app.route("/create_game", methods=["POST"])
+@login_required
+def create_game():
+
+    from models import GameHistory, GamePlayer, db, CharacterAbility, User
+
+    player_ids = request.form.getlist("players")
+    char_ids = request.form.getlist("chars")
+
+    if len(player_ids) != len(char_ids):
+        flash("Số lượng người chơi và nhân vật phải bằng nhau", "danger")
+        return redirect(url_for('game_history'))
+
+    # Random pairing
+    random.shuffle(char_ids)
+
+    new_game = GameHistory(host_id=current_user.id)
+    db.session.add(new_game)
+    db.session.flush()  # để lấy id game mới
+
+    for player_id, char_id in zip(player_ids, char_ids):
+        p = GamePlayer(game_id=new_game.id, player_id=int(player_id), char_id=int(char_id))
+        db.session.add(p)
+
+    db.session.commit()
+    flash("Tạo ván mới thành công!", "success")
+    return redirect(url_for('game_history'))
+
+@app.route("/day_off", methods=["GET", "POST"])
+@login_required
+def day_off():
+
+    if request.method == "POST":
+        start_date = datetime.strptime(request.form["start_date"], "%Y-%m-%d").date()
+        end_date = datetime.strptime(request.form["end_date"], "%Y-%m-%d").date()
+        reason = request.form.get("reason", "")
+
+        user_id = current_user.id
+        created_by = current_user.id
+
+        # Nếu là admin thì có thể chọn user khác
+        if current_user.role == 'ADMIN' and request.form.get("user_id"):
+            user_id = int(request.form["user_id"])
+
+        request_off = PlayerOffRequest(
+            user_id=user_id,
+            start_date=start_date,
+            end_date=end_date,
+            reason=reason,
+            created_by=created_by
+        )
+        db.session.add(request_off)
+        db.session.commit()
+        flash("Đã gửi yêu cầu xin nghỉ!", "success")
+        return redirect(url_for("day_off"))
+
+    # Dữ liệu để render form
+    users = User.query.all() if current_user.role == 'ADMIN' else []
+    my_offs = PlayerOffRequest.query.filter_by(user_id=current_user.id).order_by(PlayerOffRequest.start_date.desc()).all()
+    return render_template("day_off.html", users=users, my_offs=my_offs)
+
+from datetime import datetime, timedelta
+from sqlalchemy import func
+from flask import render_template
+
+@app.route("/frequency")
+@login_required
+def frequency():
+    today = datetime.utcnow().date()
+
+    # Lấy tất cả user
+    users = User.query.all()
+
+    # Lấy danh sách nghỉ (vẫn còn hiệu lực)
+    current_offs = db.session.query(
+        PlayerOffRequest.user_id,
+        func.max(PlayerOffRequest.end_date).label("latest_end")
+    ).filter(
+        PlayerOffRequest.start_date <= today,
+        PlayerOffRequest.end_date >= today
+    ).group_by(PlayerOffRequest.user_id).all()
+
+    off_dict = {user_id: latest_end for user_id, latest_end in current_offs}
+
+    # Lấy số lần chơi và lần cuối tham gia từ bảng GamePlayer
+    stats = db.session.query(
+        GamePlayer.player_id,
+        func.count(GamePlayer.id).label("play_count"),
+        func.max(GameHistory.created_at).label("last_play")
+    ).join(GameHistory, GamePlayer.game_id == GameHistory.id)\
+     .group_by(GamePlayer.player_id).all()
+
+    data = []
+
+    # Tạo danh sách đã có số liệu
+    handled_ids = set()
+
+    for player_id, play_count, last_play in stats:
+        user = User.query.get(player_id)
+        if not user:
+            continue
+
+        # Nếu đang trong kỳ nghỉ, tính lần cuối từ end_date
+        if player_id in off_dict:
+            adjusted_last_play = max(last_play.date(), off_dict[player_id])
+        else:
+            adjusted_last_play = last_play.date()
+
+        inactive = (today - adjusted_last_play).days > 7
+
+        data.append({
+            "user": user,
+            "play_count": play_count,
+            "last_play": adjusted_last_play,
+            "inactive": inactive,
+            "on_leave": player_id in off_dict
+        })
+        handled_ids.add(player_id)
+
+    # Người chưa từng chơi
+    for u in users:
+        if u.id in handled_ids:
+            continue
+
+        # Nếu người này đang xin nghỉ
+        if u.id in off_dict:
+            adjusted_last_play = off_dict[u.id]
+            inactive = (today - adjusted_last_play).days > 7
+            data.append({
+                "user": u,
+                "play_count": 0,
+                "last_play": adjusted_last_play,
+                "inactive": inactive,
+                "on_leave": True
+            })
+        else:
+            # Không có ván nào và không xin nghỉ
+            data.append({
+                "user": u,
+                "play_count": 0,
+                "last_play": None,
+                "inactive": True,
+                "on_leave": False
+            })
+
+    return render_template("frequency.html", data=data)
 
 
 print(f"📌 Flask app = {app}")

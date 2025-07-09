@@ -14,6 +14,10 @@ class User(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     death_count = db.Column(db.Integer, default=0)
     has_kim_bai = db.Column(db.Boolean, default=False)
+    # Thêm:
+    hosted_games = db.relationship('GameHistory', backref='host', lazy=True, foreign_keys='GameHistory.host_id')
+    played_games = db.relationship('GamePlayer', backref='player_info', lazy=True, foreign_keys='GamePlayer.player_id')
+
 
 class MemberID(db.Model):
     __tablename__ = 'member_ids'
@@ -58,3 +62,30 @@ class KimBaiLog(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     timestamp = db.Column(db.DateTime, default=datetime.utcnow)
+
+class GameHistory(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    host_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    players = db.relationship('GamePlayer', backref='game', cascade="all, delete", lazy=True)
+
+class GamePlayer(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    game_id = db.Column(db.Integer, db.ForeignKey('game_history.id'))
+    player_id = db.Column(db.Integer, db.ForeignKey('users.id')) 
+    char_id = db.Column(db.Integer, db.ForeignKey('character_ability.id'))
+
+    player = db.relationship('User', foreign_keys=[player_id])
+    char = db.relationship('CharacterAbility', foreign_keys=[char_id])
+
+class PlayerOffRequest(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    start_date = db.Column(db.Date)
+    end_date = db.Column(db.Date)
+    reason = db.Column(db.Text)
+    created_by = db.Column(db.Integer, db.ForeignKey('users.id'))
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    user = db.relationship('User', foreign_keys=[user_id], backref='off_requests')
+    creator = db.relationship('User', foreign_keys=[created_by])

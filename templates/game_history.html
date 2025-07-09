@@ -1,0 +1,283 @@
+{% extends "base.html" %}
+{% block title %}Lịch sử ván - Hệ thống quản lý thành viên{% endblock %}
+
+{% block content %}
+<div class="row">
+    <!-- Sidebar -->
+    <div class="col-lg-3 col-md-4">
+        {% include "_sidebar.html" %}
+    </div>
+
+    <!-- Main Content -->
+    <div class="col-lg-9 col-md-8">
+        <!-- Header Card -->
+        <div class="card mb-4">
+            <div class="card-body d-flex justify-content-between align-items-center">
+                <div>
+                    <h1 class="card-title fw-bold mb-2">
+                        <i class="fas fa-history me-2 text-primary"></i>
+                        Lịch sử các ván chơi
+                    </h1>
+                    <p class="card-text text-muted mb-0">Quản lý và theo dõi các ván game đã diễn ra</p>
+                </div>
+                <button class="btn btn-primary btn-lg" data-bs-toggle="modal" data-bs-target="#newGameModal">
+                    <i class="fas fa-plus me-2"></i>Tạo ván mới
+                </button>
+            </div>
+        </div>
+
+        <!-- Statistics Cards -->
+        <div class="row mb-4">
+            <div class="col-lg-4 col-md-6 mb-3">
+                <div class="card bg-primary text-white">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="card-title opacity-75">Tổng số ván</h6>
+                                <h2 class="fw-bold mb-0">{{ games|length if games else 0 }}</h2>
+                            </div>
+                            <i class="fas fa-gamepad fa-2x opacity-75"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Games History Table -->
+        <div class="card">
+            <div class="card-header bg-white">
+                <h5 class="card-title fw-bold mb-0">
+                    <i class="fas fa-list me-2 text-primary"></i>
+                    Danh sách lịch sử ván
+                </h5>
+            </div>
+            <div class="card-body">
+                {% if games %}
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead class="table-light">
+                            <tr>
+                                <th><i class="fas fa-clock me-1"></i>Thời gian</th>
+                                <th><i class="fas fa-user-tie me-1"></i>Quản trò</th>
+                                <th><i class="fas fa-users me-1"></i>Người chơi & vai trò</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for game in games %}
+                            <tr>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <i class="fas fa-calendar-alt text-muted me-2"></i>
+                                        <span class="fw-semibold">{{ game.created_at.strftime('%d/%m/%Y %H:%M') }}</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <div class="avatar-circle bg-success text-white me-2">
+                                            {{ game.host.username[0].upper() }}
+                                        </div>
+                                        <span class="fw-semibold">{{ game.host.username }}</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="players-list">
+                                        {% for p in game.players %}
+                                        <div class="player-item mb-1">
+                                            <span class="badge bg-secondary me-1">{{ p.player.username }}</span>
+                                            <span class="text-muted">làm</span>
+                                            <span class="badge bg-primary ms-1">{{ p.char.name }}</span>
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="text-center py-5">
+                    <i class="fas fa-gamepad fa-4x text-muted mb-3"></i>
+                    <h4 class="text-muted">Chưa có ván nào</h4>
+                    <p class="text-muted mb-4">Hãy tạo ván đầu tiên để bắt đầu</p>
+                    <button class="btn btn-primary btn-lg" data-bs-toggle="modal" data-bs-target="#newGameModal">
+                        <i class="fas fa-plus me-2"></i>Tạo ván đầu tiên
+                    </button>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal tạo ván mới -->
+<div class="modal fade" id="newGameModal" tabindex="-1" aria-labelledby="newGameModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <form id="newGameForm" method="POST" action="{{ url_for('create_game') }}">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title">
+                        <i class="fas fa-plus me-2"></i>Tạo ván mới
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Đóng"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="players" class="form-label fw-semibold">
+                                    <i class="fas fa-users me-1"></i>Người chơi:
+                                </label>
+                                <select class="form-select select2" name="players" id="players" multiple required>
+                                    {% for user in users %}
+                                    <option value="{{ user.id }}" data-name="{{ user.username }}">{{ user.username }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="chars" class="form-label fw-semibold">
+                                    <i class="fas fa-mask me-1"></i>Nhân vật:
+                                </label>
+                                <select class="form-select select2" name="chars" id="chars" multiple required>
+                                    {% for char in chars %}
+                                    <option value="{{ char.id }}" data-name="{{ char.name }}">{{ char.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="text-center mb-3">
+                        <button type="button" class="btn btn-secondary btn-lg" id="randomizeBtn">
+                            <i class="fas fa-dice me-2"></i>Phân ngẫu nhiên
+                        </button>
+                    </div>
+
+                    <div id="assignmentsBox" class="mb-3" style="display: none;">
+                        <div class="card bg-light">
+                            <div class="card-header">
+                                <h6 class="card-title mb-0">
+                                    <i class="fas fa-check-circle text-success me-2"></i>
+                                    Kết quả phân vai
+                                </h6>
+                            </div>
+                            <div class="card-body">
+                                <ul id="assignmentsList" class="list-unstyled mb-0"></ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="fas fa-times me-2"></i>Hủy
+                    </button>
+                    <button type="submit" class="btn btn-success">
+                        <i class="fas fa-save me-2"></i>Xác nhận & lưu
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Gắn select2 -->
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+<style>
+.avatar-circle {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.players-list {
+    max-height: 120px;
+    overflow-y: auto;
+}
+
+.player-item {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 5px;
+}
+
+.select2-container .select2-selection--multiple {
+    min-height: 40px;
+    border: 1px solid #ced4da;
+    border-radius: 0.375rem;
+}
+
+.select2-container--default .select2-selection--multiple .select2-selection__choice {
+    background-color: #0d6efd;
+    border-color: #0d6efd;
+    color: white;
+}
+
+#assignmentsList li {
+    padding: 8px 12px;
+    margin-bottom: 5px;
+    background-color: #f8f9fa;
+    border-radius: 5px;
+    border-left: 4px solid #28a745;
+}
+</style>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    $('.select2').select2({ 
+        width: '100%',
+        placeholder: 'Chọn...'
+    });
+
+    const btn = document.getElementById("randomizeBtn");
+    const listBox = document.getElementById("assignmentsList");
+    const box = document.getElementById("assignmentsBox");
+
+    btn.addEventListener("click", function () {
+        listBox.innerHTML = "";
+        box.style.display = "none";
+        let players = Array.from(document.getElementById("players").selectedOptions);
+        let chars = Array.from(document.getElementById("chars").selectedOptions);
+
+        if (players.length !== chars.length || players.length === 0) {
+            alert("Số lượng người chơi và nhân vật phải bằng nhau và lớn hơn 0.");
+            return;
+        }
+
+        // Random char
+        let shuffledChars = chars.slice();
+        for (let i = shuffledChars.length - 1; i > 0; i--) {
+            let j = Math.floor(Math.random() * (i + 1));
+            [shuffledChars[i], shuffledChars[j]] = [shuffledChars[j], shuffledChars[i]];
+        }
+
+        listBox.innerHTML = "";
+        players.forEach((player, index) => {
+            let li = document.createElement("li");
+            li.innerHTML = `<i class="fas fa-user-check text-success me-2"></i><strong>${player.dataset.name}</strong> làm <strong class="text-primary">${shuffledChars[index].dataset.name}</strong>`;
+            listBox.appendChild(li);
+        });
+
+        box.style.display = "block";
+
+        // Đảm bảo thứ tự char đúng trong form để gửi
+        let charSelect = document.getElementById("chars");
+        [...shuffledChars].forEach((opt) => {
+            charSelect.append(opt);
+        });
+    });
+});
+</script>
+{% endblock %}

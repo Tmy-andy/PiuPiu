@@ -45,5 +45,20 @@
         <a class="nav-link {% if request.endpoint == 'top_tier' %}active{% endif %}" href="{{ url_for('top_tier') }}">
             <i class="fas fa-crown"></i> Top Tier
         </a>
+        <a class="nav-link {% if request.endpoint == 'game_history' %}active{% endif %}" href="{{ url_for('game_history') }}">
+            <i class="fas fa-history"></i>Lịch sử game
+        </a>
+        <a class="nav-link {% if request.endpoint == 'off_requests' %}active{% endif %}" href="{{ url_for('off_requests') }}">
+            <i class="fas fa-calendar-times"></i>Yêu cầu nghỉ
+        </a>
+
+        {% if user.role == 'admin' %}
+        <a class="nav-link" href="{{ url_for('frequency') }}">
+            <i class="bi bi-clock-history"></i> Tần suất chơi
+            {% if warning_count > 0 %}
+            <span class="badge bg-danger rounded-pill ms-2 me-2">{{ warning_count }}</span>
+            {% endif %}
+        </a>
+        {% endif %}
     </nav>
 </div>
