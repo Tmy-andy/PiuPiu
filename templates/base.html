@@ -233,8 +233,7 @@
                     {% if session.user_id %}
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown">
-                            <i class="fas fa-user me-1"></i>
-                            <span class="d-none d-sm-inline">{{ session.display_name }}</span>
+                            <i class="fas fa-user me-1"></i> {{ session.display_name }}
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end">
                             <li class="dropdown-header d-sm-none">
