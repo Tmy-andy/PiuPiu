@@ -714,6 +714,27 @@ def use_kim_bai(user_id):
             flash('Không đủ kim bài.', 'danger')
     return redirect(url_for('kim_bai'))
 
+@app.route("/update_kim_bai/<int:user_id>", methods=["POST"])
+@login_required
+def update_kim_bai(user_id):
+    if current_user.role != "admin":
+        abort(403)
+
+    member = User.query.get_or_404(user_id)
+    action = request.form.get("action")
+    current_count = member.kim_bai or 0
+
+    if action == "increase":
+        member.kim_bai = current_count + 1
+    elif action == "decrease" and current_count > 0:
+        member.kim_bai = current_count - 1
+    elif action == "use":
+        member.kim_bai = 0  # hoặc trừ 1 tùy bạn muốn
+        # Hoặc gắn thêm logic "đánh dấu đã dùng"...
+
+    db.session.commit()
+    return redirect(request.referrer or url_for("dashboard"))
+
 #Top
 @app.route('/top_tier')
 @admin_required
@@ -733,7 +754,7 @@ def top_tier():
         .all()
     )
 
-    return render_template("top_tier.html", top_deaths=top_deaths)
+    return render_template("top_tier.html", top_deaths=top_deaths, now=datetime.utcnow())
 
 
 # Blacklist management

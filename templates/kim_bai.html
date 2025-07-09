@@ -11,18 +11,61 @@
 
     <!-- Main Content -->
     <div class="col-lg-9 col-md-8">
-        <!-- Header -->
+        <!-- Welcome Section -->
         <div class="card mb-4">
             <div class="card-body">
                 <h1 class="card-title fw-bold">
                     <i class="fa-solid fa-scroll-torah"></i>
                     Quản lý Kim bài miễn tử
                 </h1>
-                <p class="card-text text-muted">Bấm <strong>➖</strong> để tăng lượt chết, bấm <strong>Sử dụng kim bài</strong> để giảm số kim bài đã dùng.</p>
+                <p class="card-text text-muted">Quản lý tình trạng kim bài miễn tử và số lần chết của thành viên</p>
             </div>
         </div>
 
-        <!-- Table -->
+        <!-- Statistics Cards -->
+        <div class="row mb-4">
+            <div class="col-lg-4 col-md-6 mb-3">
+                <div class="card stats-card-warning text-white">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="card-title opacity-75">Có kim bài</h6>
+                                <h2 class="fw-bold mb-0">{{ members|selectattr('has_kim_bai')|list|length }}</h2>
+                            </div>
+                            <i class="fas fa-shield-alt fa-2x opacity-75"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6 mb-3">
+                <div class="card stats-card text-white">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="card-title opacity-75">Không có kim bài</h6>
+                                <h2 class="fw-bold mb-0">{{ members|rejectattr('has_kim_bai')|list|length }}</h2>
+                            </div>
+                            <i class="fas fa-skull fa-2x opacity-75"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6 mb-3">
+                <div class="card stats-card-info text-white">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="card-title opacity-75">Tổng thành viên</h6>
+                                <h2 class="fw-bold mb-0">{{ members|length }}</h2>
+                            </div>
+                            <i class="fas fa-users fa-2x opacity-75"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Members Table -->
         <div class="card">
             <div class="card-header bg-white">
                 <h5 class="card-title fw-bold mb-0">
@@ -33,52 +76,63 @@
             <div class="card-body">
                 {% if members %}
                 <div class="table-responsive">
-                    <table class="table table-hover align-middle">
+                    <table class="table table-hover">
                         <thead>
                             <tr>
-                                <th>Mã</th>
-                                <th>Tên</th>
+                                <th>Mã thành viên</th>
+                                <th>Tên thành viên</th>
                                 <th>Lượt chết</th>
-                                <th>Kim bài khả dụng</th>
-                                <th>Đã dùng</th>
+                                <th>Tình trạng kim bài</th>
+                                {% if admins %}
                                 <th>Hành động</th>
+                                {% endif %}
                             </tr>
                         </thead>
                         <tbody>
                             {% for m in members %}
-                            {% set available = (m.death_count // 2) - m.kim_bai_used %}
                             <tr>
-                                <td><span class="badge bg-primary">{{ m.member_id }}</span></td>
-                                <td>{{ m.display_name }}</td>
-                                <td><span class="badge bg-{{ 'danger' if m.death_count > 2 else 'warning' if m.death_count > 0 else 'success' }}">{{ m.death_count }} lần</span></td>
                                 <td>
-                                    {% if available > 0 %}
-                                        <span class="badge bg-warning text-dark">{{ available }}</span>
+                                    <span class="badge bg-primary">{{ m.member_id }}</span>
+                                </td>
+                                <td class="fw-semibold">{{ m.display_name }}</td>
+                                <td>
+                                    <span class="badge bg-{{ 'danger' if m.death_count > 2 else 'warning' if m.death_count > 0 else 'success' }}">
+                                        {{ m.death_count }} lần
+                                    </span>
+                                </td>
+                                <td>
+                                    {% if m.has_kim_bai %}
+                                        <span class="badge bg-warning text-dark">
+                                            <i class="fas fa-shield-alt me-1"></i>Có kim bài
+                                        </span>
                                     {% else %}
-                                        <span class="badge bg-secondary">0</span>
+                                        <span class="badge bg-secondary">
+                                            <i class="fas fa-times me-1"></i>Không có
+                                        </span>
                                     {% endif %}
                                 </td>
+                                {% if user.role == 'admin' %}
                                 <td>
-                                    <span class="badge bg-info text-dark">{{ m.kim_bai_used }}</span>
+                                    <form method="POST" action="{{ url_for('update_kim_bai', user_id=m.id) }}" class="d-flex gap-2 align-items-center">
+                                        <input type="hidden" name="action" value="" class="action-field">
+
+                                        <button type="submit" class="btn btn-sm btn-outline-secondary" onclick="this.form.querySelector('.action-field').value='decrease';">
+                                            <i class="fas fa-minus"></i>
+                                        </button>
+
+                                        <input type="text" name="kim_bai_count" value="{{ m.kim_bai or 0 }}" class="form-control form-control-sm text-center" style="width: 50px;" readonly>
+
+                                        <button type="submit" class="btn btn-sm btn-outline-secondary" onclick="this.form.querySelector('.action-field').value='increase';">
+                                            <i class="fas fa-plus"></i>
+                                        </button>
+
+                                        <button type="submit" class="btn btn-sm btn-success" onclick="this.form.querySelector('.action-field').value='use';">
+                                            <i class="fas fa-check me-1"></i>Sử Dụng Kim Bài
+                                        </button>
+                                    </form>
                                 </td>
-                                <td>
-                                    <div class="d-flex gap-2">
-                                        <!-- ➖ Thêm lượt chết -->
-                                        <form method="POST" action="{{ url_for('increase_death', user_id=m.id) }}">
-                                            <button class="btn btn-sm btn-outline-danger" title="Tăng lượt chết">
-                                                <i class="fas fa-minus"></i>
-                                            </button>
-                                        </form>
-                                        <!-- Sử dụng kim bài nếu còn -->
-                                        {% if available > 0 %}
-                                        <form method="POST" action="{{ url_for('use_kim_bai', user_id=m.id) }}">
-                                            <button class="btn btn-sm btn-outline-warning" title="Sử dụng kim bài">
-                                                <i class="fas fa-shield-alt me-1"></i>Sử dụng
-                                            </button>
-                                        </form>
-                                        {% endif %}
-                                    </div>
-                                </td>
+                                {% endif %}
+
                             </tr>
                             {% endfor %}
                         </tbody>
@@ -88,6 +142,10 @@
                 <div class="text-center py-4">
                     <i class="fas fa-users fa-3x text-muted mb-3"></i>
                     <h5 class="text-muted">Chưa có thành viên nào</h5>
+                    <p class="text-muted">Hãy thêm thành viên vào hệ thống</p>
+                    <a href="{{ url_for('members') }}" class="btn btn-primary">
+                        <i class="fas fa-plus me-2"></i>Thêm thành viên
+                    </a>
                 </div>
                 {% endif %}
             </div>
