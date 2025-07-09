@@ -21,7 +21,7 @@
                         </h1>
                         <p class="card-text text-muted mb-0">Quản lý và theo dõi các ván game đã diễn ra</p>
                     </div>
-                    {% if user.role == 'admin' %}
+                    {% if users.role == 'admin' %}
                     <button class="btn btn-primary btn-lg" data-bs-toggle="modal" data-bs-target="#newGameModal">
                         <i class="fas fa-plus me-2"></i>
                         <span class="d-none d-sm-inline">Tạo ván mới</span>
@@ -121,7 +121,7 @@
                     <i class="fas fa-gamepad fa-4x text-muted mb-3"></i>
                     <h4 class="text-muted">Chưa có ván nào</h4>
                     <p class="text-muted mb-4">Hãy tạo ván đầu tiên để bắt đầu</p>
-                    {% if user.role == 'admin' %}
+                    {% if users.role == 'admin' %}
                     <button class="btn btn-primary btn-lg" data-bs-toggle="modal" data-bs-target="#newGameModal">
                         <i class="fas fa-plus me-2"></i>Tạo ván mới
                     </button>
@@ -262,9 +262,6 @@
         </div>
     </div>
 </div>
-
-<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
 <style>
 .avatar-circle {
