@@ -204,6 +204,12 @@
                 <i class="fas fa-users me-2"></i>
                 Quản lý thành viên
             </a>
+
+            <div class="bg-white text-dark py-1 px-3 border-bottom small" style="box-shadow: var(--card-shadow);">
+                {% if session.user_role %}
+                    <strong>Vai trò hiện tại:</strong> {{ session.user_role|capitalize }}
+                {% endif %}
+            </div>
             
             {% if session.user_id %}
             <div class="navbar-nav ms-auto">
