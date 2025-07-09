@@ -21,9 +21,9 @@
                     <p class="card-text text-muted mb-0">Quản lý và theo dõi các ván game đã diễn ra</p>
                 </div>
                 {% if user.role == 'admin' %}
-                <div class="modal fade" id="newGameModal" tabindex="-1" aria-labelledby="newGameModalLabel" aria-hidden="true">
+                <button class="btn btn-primary btn-lg" data-bs-toggle="modal" data-bs-target="#newGameModal">
                     <i class="fas fa-plus me-2"></i>Tạo ván mới
-                </div>
+                </button>
                 {% endif %}
             </div>
         </div>
@@ -115,7 +115,7 @@
 </div>
 
 <!-- Modal tạo ván mới -->
-<div class="modal fade" id="" tabindex="-1" aria-labelledby="newGameModalLabel" aria-hidden="true">
+<div class="modal fade" id="newGameModal" tabindex="-1" aria-labelledby="newGameModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <form id="newGameForm" method="POST" action="{{ url_for('create_game') }}">
@@ -125,7 +125,7 @@
                     </h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Đóng"></button>
                 </div>
-                <div class="modal-body"newGameModal>
+                <div class="modal-body" id="newGameModal">
                     <div class="row">
                         <div class="col-md-6">
                             <div class="mb-3">
