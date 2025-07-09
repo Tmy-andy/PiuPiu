@@ -218,46 +218,36 @@
     <nav class="navbar navbar-expand-lg navbar-dark">
         <div class="container">
             <a class="navbar-brand" href="{{ url_for('dashboard') }}">
-                <i class="fas fa-users me-2"></i>
-                Quản lý thành viên
+                <i class="fas fa-users me-2"></i>Quản lý thành viên
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
 
             {% if session.user_id %}
-            <div class="navbar-nav ms-auto">
-                <div class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown">
-                        <i class="fas fa-user me-1"></i>
-                        {{ session.display_name }}
-                    </a>
-                    {% if session.display_name %}
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="{{ url_for('dashboard') }}">
-                            <i class="fas fa-tachometer-alt me-2"></i>Dashboard
-                        </a></li>
-                        <li><a class="dropdown-item" href="{{ url_for('profile') }}">
-                            <i class="fas fa-user-cog me-2"></i>Thông tin cá nhân
-                        </a></li>
-
-                        {% if session.user_role == 'admin' and session.display_name == 'Administrator' %}
-                        <li><a class="dropdown-item" href="{{ url_for('download_db') }}">
-                            <i class="fas fa-database me-2"></i>Tải database
-                        </a></li>
-                        {% endif %}
-
-                        <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item" href="{{ url_for('logout') }}">
-                            <i class="fas fa-sign-out-alt me-2"></i>Đăng xuất
-                        </a></li>
-                    </ul>
-                    {% endif %}
-
-                </div> 
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-user me-1"></i>{{ session.display_name }}
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" href="{{ url_for('dashboard') }}">
+                                <i class="fas fa-tachometer-alt me-2"></i>Dashboard</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('profile') }}">
+                                <i class="fas fa-user-cog me-2"></i>Thông tin cá nhân</a></li>
+                            {% if session.user_role == 'admin' and session.display_name == 'Administrator' %}
+                            <li><a class="dropdown-item" href="{{ url_for('download_db') }}">
+                                <i class="fas fa-database me-2"></i>Tải database</a></li>
+                            {% endif %}
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="{{ url_for('logout') }}">
+                                <i class="fas fa-sign-out-alt me-2"></i>Đăng xuất</a></li>
+                        </ul>
+                    </li>
+                </ul>
             </div>
             {% endif %}
-            
         </div>
     </nav>
 
