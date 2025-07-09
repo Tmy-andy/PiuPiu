@@ -52,21 +52,21 @@ migrate = Migrate(app, db)
 with app.app_context():
     db.create_all()
 
-def login_required(f):
-    @wraps(f)
-    def decorated_function(*args, **kwargs):
-        user_id = session.get('user_id')
-        if not user_id:
-            return redirect(url_for('login'))
+# def login_required(f):
+#     @wraps(f)
+#     def decorated_function(*args, **kwargs):
+#         user_id = session.get('user_id')
+#         if not user_id:
+#             return redirect(url_for('login'))
 
-        user = User.query.get(user_id)
-        if not user:
-            session.clear()
-            flash('Tài khoản không tồn tại hoặc đã bị xóa.', 'error')
-            return redirect(url_for('login'))
+#         user = User.query.get(user_id)
+#         if not user:
+#             session.clear()
+#             flash('Tài khoản không tồn tại hoặc đã bị xóa.', 'error')
+#             return redirect(url_for('login'))
 
-        return f(*args, **kwargs)
-    return decorated_function
+#         return f(*args, **kwargs)
+#     return decorated_function
 
 def admin_required(f):
     @wraps(f)
@@ -820,7 +820,6 @@ def top_tier():
 @app.route('/blacklist', methods=['GET', 'POST'])
 @login_required
 def blacklist():
-
     role_filter = request.args.get('role')
     user_filter_id = request.args.get('user_id')
 
