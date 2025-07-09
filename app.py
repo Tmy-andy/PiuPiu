@@ -952,21 +952,23 @@ def create_game():
 @app.route("/day_off", methods=["GET", "POST"])
 @login_required
 def day_off():
+    user_id = session.get("user_id")
+    user = User.query.get(user_id)
 
     if request.method == "POST":
         start_date = datetime.strptime(request.form["start_date"], "%Y-%m-%d").date()
         end_date = datetime.strptime(request.form["end_date"], "%Y-%m-%d").date()
         reason = request.form.get("reason", "")
 
-        user_id = current_user.id
-        created_by = current_user.id
+        actual_user_id = user.id
+        created_by = user.id
 
-        # Nếu là admin thì có thể chọn user khác
-        if current_user.role == 'ADMIN' and request.form.get("user_id"):
-            user_id = int(request.form["user_id"])
+        # ✅ Nếu là admin thì được chọn người khác
+        if user.role == 'admin' and request.form.get("user_id"):
+            actual_user_id = int(request.form["user_id"])
 
         request_off = PlayerOffRequest(
-            user_id=user_id,
+            user_id=actual_user_id,
             start_date=start_date,
             end_date=end_date,
             reason=reason,
@@ -977,9 +979,9 @@ def day_off():
         flash("Đã gửi yêu cầu xin nghỉ!", "success")
         return redirect(url_for("day_off"))
 
-    # Dữ liệu để render form
-    users = User.query.all() if current_user.role == 'ADMIN' else []
-    my_offs = PlayerOffRequest.query.filter_by(user_id=current_user.id).order_by(PlayerOffRequest.start_date.desc()).all()
+    # ✅ Dữ liệu để render form
+    users = User.query.all() if user.role == 'admin' else []
+    my_offs = PlayerOffRequest.query.filter_by(user_id=user.id).order_by(PlayerOffRequest.start_date.desc()).all()
     return render_template("day_off.html", users=users, my_offs=my_offs)
 
 from datetime import datetime, timedelta
