@@ -89,25 +89,26 @@ def inject_user():
     user = User.query.get(user_id) if user_id else None
 
     from datetime import datetime
-
     warning_count = 0
     now = datetime.utcnow()
 
     users = User.query.all()
     for u in users:
+        # ❌ Nếu chưa có is_active thì bỏ dòng này
         # if not u.is_active:
         #     continue
 
-        # Đang xin nghỉ?
+        # Kiểm tra có đang xin nghỉ không
         on_leave = PlayerOffRequest.query.filter(
             PlayerOffRequest.user_id == u.id,
             PlayerOffRequest.start_date <= now.date(),
             PlayerOffRequest.end_date >= now.date()
         ).first()
+
         if on_leave:
             continue
 
-        # Lần chơi gần nhất
+        # Lấy lần chơi gần nhất
         last_game = (
             GamePlayer.query
             .filter_by(player_id=u.id)
@@ -120,8 +121,8 @@ def inject_user():
         if not last_play_time or (now - last_play_time).days > 7:
             warning_count += 1
 
-    # ✅ Giữ nguyên user và thêm warning_count
     return dict(user=user, warning_count=warning_count)
+
 
 
 # Error handlers
