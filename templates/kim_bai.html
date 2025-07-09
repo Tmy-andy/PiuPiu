@@ -83,7 +83,7 @@
                                 <th>Tên thành viên</th>
                                 <th>Lượt chết</th>
                                 <th>Tình trạng kim bài</th>
-                                {% if admins %}
+                                {% if user.role == 'admin' %}
                                 <th>Hành động</th>
                                 {% endif %}
                             </tr>
