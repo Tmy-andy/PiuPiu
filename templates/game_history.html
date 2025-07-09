@@ -623,7 +623,13 @@ document.addEventListener("DOMContentLoaded", function () {
         box.style.display = "none";
 
         let players = Array.from(document.getElementById("players").selectedOptions);
-        let chars = Array.from(document.getElementById("chars").selectedOptions);
+        let chars = Array.from(document.getElementById("chars").selectedOptions).map(opt => {
+            return {
+                value: opt.value,
+                name: opt.textContent.trim()
+            };
+        });
+
 
         if (players.length !== chars.length || players.length === 0) {
             alert("Số lượng người chơi và nhân vật phải bằng nhau và lớn hơn 0.");
@@ -636,10 +642,10 @@ document.addEventListener("DOMContentLoaded", function () {
             let j = Math.floor(Math.random() * (i + 1));
             [shuffledChars[i], shuffledChars[j]] = [shuffledChars[j], shuffledChars[i]];
         }
-
+        // Hiển thị kết quả phân vai
         players.forEach((player, index) => {
             let li = document.createElement("li");
-            li.innerHTML = `<i class="fas fa-user-check text-success me-2"></i><strong>${player.dataset.name}</strong> làm <strong class="text-primary">${shuffledChars[index].dataset.name}</strong>`;
+            li.innerHTML = `<i class="fas fa-user-check text-success me-2"></i><strong>${player.dataset.name}</strong> làm <strong class="text-primary">${shuffledChars[index].name}</strong>`;
             listBox.appendChild(li);
         });
 
