@@ -133,8 +133,8 @@
                                     <i class="fas fa-users me-1"></i>Người chơi:
                                 </label>
                                 <select class="form-select select2" name="players" id="players" multiple required>
-                                    {% for m in members %}
-                                    <option value="{{ m.id }}" data-name="{{ m.username }}">{{ m.username }}</option>
+                                    {% for u in users %}
+                                        <option value="{{ u.id }}" data-name="{{ u.username }}">{{ u.username }}</option>
                                     {% endfor %}
                                 </select>
                             </div>
