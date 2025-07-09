@@ -95,8 +95,8 @@ def inject_user():
 
     users = User.query.all()
     for u in users:
-        if not u.is_active:
-            continue
+        # if not u.is_active:
+        #     continue
 
         # Đang xin nghỉ?
         on_leave = PlayerOffRequest.query.filter(
