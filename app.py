@@ -11,7 +11,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import timedelta
 from datetime import datetime
 from database import init_app, db
-from models import User, MemberID, PointLog, Rule, CharacterAbility, BlacklistEntry, KimBaiLog
+from models import User, MemberID, PointLog, Rule, CharacterAbility, BlacklistEntry, KimBaiLog, PlayerOffRequest, GamePlayer, GameHistory
 from functools import wraps
 from sqlalchemy.orm import aliased
 from flask_sqlalchemy import SQLAlchemy
