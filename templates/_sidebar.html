@@ -1,5 +1,8 @@
 <!-- templates/_sidebar.html -->
 <div class="sidebar p-3">
+    <button id="toggleSidebar" class="sidebar-toggle-btn mb-2">
+        <i class="fas fa-angle-left"></i>
+    </button>
     <h5 class="fw-bold text-dark mb-3">
         <i class="fas fa-tachometer-alt me-2"></i>
         {% if user is defined and user.role == 'admin' %}
@@ -62,3 +65,25 @@
         {% endif %}
     </nav>
 </div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const toggleBtn = document.getElementById("toggleSidebar");
+        const sidebar = document.querySelector(".sidebar");
+        const contentWrapper = document.getElementById("main-content-wrapper");
+
+        toggleBtn.addEventListener("click", function () {
+            sidebar.classList.toggle("collapsed");
+            contentWrapper.classList.toggle("expanded");
+
+            const icon = toggleBtn.querySelector("i");
+            if (sidebar.classList.contains("collapsed")) {
+                icon.classList.remove("fa-angle-left");
+                icon.classList.add("fa-angle-right");
+            } else {
+                icon.classList.remove("fa-angle-right");
+                icon.classList.add("fa-angle-left");
+            }
+        });
+    });
+</script>

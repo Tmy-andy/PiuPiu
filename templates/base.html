@@ -194,6 +194,36 @@
                 margin-bottom: 1rem;
             }
         }
+
+        /* Nút toggle */
+        .sidebar-toggle-btn {
+            position: fixed;
+            top: 70px;
+            left: 10px;
+            z-index: 1050;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 0.4rem 0.6rem;
+            cursor: pointer;
+            box-shadow: var(--card-shadow);
+        }
+
+        .sidebar.collapsed {
+            width: 0 !important;
+            padding: 0 !important;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        #main-content-wrapper {
+            transition: margin-left 0.3s ease;
+        }
+
+        #main-content-wrapper.expanded {
+            margin-left: 0;
+        }
     </style>
 </head>
 <body>
@@ -205,12 +235,6 @@
                 Quản lý thành viên
             </a>
 
-            <div class="bg-white text-dark py-1 px-3 border-bottom small" style="box-shadow: var(--card-shadow);">
-                {% if session.user_role %}
-                    <strong>Vai trò hiện tại:</strong> {{ session.user_role|capitalize }}
-                {% endif %}
-            </div>
-            
             {% if session.user_id %}
             <div class="navbar-nav ms-auto">
                 <div class="nav-item dropdown">
@@ -269,6 +293,29 @@
     </main>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const toggleBtn = document.getElementById("toggleSidebar");
+            const sidebar = document.querySelector(".sidebar");
+            const contentWrapper = document.getElementById("main-content-wrapper");
+
+            toggleBtn.addEventListener("click", function () {
+                sidebar.classList.toggle("collapsed");
+                contentWrapper.classList.toggle("expanded");
+
+                const icon = toggleBtn.querySelector("i");
+                if (sidebar.classList.contains("collapsed")) {
+                    icon.classList.remove("fa-angle-left");
+                    icon.classList.add("fa-angle-right");
+                } else {
+                    icon.classList.remove("fa-angle-right");
+                    icon.classList.add("fa-angle-left");
+                }
+            });
+        });
+    </script>
+    
     {% block scripts %}{% endblock %}
 </body>
 </html>
