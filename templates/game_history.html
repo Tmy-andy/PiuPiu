@@ -125,7 +125,7 @@
                     </h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Đóng"></button>
                 </div>
-                <div class="modal-body" id="newGameModal">
+                <div class="modal-body">
                     <div class="row">
                         <div class="col-md-6">
                             <div class="mb-3">
@@ -241,21 +241,21 @@
 
 <script>
 document.addEventListener("DOMContentLoaded", function () {
-    function initSelect2() {
+    // Gọi Select2 khi trang tải ban đầu
+    $('.select2').select2({
+        width: '100%',
+        placeholder: 'Chọn...'
+    });
+
+    // Gọi lại Select2 khi mở modal
+    $('#newGameModal').on('shown.bs.modal', function () {
         $('.select2').select2({
             width: '100%',
             placeholder: 'Chọn...'
         });
-    }
-
-    // Khởi tạo khi trang tải xong
-    initSelect2();
-
-    // Khởi tạo lại mỗi khi modal mở
-    $('#newGameModal').on('shown.bs.modal', function () {
-        initSelect2();
     });
 
+    // Code random hóa
     const btn = document.getElementById("randomizeBtn");
     const listBox = document.getElementById("assignmentsList");
     const box = document.getElementById("assignmentsBox");
@@ -263,6 +263,7 @@ document.addEventListener("DOMContentLoaded", function () {
     btn.addEventListener("click", function () {
         listBox.innerHTML = "";
         box.style.display = "none";
+
         let players = Array.from(document.getElementById("players").selectedOptions);
         let chars = Array.from(document.getElementById("chars").selectedOptions);
 
@@ -286,7 +287,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         box.style.display = "block";
 
-        // Đảm bảo thứ tự char đúng trong form
+        // Gắn lại nhân vật theo thứ tự
         let charSelect = document.getElementById("chars");
         shuffledChars.forEach((opt) => {
             charSelect.append(opt);
