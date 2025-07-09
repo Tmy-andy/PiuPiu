@@ -62,6 +62,8 @@
         {% endif %}
     </nav>
 </div>
+
+{% block scripts %}
 <script>
 document.addEventListener("DOMContentLoaded", function () {
     const toggleHeader = document.getElementById("sidebarToggleHeader");
@@ -76,4 +78,5 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 });
 </script>
+{% endblock %}
 
