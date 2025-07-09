@@ -168,7 +168,7 @@
                                                         <div class="avatar-circle bg-primary text-white me-2">
                                                             {{ u.member_id[-2:].upper() }}
                                                         </div>
-                                                        <span>Thành viên 1 {{ u.member_id[-2:] }}</span>
+                                                        <span>{{ u.member_id[-2:] }}</span>
                                                     </div>
                                                     <div class="option-checkbox">
                                                         <i class="fas fa-check"></i>
@@ -180,12 +180,6 @@
                                     </div>
                                     <div class="selected-items" id="selectedPlayers"></div>
                                 </div>
-                                <select class="form-select select2" name="players" id="players" multiple required>
-                                    {% for user in users %}
-                                    <option value="{{ user.id }}" data-name="{{ user.member_id[-2:] }}">Thành viên 2 {{ user.member_id[-2:] }}</option>
-                                    {% endfor %}
-                                </select>
-
                             </div>
                         </div>
                         <div class="col-12">
