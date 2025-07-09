@@ -115,7 +115,7 @@
 </div>
 
 <!-- Modal tạo ván mới -->
-<div class="modal fade" id="newGameModal" tabindex="-1" aria-labelledby="newGameModalLabel" aria-hidden="true">
+<div class="modal fade" id="" tabindex="-1" aria-labelledby="newGameModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <form id="newGameForm" method="POST" action="{{ url_for('create_game') }}">
@@ -125,7 +125,7 @@
                     </h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Đóng"></button>
                 </div>
-                <div class="modal-body">
+                <div class="modal-body"newGameModal>
                     <div class="row">
                         <div class="col-md-6">
                             <div class="mb-3">
@@ -234,6 +234,7 @@
     border-left: 4px solid #28a745;
 }
 </style>
+{% endblock %}
 
 {% block scripts %}
 <script>
