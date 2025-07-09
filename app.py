@@ -678,6 +678,12 @@ def delete_ability(ability_id):
     return redirect(url_for('abilities'))
 
 # Kim Bài Miễn Tử
+@app.route('/kim_bai')
+@admin_required
+def kim_bai():
+    users = User.query.filter_by(role='member').order_by(User.display_name).all()
+    return render_template('kim_bai.html', users=users)
+
 @app.route('/increase_death/<int:user_id>', methods=['POST'])
 @admin_required
 def increase_death(user_id):
