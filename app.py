@@ -4,7 +4,7 @@ import traceback
 print("✅ Flask đang được yêu cầu chạy ở cổng :", os.environ.get("PORT"))
 print("📦 Environment:", dict(os.environ))
 
-from flask import Flask, render_template, request, redirect, url_for, flash, session, send_file, Response
+from flask import Flask, render_template, request, redirect, url_for, flash, session, send_file, Response, abort
 from docx import Document
 from flask_login import login_required
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -84,6 +84,19 @@ def inject_user():
         user = User.query.get(user_id)
         return dict(user=user)
     return dict(user=None)
+
+# Error handlers
+@app.errorhandler(403)
+def forbidden(e):
+    return render_template('errors/403.html'), 403
+
+@app.errorhandler(404)
+def not_found(e):
+    return render_template("errors/404.html"), 404
+
+@app.errorhandler(500)
+def internal_server_error(e):
+    return render_template("errors/500.html"), 500
 
 # Routes
 @app.route('/ping')
@@ -717,6 +730,7 @@ def use_kim_bai(user_id):
 @app.route("/update_kim_bai/<int:user_id>", methods=["POST"])
 @login_required
 def update_kim_bai(user_id):
+    current_user = User.query.get(session['user_id'])
     if current_user.role != "admin":
         abort(403)
 
