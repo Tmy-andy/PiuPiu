@@ -9,14 +9,16 @@ from docx import Document
 from flask_login import login_required
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import timedelta
+from datetime import datetime
 from database import init_app, db
-from models import User, MemberID, PointLog, Rule, CharacterAbility, BlacklistEntry
+from models import User, MemberID, PointLog, Rule, CharacterAbility, BlacklistEntry, KimBaiLog
 from functools import wraps
 from sqlalchemy.orm import aliased
 from flask_sqlalchemy import SQLAlchemy
 import logging
 from zipfile import ZipFile
 import tempfile
+from sqlalchemy.sql import func
 import csv
 import io
 from dotenv import load_dotenv
@@ -676,27 +678,57 @@ def delete_ability(ability_id):
     return redirect(url_for('abilities'))
 
 # Kim Bài Miễn Tử
-@app.route('/kim_bai', methods=['GET', 'POST'])
-@login_required
-def kim_bai():
-    members = User.query.filter_by(role='member').order_by(User.display_name).all()
-    return render_template('kim_bai.html', members=members)
-
-@app.route('/update_kim_bai/<int:user_id>', methods=['POST'])
+@app.route('/increase_death/<int:user_id>', methods=['POST'])
 @admin_required
-def update_kim_bai(user_id):
-    death_count = int(request.form['death_count'])
-    has_kim_bai = request.form['has_kim_bai'] == 'true'
-
+def increase_death(user_id):
     user = User.query.get(user_id)
     if user:
-        user.death_count = death_count
-        user.has_kim_bai = has_kim_bai
+        user.death_count += 1
         db.session.commit()
-        flash('Cập nhật kim bài thành công!', 'success')
-    else:
-        flash('Không tìm thấy người dùng.', 'error')
+
+        # Ghi log nếu muốn thống kê theo tháng
+        log = KimBaiLog(user_id=user.id, timestamp=datetime.utcnow())
+        db.session.add(log)
+        db.session.commit()
+
+        flash('Đã tăng lượt chết.', 'success')
     return redirect(url_for('kim_bai'))
+
+@app.route('/use_kim_bai/<int:user_id>', methods=['POST'])
+@admin_required
+def use_kim_bai(user_id):
+    user = User.query.get(user_id)
+    if user:
+        available = (user.death_count // 2) - user.kim_bai_used
+        if available > 0:
+            user.kim_bai_used += 1
+            db.session.commit()
+            flash('Đã sử dụng kim bài.', 'success')
+        else:
+            flash('Không đủ kim bài.', 'danger')
+    return redirect(url_for('kim_bai'))
+
+#Top tier
+@app.route('/top_tier')
+@admin_required
+def top_tier():
+    # Top 3 chết nhiều nhất tháng
+    current_month = datetime.utcnow().month
+    current_year = datetime.utcnow().year
+
+    top_deaths = (
+        db.session.query(User.display_name, func.count(KimBaiLog.id).label("death_count"))
+        .join(KimBaiLog)
+        .filter(func.extract('month', KimBaiLog.timestamp) == current_month)
+        .filter(func.extract('year', KimBaiLog.timestamp) == current_year)
+        .group_by(User.id)
+        .order_by(func.count(KimBaiLog.id).desc())
+        .limit(3)
+        .all()
+    )
+
+    return render_template("top_tier.html", top_deaths=top_deaths)
+
 
 # Blacklist management
 @app.route('/blacklist', methods=['GET', 'POST'])
