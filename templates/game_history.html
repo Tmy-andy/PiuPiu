@@ -21,7 +21,7 @@
                     <p class="card-text text-muted mb-0">Quản lý và theo dõi các ván game đã diễn ra</p>
                 </div>
                 {% if user.role == 'admin' %}
-                <button class="btn btn-primary btn-lg" data-bs-toggle="modal" data-bs-target="#newGameModal">
+                <div class="modal fade" id="newGameModal" tabindex="-1" aria-labelledby="newGameModalLabel" aria-hidden="true">
                     <i class="fas fa-plus me-2"></i>Tạo ván mới
                 </button>
                 {% endif %}
