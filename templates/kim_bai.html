@@ -24,6 +24,7 @@
 
         <!-- Statistics Cards -->
         <div class="row mb-4">
+            <!-- Cards giữ nguyên -->
             <div class="col-lg-4 col-md-6 mb-3">
                 <div class="card stats-card-warning text-white">
                     <div class="card-body">
@@ -90,17 +91,17 @@
                         </thead>
                         <tbody>
                             {% for m in members %}
-                            <tr>
+                            <tr id="member-{{ m.id }}">
                                 <td>
                                     <span class="badge bg-primary">{{ m.member_id }}</span>
                                 </td>
                                 <td class="fw-semibold">{{ m.display_name }}</td>
-                                <td>
+                                <td id="death-{{ m.id }}">
                                     <span class="badge bg-{{ 'danger' if m.death_count > 2 else 'warning' if m.death_count > 0 else 'success' }}">
                                         {{ m.death_count }} lần
                                     </span>
                                 </td>
-                                <td>
+                                <td id="kim-{{ m.id }}">
                                     {% if m.has_kim_bai %}
                                         <span class="badge bg-warning text-dark">
                                             <i class="fas fa-shield-alt me-1"></i>Có kim bài
@@ -115,29 +116,19 @@
                                 <td>
                                     <div class="d-flex gap-2 align-items-center">
                                         <!-- Giảm lượt chết -->
-                                        <form method="POST" action="{{ url_for('decrease_death', user_id=m.id) }}">
-                                        <button type="submit" class="btn btn-sm btn-outline-secondary" title="Giảm lượt chết">
+                                        <button class="btn btn-sm btn-outline-secondary" onclick="updateDeath({{ m.id }}, 'decrease')">
                                             <i class="fas fa-minus"></i>
                                         </button>
-                                        </form>
-
-                                        <!-- Hiển thị lượt chết -->
-                                        <span class="badge bg-light text-dark px-2">{{ m.death_count }} lần</span>
 
                                         <!-- Tăng lượt chết -->
-                                        <form method="POST" action="{{ url_for('increase_death', user_id=m.id) }}">
-                                        <button type="submit" class="btn btn-sm btn-outline-danger" title="Tăng lượt chết">
+                                        <button class="btn btn-sm btn-outline-danger" onclick="updateDeath({{ m.id }}, 'increase')">
                                             <i class="fas fa-plus"></i>
                                         </button>
-                                        </form>
-
-                                        <!-- Dùng kim bài nếu có -->
+                                        <!-- Sử dụng kim bài -->
                                         {% if m.has_kim_bai %}
-                                        <form method="POST" action="{{ url_for('use_kim_bai', user_id=m.id) }}">
-                                        <button type="submit" class="btn btn-sm btn-outline-warning" title="Sử dụng kim bài">
+                                        <button class="btn btn-sm btn-outline-warning" onclick="useKimBai({{ m.id }})">
                                             <i class="fas fa-shield-alt me-1"></i>Sử dụng
                                         </button>
-                                        </form>
                                         {% endif %}
                                     </div>
                                 </td>
@@ -161,4 +152,18 @@
         </div>
     </div>
 </div>
+
+<script>
+function updateDeath(id, action) {
+    fetch(`/${action}_death/${id}`, {
+        method: 'POST'
+    }).then(() => location.reload());
+}
+
+function useKimBai(id) {
+    fetch(`/use_kim_bai/${id}`, {
+        method: 'POST'
+    }).then(() => location.reload());
+}
+</script>
 {% endblock %}
