@@ -22,6 +22,7 @@ from sqlalchemy.sql import func
 import csv
 import io
 from flask_migrate import Migrate
+from sqlalchemy.inspection import inspect
 from dotenv import load_dotenv
 
 load_dotenv()
