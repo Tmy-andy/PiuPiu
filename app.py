@@ -477,6 +477,7 @@ def profile():
     return render_template('profile.html', user=user)
 
 @app.route('/admins')
+@login_required
 @admin_required
 def admins():
 
