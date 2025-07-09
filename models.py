@@ -75,7 +75,7 @@ class GamePlayer(db.Model):
     player_id = db.Column(db.Integer, db.ForeignKey('users.id')) 
     char_id = db.Column(db.Integer, db.ForeignKey('character_ability.id'))
 
-    player = db.relationship('User', foreign_keys=[player_id])
+    player = db.relationship('User', foreign_keys=[player_id], overlaps="player_info,played_games")
     char = db.relationship('CharacterAbility', foreign_keys=[char_id])
 
 class PlayerOffRequest(db.Model):
