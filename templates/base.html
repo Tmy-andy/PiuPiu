@@ -226,12 +226,14 @@
                 <ul class="navbar-nav ms-auto">
                     {% if session.user_id %}
                     <li class="nav-item dropdown">
-                        <a id="userDropdownToggle" class="nav-link dropdown-toggle text-white d-none d-sm-inline-flex align-items-center gap-2" href="#" role="button" data-bs-toggle="dropdown">
+                        <a id="userDropdownToggle"
+                        class="nav-link dropdown-toggle text-white d-none d-sm-inline-flex align-items-center gap-2"
+                        href="#" role="button" data-bs-toggle="dropdown">
                             <i class="fas fa-user"></i>
-                            <span class="d-none d-sm-inline">{{ session.display_name }}</span>
+                            <span>{{ session.display_name }}</span>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end">
-                            <li class="dropdown-header d-sm-none" class="d-none d-sm-inline">
+                            <li class="dropdown-header d-sm-none">
                                 <strong>{{ session.display_name }}</strong>
                             </li>
                             <li><hr class="dropdown-divider d-sm-none"></li>
