@@ -703,9 +703,11 @@ def increase_death(user_id):
     user = User.query.get(user_id)
     if user:
         user.death_count += 1
+        # Nếu death_count chia hết cho 2 → cấp kim bài
+        if user.death_count % 2 == 0:
+            user.has_kim_bai = True
         db.session.commit()
 
-        # Ghi log nếu muốn thống kê theo tháng
         log = KimBaiLog(user_id=user.id, timestamp=datetime.utcnow())
         db.session.add(log)
         db.session.commit()
@@ -717,37 +719,33 @@ def increase_death(user_id):
 @admin_required
 def use_kim_bai(user_id):
     user = User.query.get(user_id)
-    if user:
-        available = (user.death_count // 2) - user.kim_bai_used
-        if available > 0:
-            user.kim_bai_used += 1
-            db.session.commit()
-            flash('Đã sử dụng kim bài.', 'success')
-        else:
-            flash('Không đủ kim bài.', 'danger')
+    if user and user.has_kim_bai:
+        user.has_kim_bai = False
+        db.session.commit()
+        flash('Đã sử dụng kim bài.', 'success')
+    else:
+        flash('Không có kim bài để dùng.', 'danger')
     return redirect(url_for('kim_bai'))
 
-@app.route("/update_kim_bai/<int:user_id>", methods=["POST"])
-@login_required
-def update_kim_bai(user_id):
-    current_user = User.query.get(session['user_id'])
-    if current_user.role != "admin":
-        abort(403)
+@app.route('/decrease_death/<int:user_id>', methods=['POST'])
+@admin_required
+def decrease_death(user_id):
+    user = User.query.get(user_id)
+    if user and user.death_count > 0:
+        user.death_count -= 1
 
-    member = User.query.get_or_404(user_id)
-    action = request.form.get("action")
-    current_count = member.kim_bai or 0
+        # Cập nhật lại trạng thái kim bài:
+        if user.death_count % 2 == 0:
+            user.has_kim_bai = True
+        else:
+            user.has_kim_bai = False
 
-    if action == "increase":
-        member.kim_bai = current_count + 1
-    elif action == "decrease" and current_count > 0:
-        member.kim_bai = current_count - 1
-    elif action == "use":
-        member.kim_bai = 0  # hoặc trừ 1 tùy bạn muốn
-        # Hoặc gắn thêm logic "đánh dấu đã dùng"...
+        db.session.commit()
+        flash('Đã giảm lượt chết.', 'success')
+    else:
+        flash('Không thể giảm nữa.', 'warning')
+    return redirect(url_for('kim_bai'))
 
-    db.session.commit()
-    return redirect(request.referrer or url_for("dashboard"))
 
 #Top
 @app.route('/top_tier')

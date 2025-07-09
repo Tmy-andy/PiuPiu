@@ -113,26 +113,35 @@
                                 </td>
                                 {% if user.role == 'admin' %}
                                 <td>
-                                    <form method="POST" action="{{ url_for('update_kim_bai', user_id=m.id) }}" class="d-flex gap-2 align-items-center">
-                                        <input type="hidden" name="action" value="" class="action-field">
-
-                                        <button type="submit" class="btn btn-sm btn-outline-secondary" onclick="this.form.querySelector('.action-field').value='decrease';">
+                                    <div class="d-flex gap-2 align-items-center">
+                                        <!-- Giảm lượt chết -->
+                                        <form method="POST" action="{{ url_for('decrease_death', user_id=m.id) }}">
+                                        <button type="submit" class="btn btn-sm btn-outline-secondary" title="Giảm lượt chết">
                                             <i class="fas fa-minus"></i>
                                         </button>
+                                        </form>
 
-                                        <input type="text" name="kim_bai_count" value="{{ m.kim_bai or 0 }}" class="form-control form-control-sm text-center" style="width: 50px;" readonly>
+                                        <!-- Hiển thị lượt chết -->
+                                        <span class="badge bg-light text-dark px-2">{{ m.death_count }} lần</span>
 
-                                        <button type="submit" class="btn btn-sm btn-outline-secondary" onclick="this.form.querySelector('.action-field').value='increase';">
+                                        <!-- Tăng lượt chết -->
+                                        <form method="POST" action="{{ url_for('increase_death', user_id=m.id) }}">
+                                        <button type="submit" class="btn btn-sm btn-outline-danger" title="Tăng lượt chết">
                                             <i class="fas fa-plus"></i>
                                         </button>
+                                        </form>
 
-                                        <button type="submit" class="btn btn-sm btn-success" onclick="this.form.querySelector('.action-field').value='use';">
-                                            <i class="fas fa-check me-1"></i>Sử Dụng Kim Bài
+                                        <!-- Dùng kim bài nếu có -->
+                                        {% if m.has_kim_bai %}
+                                        <form method="POST" action="{{ url_for('use_kim_bai', user_id=m.id) }}">
+                                        <button type="submit" class="btn btn-sm btn-outline-warning" title="Sử dụng kim bài">
+                                            <i class="fas fa-shield-alt me-1"></i>Sử dụng
                                         </button>
-                                    </form>
+                                        </form>
+                                        {% endif %}
+                                    </div>
                                 </td>
                                 {% endif %}
-
                             </tr>
                             {% endfor %}
                         </tbody>
