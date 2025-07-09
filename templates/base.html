@@ -221,36 +221,50 @@
                 <i class="fas fa-users me-2"></i>Quản lý thành viên
             </a>
 
-            <!-- Hamburger icon -->
-            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
 
             <!-- Collapsible nav items -->
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     {% if session.user_id %}
                     <li class="nav-item dropdown">
-                        <a id="userDropdownToggle" class="nav-link dropdown-toggle text-white d-none d-sm-inline-flex" href="#" role="button" data-bs-toggle="dropdown">
-                            <span class="d-none d-sm-inline">
-                                <i class="fas fa-user me-1"></i> {{ session.display_name }}
-                            </span>
+                        <a id="userDropdownToggle" class="nav-link dropdown-toggle text-white d-none d-sm-inline-flex align-items-center gap-2" href="#" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-user"></i>
+                            <span>{{ session.display_name }}</span>
                         </a>
-                        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-                                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                            <span class="navbar-toggler-icon"></span>
-                        </button>
                         <ul class="dropdown-menu dropdown-menu-end">
                             <li class="dropdown-header d-sm-none">
                                 <strong>{{ session.display_name }}</strong>
                             </li>
                             <li><hr class="dropdown-divider d-sm-none"></li>
-                            <li><a class="dropdown-item" href="{{ url_for('dashboard') }}">Dashboard</a></li>
-                            <li><a class="dropdown-item" href="{{ url_for('profile') }}">Thông tin cá nhân</a></li>
-                            {% if session.user_role == 'admin' %}
-                            <li><a class="dropdown-item" href="{{ url_for('download_db') }}">Tải database</a></li>
+
+                            <li>
+                                <a class="dropdown-item" href="{{ url_for('dashboard') }}">
+                                    <i class="fas fa-tachometer-alt me-2 text-primary"></i> Dashboard
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="{{ url_for('profile') }}">
+                                    <i class="fas fa-user-cog me-2 text-secondary"></i> Thông tin cá nhân
+                                </a>
+                            </li>
+                            {% if session.user_role == 'admin' and session.display_name == 'Administrator' %}
+                            <li>
+                                <a class="dropdown-item" href="{{ url_for('download_db') }}">
+                                    <i class="fas fa-database me-2 text-warning"></i> Tải database
+                                </a>
+                            </li>
                             {% endif %}
                             <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" href="{{ url_for('logout') }}">Đăng xuất</a></li>
+                            <li>
+                                <a class="dropdown-item" href="{{ url_for('logout') }}">
+                                    <i class="fas fa-sign-out-alt me-2 text-danger"></i> Đăng xuất
+                                </a>
+                            </li>
                         </ul>
+
                     </li>
                     {% endif %}
                 </ul>
