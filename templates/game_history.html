@@ -95,16 +95,16 @@
                                 <td>
                                     <div class="d-flex align-items-center">
                                         <div class="avatar-circle bg-success text-white me-2">
-                                            {{ game.host.username[0].upper() }}
+                                            {{ game.host.member_id[-2:].upper() }}
                                         </div>
-                                        <span class="fw-semibold">{{ game.host.username }}</span>
+                                        <span class="fw-semibold">Thành viên {{ game.host.member_id[-2:] }}</span>
                                     </div>
                                 </td>
                                 <td>
                                     <div class="players-list">
                                         {% for p in game.players %}
                                         <div class="player-item mb-1">
-                                            <span class="badge bg-secondary me-1">{{ p.player.username }}</span>
+                                            <span class="badge bg-secondary me-1">Thành viên {{ p.player.member_id[-2:] }}</span>
                                             <span class="text-muted">làm</span>
                                             <span class="badge bg-primary ms-1">{{ p.char.name }}</span>
                                         </div>
@@ -163,12 +163,12 @@
                                             </div>
                                             <div class="select-options">
                                                 {% for u in users %}
-                                                <div class="select-option" data-value="{{ u.id }}" data-name="{{ u.username }}">
+                                                <div class="select-option" data-value="{{ u.id }}" data-name="{{ u.member_id[-2:] }}">
                                                     <div class="option-content">
                                                         <div class="avatar-circle bg-primary text-white me-2">
-                                                            {{ u.username[0].upper() }}
+                                                            {{ u.member_id[-2:].upper() }}
                                                         </div>
-                                                        <span>{{ u.username }}</span>
+                                                        <span>Thành viên {{ u.member_id[-2:] }}</span>
                                                     </div>
                                                     <div class="option-checkbox">
                                                         <i class="fas fa-check"></i>
@@ -180,11 +180,12 @@
                                     </div>
                                     <div class="selected-items" id="selectedPlayers"></div>
                                 </div>
-                                <select class="form-select d-none" name="players" id="players" multiple required>
-                                    {% for u in users %}
-                                    <option value="{{ u.id }}" data-name="{{ u.username }}">{{ u.username }}</option>
+                                <select class="form-select select2" name="players" id="players" multiple required>
+                                    {% for user in users %}
+                                    <option value="{{ user.id }}" data-name="{{ user.member_id[-2:] }}">Thành viên {{ user.member_id[-2:] }}</option>
                                     {% endfor %}
                                 </select>
+
                             </div>
                         </div>
                         <div class="col-12">
