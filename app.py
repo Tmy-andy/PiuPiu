@@ -480,7 +480,6 @@ def profile():
 @login_required
 @admin_required
 def admins():
-
     admins = User.query.filter_by(role='admin').order_by(User.created_at.desc()).all()
     members = User.query.filter_by(role='member').all()
 
@@ -490,11 +489,10 @@ def admins():
     return render_template('admins.html', admins=admins, members=members,
                            can_create=can_create, can_edit=can_edit)
 
+
 @app.route('/delete_admin/<int:user_id>', methods=['POST'])
 @admin_required
 def delete_admin(user_id):
-
-
     if not current_user or current_user.member_id != 'ADMIN-001':
         flash('Bạn không có quyền xóa admin.', 'danger')
         return redirect(url_for('admins'))
