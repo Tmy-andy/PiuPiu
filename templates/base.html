@@ -222,10 +222,7 @@
             </a>
 
             <!-- Hamburger icon -->
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
+            
 
             <!-- Collapsible nav items -->
             <div class="collapse navbar-collapse" id="navbarNav">
@@ -233,9 +230,14 @@
                     {% if session.user_id %}
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown">
-                            <i class="fas fa-user me-1"></i>
-                            <span class="d-none d-sm-inline">{{ session.display_name }}</span>
+                            <span class="d-none d-sm-inline">
+                                <i class="fas fa-user me-1"></i> {{ session.display_name }}
+                            </span>
                         </a>
+                        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
                         <ul class="dropdown-menu dropdown-menu-end">
                             <li class="dropdown-header d-sm-none">
                                 <strong>{{ session.display_name }}</strong>
