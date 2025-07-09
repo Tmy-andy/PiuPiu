@@ -111,7 +111,7 @@
                                         </span>
                                     {% endif %}
                                 </td>
-                                {% if admins %}
+                                {% if user.role == 'admin' %}
                                 <td>
                                     <form method="POST" action="{{ url_for('update_kim_bai', user_id=m.id) }}" class="d-flex gap-2 align-items-center">
                                         <div class="input-group input-group-sm" style="width: 100px;">
