@@ -630,7 +630,8 @@ document.addEventListener("DOMContentLoaded", function () {
             };
         });
 
-
+        console.log("Players:", players);
+        console.log("Chars:", chars);
         if (players.length !== chars.length || players.length === 0) {
             alert("Số lượng người chơi và nhân vật phải bằng nhau và lớn hơn 0.");
             return;
