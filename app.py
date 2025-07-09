@@ -704,7 +704,7 @@ def increase_death(user_id):
     if user:
         user.death_count += 1
         # Nếu death_count chia hết cho 2 → cấp kim bài
-        if user.death_count % 2 == 0:
+        if user.death_count > 0 and user.death_count % 2 == 0:
             user.has_kim_bai = True
         db.session.commit()
 
@@ -735,7 +735,7 @@ def decrease_death(user_id):
         user.death_count -= 1
 
         # Cập nhật lại trạng thái kim bài:
-        if user.death_count % 2 == 0:
+        if user.death_count > 0 and user.death_count % 2 == 0:
             user.has_kim_bai = True
         else:
             user.has_kim_bai = False
