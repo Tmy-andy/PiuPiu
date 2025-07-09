@@ -692,7 +692,7 @@ def delete_ability(ability_id):
 
 # Kim Bài Miễn Tử
 @app.route('/kim_bai')
-@admin_required
+@login_required
 def kim_bai():
     members = User.query.filter_by(role='member').order_by(User.display_name).all()
     return render_template('kim_bai.html', members=members)
@@ -749,7 +749,7 @@ def decrease_death(user_id):
 
 #Top
 @app.route('/top_tier')
-@admin_required
+@login_required
 def top_tier():
     # Top 3 chết nhiều nhất tháng
     current_month = datetime.utcnow().month
