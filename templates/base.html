@@ -220,13 +220,12 @@
             <a class="navbar-brand" href="{{ url_for('dashboard') }}">
                 <i class="fas fa-users me-2"></i>Quản lý thành viên
             </a>
-
             <!-- Collapsible nav items -->
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     {% if session.user_id %}
                     <li class="nav-item dropdown">
-                        <a id="userDropdownToggle" class="nav-link dropdown-toggle text-white d-none d-sm-inline-flex align-items-center gap-2" href="#" role="button" data-bs-toggle="dropdown">
+                        <a id="userDropdownToggle" class="nav-link dropdown-toggle text-white align-items-center gap-2" href="#" role="button" data-bs-toggle="dropdown">
                             <i class="fas fa-user"></i>
                             <span class="d-none d-sm-inline">{{ session.display_name }}</span>
                         </a>
