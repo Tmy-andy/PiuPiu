@@ -22,6 +22,7 @@ from sqlalchemy.sql import func
 import csv
 import io
 from dotenv import load_dotenv
+from flask_migrate import Migrate
 
 load_dotenv()
 
@@ -708,7 +709,7 @@ def use_kim_bai(user_id):
             flash('Không đủ kim bài.', 'danger')
     return redirect(url_for('kim_bai'))
 
-#Top tier
+#Top
 @app.route('/top_tier')
 @admin_required
 def top_tier():
