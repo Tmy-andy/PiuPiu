@@ -26,7 +26,7 @@
             <div class="card-header bg-white">
                 <h5 class="card-title fw-bold mb-0">
                     <i class="fas fa-plus-circle me-2 text-success"></i>
-                    Tạo yêu cầu nghỉ mới
+                    Tạo yêu cầu xin off
                 </h5>
             </div>
             <div class="card-body">
@@ -35,10 +35,10 @@
                         {% if current_user.role == 'ADMIN' %}
                         <div class="col-md-12 mb-3">
                             <label for="user_id" class="form-label fw-semibold">
-                                <i class="fas fa-user me-1"></i>Chọn người chơi:
+                                <i class="fas fa-user me-1"></i>Chọn người:
                             </label>
                             <select class="form-select" name="user_id" required>
-                                <option disabled selected>-- Chọn người chơi --</option>
+                                <option disabled selected>-- Chọn người --</option>
                                 {% for u in users %}
                                     <option value="{{ u.id }}">{{ u.username }}</option>
                                 {% endfor %}
@@ -93,7 +93,7 @@
                         <thead>
                             <tr>
                                 <th>
-                                    <i class="fas fa-user me-1"></i>Người chơi
+                                    <i class="fas fa-user me-1"></i>Người xin off
                                 </th>
                                 <th>
                                     <i class="fas fa-calendar-plus me-1"></i>Từ ngày
@@ -137,8 +137,7 @@
                 {% else %}
                 <div class="text-center py-4">
                     <i class="fas fa-calendar-times fa-3x text-muted mb-3"></i>
-                    <h5 class="text-muted">Chưa có yêu cầu nghỉ nào</h5>
-                    <p class="text-muted">Hãy tạo yêu cầu nghỉ đầu tiên của bạn</p>
+                    <h5 class="text-muted">Chưa có ai xin off</h5>
                 </div>
                 {% endif %}
             </div>
