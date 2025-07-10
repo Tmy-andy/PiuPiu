@@ -80,6 +80,14 @@
                             </tr>
                         </thead>
                         <tbody>
+                            {# Thêm đoạn này trước vòng lặp for game in games #}
+                            {% set FACTION_ICONS = {
+                                "Phe Dân": "fa-solid fa-user-group",
+                                "Phe Sói": "fa-brands fa-wolf-pack-battalion",
+                                "Phe Ba": "fas fa-user-ninja text-warning",
+                                "Đổi Phe": "fa-random text-info"
+                            } %}
+
                             {% for game in games %}
                             <tr>
                                 <td>
@@ -102,16 +110,21 @@
                                 <td>
                                     <div class="players-list">
                                         {% for p in game.players %}
-                                        <div class="player-item mb-1">
-                                            <span class="badge bg-secondary me-1">Thành viên {{ p.player.member_id[-3:] }}</span>
-                                            <span class="text-muted">làm</span>
-                                            <span class="badge bg-primary ms-1">{{ p.char.name }}</span>
-                                        </div>
+                                            {% set icon_class = FACTION_ICONS.get(p.char.faction, 'fa-question-circle text-muted') %}
+                                            <div class="player-item mb-1">
+                                                <span class="badge bg-secondary me-1">Thành viên {{ p.player.member_id[-3:] }}</span>
+                                                <span class="text-muted">làm</span>
+                                                <span class="badge bg-primary ms-1">
+                                                    <i class="fas {{ icon_class }} me-1" title="{{ p.char.faction }}"></i>
+                                                    {{ p.char.name }}
+                                                </span>
+                                            </div>
                                         {% endfor %}
                                     </div>
                                 </td>
                             </tr>
                             {% endfor %}
+
                         </tbody>
                     </table>
                 </div>
