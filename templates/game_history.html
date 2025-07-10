@@ -614,7 +614,10 @@ document.addEventListener("DOMContentLoaded", function () {
             this.selectedContainer.appendChild(selectedItem);
 
             // Cập nhật đếm
-            this.updateCharCount(value);
+            if (this.container.id === 'charsSelect') {
+                this.updateCharCount(value);
+            }
+
         }
         
         deselectOption(option, value) {
@@ -629,7 +632,19 @@ document.addEventListener("DOMContentLoaded", function () {
                 selectedItem.remove();
             }
 
-            this.updateCharCount(value);
+            if (this.container.id === 'charsSelect') {
+                this.updateCharCount(value);
+            }
+
+            // Xóa khỏi real select
+            const realOption = this.realSelect.querySelector(`option[value="${value}"]`);
+            if (realOption) {
+                realOption.selected = false;
+            }
+
+            // Cập nhật placeholder và real select
+            this.updatePlaceholder();
+            this.updateRealSelect();    
         }
         
         updatePlaceholder() {
