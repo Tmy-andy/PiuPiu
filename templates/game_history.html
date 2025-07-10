@@ -196,7 +196,7 @@
                                         </div>
                                     </div>
                                     <div class="selected-items" id="selectedPlayers"></div>
-                                    <select class="form-select d-none" name="players" id="players" multiple required>
+                                    <select class="form-select d-none" name="players" id="players" multiple>
                                         {% for u in users %}
                                         <option value="{{ u.id }}" data-name="{{ u.member_id[-3:] }}">{{ u.member_id[-3:] }}</option>
                                         {% endfor %}
@@ -731,6 +731,19 @@ document.addEventListener("DOMContentLoaded", function () {
 
         box.style.display = "block";
         randomizedCharIds = shuffledChars.map(opt => opt.value);
+    });
+    document.getElementById("newGameForm").addEventListener("submit", function (e) {
+        const selectedPlayers = Array.from(document.getElementById("players").selectedOptions);
+        const selectedChars = randomizedCharIds;
+
+        if (selectedPlayers.length === 0 || selectedPlayers.length !== selectedChars.length) {
+            alert("Số lượng người chơi và nhân vật phải bằng nhau và lớn hơn 0.");
+            e.preventDefault();
+            return;
+        }
+
+        // Gán char_ids vào input ẩn
+        document.getElementById("char_ids").value = selectedChars.join(",");
     });
 });
 </script>
