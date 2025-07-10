@@ -952,9 +952,6 @@ def create_game():
         flash("Số lượng người chơi và nhân vật phải bằng nhau", "danger")
         return redirect(url_for('game_history'))
 
-    # Random pairing
-    random.shuffle(char_ids)
-
     new_game = GameHistory(host_id=current_user.id)
     db.session.add(new_game)
     db.session.flush()  # để lấy id game mới
