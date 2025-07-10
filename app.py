@@ -911,7 +911,7 @@ def game_history():
     # Thêm dict ánh xạ icon và màu sắc theo phe
     FACTION_ICONS = {
         "Phe Dân": ("fa-users", "bg-success text-white"),
-        "Phe Sói": ("fa-skull-crossbones", "bg-danger-subtle text-danger"),
+        "Phe Sói": ("fa-brands fa-wolf-pack-battalion", "bg-danger-subtle text-danger"),
         "Phe 3": ("fa-user-secret", "bg-dark text-white"),
         "Đổi Phe": ("fa-random", "bg-warning-subtle text-warning")
     }
