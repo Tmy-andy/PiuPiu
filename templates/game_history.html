@@ -106,16 +106,22 @@
                                         <span class="fw-semibold">{{ game.host.member_id[-3:] }}</span>
                                     </div>
                                 </td>
+                                {% set FACTION_ICONS = {
+                                    "Phe Dân": ("fa-users", "bg-success text-white"),
+                                    "Phe Sói": ("fa-skull-crossbones", "bg-danger-subtle text-danger"),
+                                    "Phe 3": ("fa-user-secret", "bg-dark text-white"),
+                                    "Đổi Phe": ("fa-random", "bg-warning-subtle text-warning")
+                                } %}
+
                                 <td>
                                     <div class="players-list">
                                         {% for p in game.players %}
-                                            {% set icon_class = FACTION_ICONS.get(p.char.faction, 'fa-question-circle text-muted') %}
+                                            {% set icon, color_class = FACTION_ICONS.get(p.char.faction, ('fa-question-circle', 'bg-secondary text-white')) %}
                                             <div class="player-item mb-1">
                                                 <span class="badge bg-secondary me-1">Thành viên {{ p.player.member_id[-3:] }}</span>
                                                 <span class="text-muted">làm</span>
-                                                <span class="badge bg-primary ms-1">
-                                                    <i class="fas {{ icon_class }} me-1" title="{{ p.char.faction }}"></i>
-                                                    {{ p.char.name }}
+                                                <span class="badge ms-1 {{ color_class }}">
+                                                    <i class="fas {{ icon }} me-1"></i>{{ p.char.name }}
                                                 </span>
                                             </div>
                                         {% endfor %}
@@ -509,6 +515,10 @@
 .character-icon i {
     color: inherit !important;
 }
+.players-list .badge i {
+    color: inherit !important;
+}
+
 </style>
 {% endblock %}
 
