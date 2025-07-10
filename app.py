@@ -945,7 +945,8 @@ def create_game():
     from models import GameHistory, GamePlayer, db, CharacterAbility, User
 
     player_ids = request.form.getlist("players")
-    char_ids = request.form.getlist("chars")
+    char_ids_str = request.form.get("char_ids", "")
+    char_ids = [int(cid) for cid in char_ids_str.split(',') if cid.strip().isdigit()]
 
     if len(player_ids) != len(char_ids):
         flash("Số lượng người chơi và nhân vật phải bằng nhau", "danger")

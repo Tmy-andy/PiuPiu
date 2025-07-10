@@ -248,11 +248,7 @@
                                     </div>
                                     <div class="selected-items" id="selectedChars"></div>
                                 </div>
-                                <select class="form-select d-none" name="chars" id="chars" multiple required>
-                                    {% for char in chars %}
-                                    <option value="{{ char.id }}" data-name="{{ char.name }}">{{ char.name }}</option>
-                                    {% endfor %}
-                                </select>
+                                <input type="hidden" name="char_ids" id="char_ids">
                             </div>
                         </div>
                     </div>
@@ -578,19 +574,16 @@ document.addEventListener("DOMContentLoaded", function () {
         selectOption(option) {
             const value = option.dataset.value;
             const name = option.dataset.name;
-            
-            if (option.classList.contains('selected')) {
-                this.deselectOption(option, value);
-            } else {
-                this.addOption(option, value, name);
-            }
-            
+
+            // Cho phép chọn nhiều lần: KHÔNG kiểm tra selected nữa
+            this.addOption(option, value, name);
+
             this.updatePlaceholder();
             this.updateRealSelect();
         }
+
         
         addOption(option, value, name) {
-            option.classList.add('selected');
             this.selectedItems.push({value, name, option});
             
             const selectedItem = document.createElement('div');
@@ -635,19 +628,11 @@ document.addEventListener("DOMContentLoaded", function () {
         }
         
         updateRealSelect() {
-            // Clear all selections
-            Array.from(this.realSelect.options).forEach(option => {
-                option.selected = false;
-            });
-            
-            // Select the chosen items
-            this.selectedItems.forEach(item => {
-                const option = this.realSelect.querySelector(`[value="${item.value}"]`);
-                if (option) {
-                    option.selected = true;
-                }
-            });
+            const hiddenInput = document.getElementById("char_ids");
+            const allCharIds = this.selectedItems.map(item => item.value);
+            hiddenInput.value = allCharIds.join(',');
         }
+
     }
     
     // Initialize custom selects
@@ -704,6 +689,12 @@ document.addEventListener("DOMContentLoaded", function () {
         let charSelect = document.getElementById("chars");
         shuffledChars.forEach((opt) => {
             charSelect.append(opt);
+        });
+            // Trước khi submit form, lưu thứ tự nhân vật đã random vào input ẩn
+        document.getElementById("newGameForm").addEventListener("submit", function (e) {
+            const hiddenInput = document.getElementById("char_ids");
+            const selectedCharIds = Array.from(document.getElementById("chars").selectedOptions).map(opt => opt.value);
+            hiddenInput.value = selectedCharIds.join(",");
         });
     });
 });
