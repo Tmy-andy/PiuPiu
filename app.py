@@ -904,11 +904,22 @@ def edit_blacklist_author(entry_id):
 @app.route("/game_history")
 def game_history():
     from models import GameHistory, User, CharacterAbility
+
+    # Thứ tự phe
+    faction_order = {
+        "Phe Dân": 1,
+        "Phe Sói": 2,
+        "Phe 3": 3,
+        "Đổi Phe": 4
+    }
+
     games = GameHistory.query.order_by(GameHistory.created_at.desc()).all()
     users = User.query.all()
     chars = CharacterAbility.query.all()
 
-    # Thêm dict ánh xạ icon và màu sắc theo phe
+    # Sắp xếp chars theo phe
+    chars_sorted = sorted(chars, key=lambda c: faction_order.get(c.faction, 999))
+
     FACTION_ICONS = {
         "Phe Dân": ("fa-users", "bg-success text-white"),
         "Phe Sói": ("fa-brands fa-wolf-pack-battalion", "bg-danger-subtle text-danger"),
@@ -920,9 +931,10 @@ def game_history():
         "game_history.html",
         games=games,
         users=users,
-        chars=chars,
+        chars=chars_sorted,
         FACTION_ICONS=FACTION_ICONS
     )
+
 
 import random
 from flask import request, redirect, url_for, flash
