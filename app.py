@@ -923,7 +923,7 @@ def game_history():
     FACTION_ICONS = {
         "Phe Dân": ("fa-users", "bg-success text-white"),
         "Phe Sói": ("fa-brands fa-wolf-pack-battalion", "bg-danger-subtle text-danger"),
-        "Phe Ba": ("fa-user-secret", "bg-dark text-white"),
+        "Phe Ba": ("fa-user-secret", "bg-secondary-subtle text-dark"),
         "Đổi Phe": ("fa-random", "bg-warning-subtle text-warning")
     }
 
