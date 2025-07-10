@@ -230,8 +230,6 @@
                                                 } %}
 
                                                 {% for char in chars %}
-                                                <div class="select-options">
-                                                {% for char in chars %}
                                                     {% set icon, color_class = FACTION_ICONS.get(char.faction, ('fa-question-circle', 'bg-secondary text-white')) %}
                                                     <div class="select-option" data-value="{{ char.id }}" data-name="{{ char.name }}">
                                                         <div class="option-content">
@@ -518,8 +516,8 @@
 .players-list .badge i {
     color: inherit !important;
 }
-
 </style>
+
 {% endblock %}
 
 {% block scripts %}
