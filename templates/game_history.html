@@ -662,24 +662,15 @@ document.addEventListener("DOMContentLoaded", function () {
             const hiddenInput = document.getElementById("char_ids");
             const allCharIds = this.selectedItems.map(item => item.value);
             hiddenInput.value = allCharIds.join(',');
-        }
-        updateCharCount(value) {
-            const count = this.selectedItems.filter(item => item.value === value).length;
 
-            const optionElems = Array.from(this.options).filter(opt => opt.dataset.value === value);
-            optionElems.forEach(opt => {
-                const badge = opt.querySelector('.char-count');
-                if (count > 0) {
-                    badge.style.display = "inline-block";
-                    badge.textContent = `x${count}`;
-                    opt.classList.add("highlighted");
-                } else {
-                    badge.style.display = "none";
-                    badge.textContent = "";
-                    opt.classList.remove("highlighted");
-                }
-            });
+            // ✅ Cập nhật option selected trong <select>
+            const options = this.realSelect.options;
+            for (let i = 0; i < options.length; i++) {
+                const opt = options[i];
+                opt.selected = this.selectedItems.some(item => item.value === opt.value);
+            }
         }
+
     }
     
     // Initialize custom selects
