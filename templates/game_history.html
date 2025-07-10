@@ -581,7 +581,11 @@ document.addEventListener("DOMContentLoaded", function () {
             const value = option.dataset.value;
             const name = option.dataset.name;
 
-            // Cho phép chọn nhiều lần: KHÔNG kiểm tra selected nữa
+            // Nếu là người chơi thì không cho chọn lại
+            if (this.container.id === 'playersSelect') {
+                const exists = this.selectedItems.find(item => item.value === value);
+                if (exists) return;
+            }
             this.addOption(option, value, name);
 
             this.updatePlaceholder();
