@@ -80,7 +80,6 @@
                             </tr>
                         </thead>
                         <tbody>
-                            {# Thêm đoạn này trước vòng lặp for game in games #}
                             {% set FACTION_ICONS = {
                                 "Phe Dân": "fa-solid fa-user-group",
                                 "Phe Sói": "fa-brands fa-wolf-pack-battalion",
@@ -216,11 +215,20 @@
                                                 <input type="text" placeholder="Tìm kiếm..." class="form-control form-control-sm">
                                             </div>
                                             <div class="select-options">
+
+                                                {% set FACTION_ICONS = {
+                                                    "Phe Dân": "fa-solid fa-user-group",
+                                                    "Phe Sói": "fa-brands fa-wolf-pack-battalion",
+                                                    "Phe Ba": "fas fa-user-ninja text-warning",
+                                                    "Đổi Phe": "fa-random text-info"
+                                                } %}
+
                                                 {% for char in chars %}
                                                 <div class="select-option" data-value="{{ char.id }}" data-name="{{ char.name }}">
                                                     <div class="option-content">
-                                                        <div class="character-icon me-2">
-                                                            <i class="fas fa-mask text-warning"></i>
+                                                        {% set icon_class = FACTION_ICONS.get(char.faction|title|trim, 'fa-question-circle text-muted') %}
+                                                        <div class="character-icon me-2" title="{{ char.faction }}">
+                                                            <i class="fas {{ icon_class }}"></i>
                                                         </div>
                                                         <span>{{ char.name }}</span>
                                                     </div>
