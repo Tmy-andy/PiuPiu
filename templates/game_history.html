@@ -263,6 +263,197 @@
     </div>
 </div>
 
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    // Custom Select Implementation
+    class CustomSelect {
+        constructor(container, realSelect) {
+            this.container = container;
+            this.realSelect = realSelect;
+            this.header = container.querySelector('.select-header');
+            this.dropdown = container.querySelector('.select-dropdown');
+            this.searchInput = container.querySelector('.select-search input');
+            this.options = container.querySelectorAll('.select-option');
+            this.selectedContainer = container.parentElement.querySelector('.selected-items');
+            this.selectedItems = [];
+            
+            this.init();
+        }
+        
+        init() {
+            this.header.addEventListener('click', () => this.toggleDropdown());
+            this.searchInput.addEventListener('input', (e) => this.filterOptions(e.target.value));
+            
+            this.options.forEach(option => {
+                option.addEventListener('click', () => this.selectOption(option));
+            });
+            
+            // Close dropdown when clicking outside
+            document.addEventListener('click', (e) => {
+                if (!this.container.contains(e.target)) {
+                    this.closeDropdown();
+                }
+            });
+        }
+        
+        toggleDropdown() {
+            this.dropdown.classList.toggle('show');
+            if (this.dropdown.classList.contains('show')) {
+                this.searchInput.focus();
+            }
+        }
+        
+        closeDropdown() {
+            this.dropdown.classList.remove('show');
+        }
+        
+        filterOptions(searchTerm) {
+            this.options.forEach(option => {
+                const text = option.textContent.toLowerCase();
+                const matches = text.includes(searchTerm.toLowerCase());
+                option.style.display = matches ? 'flex' : 'none';
+            });
+        }
+        
+        selectOption(option) {
+            const value = option.dataset.value;
+            const name = option.dataset.name;
+            
+            if (option.classList.contains('selected')) {
+                this.deselectOption(option, value);
+            } else {
+                this.addOption(option, value, name);
+            }
+            
+            this.updatePlaceholder();
+            this.updateRealSelect();
+        }
+        
+        addOption(option, value, name) {
+            option.classList.add('selected');
+            this.selectedItems.push({value, name, option});
+            
+            const selectedItem = document.createElement('div');
+            selectedItem.className = 'selected-item';
+            selectedItem.dataset.value = value;
+            selectedItem.innerHTML = `
+                <span>${name}</span>
+                <div class="remove-item" data-value="${value}">
+                    <i class="fas fa-times"></i>
+                </div>
+            `;
+            
+            selectedItem.querySelector('.remove-item').addEventListener('click', () => {
+                this.deselectOption(option, value);
+            });
+            
+            this.selectedContainer.appendChild(selectedItem);
+        }
+        
+        deselectOption(option, value) {
+            option.classList.remove('selected');
+            this.selectedItems = this.selectedItems.filter(item => item.value !== value);
+            
+            const selectedItem = this.selectedContainer.querySelector(`[data-value="${value}"]`);
+            if (selectedItem) {
+                selectedItem.remove();
+            }
+            
+            this.updatePlaceholder();
+            this.updateRealSelect();
+        }
+        
+        updatePlaceholder() {
+            const placeholder = this.header.querySelector('.select-placeholder');
+            if (this.selectedItems.length === 0) {
+                placeholder.textContent = this.container.id === 'playersSelect' ? 'Chọn người chơi...' : 'Chọn nhân vật...';
+                placeholder.style.color = '#6c757d';
+            } else {
+                placeholder.textContent = `Đã chọn ${this.selectedItems.length} mục`;
+                placeholder.style.color = '#212529';
+            }
+        }
+        
+        updateRealSelect() {
+            // Clear all selections
+            Array.from(this.realSelect.options).forEach(option => {
+                option.selected = false;
+            });
+            
+            // Select the chosen items
+            this.selectedItems.forEach(item => {
+                const option = this.realSelect.querySelector(`[value="${item.value}"]`);
+                if (option) {
+                    option.selected = true;
+                }
+            });
+        }
+    }
+    
+    // Initialize custom selects
+    const playersSelect = new CustomSelect(
+        document.getElementById('playersSelect'),
+        document.getElementById('players')
+    );
+    
+    const charsSelect = new CustomSelect(
+        document.getElementById('charsSelect'),
+        document.getElementById('chars')
+    );
+    
+    // Randomize functionality
+    const randomizeBtn = document.getElementById("randomizeBtn");
+    const listBox = document.getElementById("assignmentsList");
+    const box = document.getElementById("assignmentsBox");
+
+    randomizeBtn.addEventListener("click", function () {
+        listBox.innerHTML = "";
+        box.style.display = "none";
+
+        let players = Array.from(document.getElementById("players").selectedOptions);
+        let chars = Array.from(document.getElementById("chars").selectedOptions).map(opt => {
+            return {
+                value: opt.value,
+                name: opt.textContent.trim()
+            };
+        });
+
+        console.log("Players:", players);
+        console.log("Chars:", chars);
+        if (players.length !== chars.length || players.length === 0) {
+            alert("Số lượng người chơi và nhân vật phải bằng nhau và lớn hơn 0.");
+            return;
+        }
+
+        // Shuffle nhân vật
+        let shuffledChars = chars.slice();
+        for (let i = shuffledChars.length - 1; i > 0; i--) {
+            let j = Math.floor(Math.random() * (i + 1));
+            [shuffledChars[i], shuffledChars[j]] = [shuffledChars[j], shuffledChars[i]];
+        }
+        // Hiển thị kết quả phân vai
+        players.forEach((player, index) => {
+            let li = document.createElement("li");
+            li.innerHTML = `<i class="fas fa-user-check text-success me-2"></i><strong>${player.dataset.name}</strong> làm <strong class="text-primary">${shuffledChars[index].name}</strong>`;
+            listBox.appendChild(li);
+        });
+
+        box.style.display = "block";
+
+        // Gắn lại nhân vật theo thứ tự
+        let charSelect = document.getElementById("chars");
+        shuffledChars.forEach((opt) => {
+            charSelect.append(opt);
+        });
+    });
+});
+</script>
+{% endblock %}
 <style>
 .avatar-circle {
     width: 35px;
@@ -475,194 +666,4 @@
     }
 }
 </style>
-<!-- {% endblock %} -->
-<!-- 
-{% block scripts %}
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script> -->
-
-<!-- <script>
-document.addEventListener("DOMContentLoaded", function () {
-    // Custom Select Implementation
-    class CustomSelect {
-        constructor(container, realSelect) {
-            this.container = container;
-            this.realSelect = realSelect;
-            this.header = container.querySelector('.select-header');
-            this.dropdown = container.querySelector('.select-dropdown');
-            this.searchInput = container.querySelector('.select-search input');
-            this.options = container.querySelectorAll('.select-option');
-            this.selectedContainer = container.parentElement.querySelector('.selected-items');
-            this.selectedItems = [];
-            
-            this.init();
-        }
-        
-        init() {
-            this.header.addEventListener('click', () => this.toggleDropdown());
-            this.searchInput.addEventListener('input', (e) => this.filterOptions(e.target.value));
-            
-            this.options.forEach(option => {
-                option.addEventListener('click', () => this.selectOption(option));
-            });
-            
-            // Close dropdown when clicking outside
-            document.addEventListener('click', (e) => {
-                if (!this.container.contains(e.target)) {
-                    this.closeDropdown();
-                }
-            });
-        }
-        
-        toggleDropdown() {
-            this.dropdown.classList.toggle('show');
-            if (this.dropdown.classList.contains('show')) {
-                this.searchInput.focus();
-            }
-        }
-        
-        closeDropdown() {
-            this.dropdown.classList.remove('show');
-        }
-        
-        filterOptions(searchTerm) {
-            this.options.forEach(option => {
-                const text = option.textContent.toLowerCase();
-                const matches = text.includes(searchTerm.toLowerCase());
-                option.style.display = matches ? 'flex' : 'none';
-            });
-        }
-        
-        selectOption(option) {
-            const value = option.dataset.value;
-            const name = option.dataset.name;
-            
-            if (option.classList.contains('selected')) {
-                this.deselectOption(option, value);
-            } else {
-                this.addOption(option, value, name);
-            }
-            
-            this.updatePlaceholder();
-            this.updateRealSelect();
-        }
-        
-        addOption(option, value, name) {
-            option.classList.add('selected');
-            this.selectedItems.push({value, name, option});
-            
-            const selectedItem = document.createElement('div');
-            selectedItem.className = 'selected-item';
-            selectedItem.dataset.value = value;
-            selectedItem.innerHTML = `
-                <span>${name}</span>
-                <div class="remove-item" data-value="${value}">
-                    <i class="fas fa-times"></i>
-                </div>
-            `;
-            
-            selectedItem.querySelector('.remove-item').addEventListener('click', () => {
-                this.deselectOption(option, value);
-            });
-            
-            this.selectedContainer.appendChild(selectedItem);
-        }
-        
-        deselectOption(option, value) {
-            option.classList.remove('selected');
-            this.selectedItems = this.selectedItems.filter(item => item.value !== value);
-            
-            const selectedItem = this.selectedContainer.querySelector(`[data-value="${value}"]`);
-            if (selectedItem) {
-                selectedItem.remove();
-            }
-            
-            this.updatePlaceholder();
-            this.updateRealSelect();
-        }
-        
-        updatePlaceholder() {
-            const placeholder = this.header.querySelector('.select-placeholder');
-            if (this.selectedItems.length === 0) {
-                placeholder.textContent = this.container.id === 'playersSelect' ? 'Chọn người chơi...' : 'Chọn nhân vật...';
-                placeholder.style.color = '#6c757d';
-            } else {
-                placeholder.textContent = `Đã chọn ${this.selectedItems.length} mục`;
-                placeholder.style.color = '#212529';
-            }
-        }
-        
-        updateRealSelect() {
-            // Clear all selections
-            Array.from(this.realSelect.options).forEach(option => {
-                option.selected = false;
-            });
-            
-            // Select the chosen items
-            this.selectedItems.forEach(item => {
-                const option = this.realSelect.querySelector(`[value="${item.value}"]`);
-                if (option) {
-                    option.selected = true;
-                }
-            });
-        }
-    }
-    
-    // Initialize custom selects
-    const playersSelect = new CustomSelect(
-        document.getElementById('playersSelect'),
-        document.getElementById('players')
-    );
-    
-    const charsSelect = new CustomSelect(
-        document.getElementById('charsSelect'),
-        document.getElementById('chars')
-    );
-    
-    // Randomize functionality
-    const randomizeBtn = document.getElementById("randomizeBtn");
-    const listBox = document.getElementById("assignmentsList");
-    const box = document.getElementById("assignmentsBox");
-
-    randomizeBtn.addEventListener("click", function () {
-        listBox.innerHTML = "";
-        box.style.display = "none";
-
-        let players = Array.from(document.getElementById("players").selectedOptions);
-        let chars = Array.from(document.getElementById("chars").selectedOptions).map(opt => {
-            return {
-                value: opt.value,
-                name: opt.textContent.trim()
-            };
-        });
-
-        console.log("Players:", players);
-        console.log("Chars:", chars);
-        if (players.length !== chars.length || players.length === 0) {
-            alert("Số lượng người chơi và nhân vật phải bằng nhau và lớn hơn 0.");
-            return;
-        }
-
-        // Shuffle nhân vật
-        let shuffledChars = chars.slice();
-        for (let i = shuffledChars.length - 1; i > 0; i--) {
-            let j = Math.floor(Math.random() * (i + 1));
-            [shuffledChars[i], shuffledChars[j]] = [shuffledChars[j], shuffledChars[i]];
-        }
-        // Hiển thị kết quả phân vai
-        players.forEach((player, index) => {
-            let li = document.createElement("li");
-            li.innerHTML = `<i class="fas fa-user-check text-success me-2"></i><strong>${player.dataset.name}</strong> làm <strong class="text-primary">${shuffledChars[index].name}</strong>`;
-            listBox.appendChild(li);
-        });
-
-        box.style.display = "block";
-
-        // Gắn lại nhân vật theo thứ tự
-        let charSelect = document.getElementById("chars");
-        shuffledChars.forEach((opt) => {
-            charSelect.append(opt);
-        });
-    });
-});
-</script>
-{% endblock %} -->
+{% block styles %}
