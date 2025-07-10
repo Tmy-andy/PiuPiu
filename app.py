@@ -909,7 +909,7 @@ def game_history():
     faction_order = {
         "Phe Dân": 1,
         "Phe Sói": 2,
-        "Phe 3": 3,
+        "Phe Ba": 3,
         "Đổi Phe": 4
     }
 
@@ -923,7 +923,7 @@ def game_history():
     FACTION_ICONS = {
         "Phe Dân": ("fa-users", "bg-success text-white"),
         "Phe Sói": ("fa-brands fa-wolf-pack-battalion", "bg-danger-subtle text-danger"),
-        "Phe 3": ("fa-user-secret", "bg-dark text-white"),
+        "Phe Ba": ("fa-user-secret", "bg-dark text-white"),
         "Đổi Phe": ("fa-random", "bg-warning-subtle text-warning")
     }
 
