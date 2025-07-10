@@ -901,24 +901,31 @@ def edit_blacklist_author(entry_id):
 
     return redirect(url_for('blacklist'))
 
-@app.route('/fix_sequence')
-def fix_sequence():
-    from sqlalchemy import text
-    db.session.execute(text("SELECT setval('users_id_seq', (SELECT MAX(id) FROM users))"))
-    db.session.commit()
-    return "✅ Đã cập nhật sequence users_id_seq!"
-
 @app.route("/game_history")
 def game_history():
     from models import GameHistory, User, CharacterAbility
     games = GameHistory.query.order_by(GameHistory.created_at.desc()).all()
     users = User.query.all()
     chars = CharacterAbility.query.all()
-    return render_template("game_history.html", games=games, users=users, chars=chars)
+
+    # Thêm dict ánh xạ icon và màu sắc theo phe
+    FACTION_ICONS = {
+        "Phe Dân": ("fa-users", "bg-success text-white"),
+        "Phe Sói": ("fa-skull-crossbones", "bg-danger-subtle text-danger"),
+        "Phe 3": ("fa-user-secret", "bg-dark text-white"),
+        "Đổi Phe": ("fa-random", "bg-warning-subtle text-warning")
+    }
+
+    return render_template(
+        "game_history.html",
+        games=games,
+        users=users,
+        chars=chars,
+        FACTION_ICONS=FACTION_ICONS
+    )
 
 import random
 from flask import request, redirect, url_for, flash
-
 @app.route("/create_game", methods=["POST"])
 @login_required
 def create_game():

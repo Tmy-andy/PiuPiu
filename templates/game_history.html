@@ -7,86 +7,60 @@
         {% include "_sidebar.html" %}
     </div>
 
-    <!-- Main Content -->
     <div class="col-lg-9 col-md-8">
-        <!-- Header Card -->
+        <!-- Tiêu đề -->
         <div class="card mb-4">
-            <div class="card-body">
-                <div class="d-flex flex-column flex-lg-row justify-content-between align-items-start align-items-lg-center gap-3">
-                    <div>
-                        <h1 class="card-title fw-bold mb-2">
-                            <i class="fas fa-history me-2 text-primary"></i>
-                            Lịch sử các ván chơi
-                        </h1>
-                        <p class="card-text text-muted mb-0">Quản lý và theo dõi các ván game đã diễn ra</p>
-                    </div>
-                    {% if session.user_role == 'admin' %}
-                    <button class="btn btn-primary btn-lg" data-bs-toggle="modal" data-bs-target="#newGameModal">
-                        <i class="fas fa-plus me-2"></i>
-                        <span class="d-none d-sm-inline">Tạo ván mới</span>
-                        <span class="d-sm-none">Tạo mới</span>
-                    </button>
-                    {% endif %}
+            <div class="card-body d-flex justify-content-between align-items-center">
+                <div>
+                    <h1 class="fw-bold mb-2"><i class="fas fa-history me-2 text-primary"></i>Lịch sử các ván chơi</h1>
+                    <p class="text-muted mb-0">Quản lý và theo dõi các ván game đã diễn ra</p>
                 </div>
+                {% if session.user_role == 'admin' %}
+                <button class="btn btn-primary btn-lg" data-bs-toggle="modal" data-bs-target="#newGameModal">
+                    <i class="fas fa-plus me-2"></i>Tạo ván mới
+                </button>
+                {% endif %}
             </div>
         </div>
 
-        <!-- Statistics Cards -->
+        <!-- Tổng số ván -->
         <div class="row mb-4">
-            <div class="col-lg-4 col-md-6 mb-3">
+            <div class="col-md-6 col-lg-4 mb-3">
                 <div class="card bg-primary text-white">
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div>
-                                <h6 class="card-title opacity-75">Tổng số ván</h6>
-                                <h2 class="fw-bold mb-0">{{ games|length if games else 0 }}</h2>
-                            </div>
-                            <i class="fas fa-gamepad fa-2x opacity-75"></i>
+                    <div class="card-body d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="opacity-75">Tổng số ván</h6>
+                            <h2 class="fw-bold mb-0">{{ games|length if games else 0 }}</h2>
                         </div>
+                        <i class="fas fa-gamepad fa-2x opacity-75"></i>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Games History Table -->
+        <!-- Bảng lịch sử -->
         <div class="card">
             <div class="card-header bg-white">
-                <h5 class="card-title fw-bold mb-0">
-                    <i class="fas fa-list me-2 text-primary"></i>
-                    Danh sách lịch sử ván
-                </h5>
+                <h5 class="fw-bold mb-0"><i class="fas fa-list me-2 text-primary"></i>Danh sách lịch sử ván</h5>
             </div>
             <div class="card-body">
                 {% if games %}
+                {% set FACTION_ICONS = {
+                    "Phe Dân": ("fa-users", "bg-success text-white"),
+                    "Phe Sói": ("fa-skull-crossbones", "bg-danger-subtle text-danger"),
+                    "Phe 3": ("fa-user-secret", "bg-dark text-white"),
+                    "Đổi Phe": ("fa-random", "bg-warning-subtle text-warning")
+                } %}
                 <div class="table-responsive">
                     <table class="table table-hover">
                         <thead class="table-light">
                             <tr>
-                                <th>
-                                    <i class="fas fa-clock me-1"></i>
-                                    <span class="d-none d-md-inline">Thời gian</span>
-                                    <span class="d-md-none">Ngày</span>
-                                </th>
-                                <th>
-                                    <i class="fas fa-user-tie me-1"></i>
-                                    <span class="d-none d-sm-inline">Quản trò</span>
-                                    <span class="d-sm-none">QT</span>
-                                </th>
-                                <th>
-                                    <i class="fas fa-users me-1"></i>
-                                    <span class="d-none d-md-inline">Người chơi & vai trò</span>
-                                    <span class="d-md-none">Người chơi</span>
-                                </th>
+                                <th><i class="fas fa-clock me-1"></i>Thời gian</th>
+                                <th><i class="fas fa-user-tie me-1"></i>Quản trò</th>
+                                <th><i class="fas fa-users me-1"></i>Người chơi & vai trò</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {% set FACTION_ICONS = {
-                                "Phe Dân": ("fa-users", "bg-success text-white"),                 
-                                "Phe Sói": ("fa-skull-crossbones", "bg-danger-subtle text-danger"), 
-                                "Phe 3": ("fa-user-secret", "bg-dark text-white"),                  
-                                "Đổi Phe": ("fa-random", "bg-warning-subtle text-warning")          
-                            } %}
-
                             {% for game in games %}
                             <tr>
                                 <td>
@@ -106,13 +80,6 @@
                                         <span class="fw-semibold">{{ game.host.member_id[-3:] }}</span>
                                     </div>
                                 </td>
-                                {% set FACTION_ICONS = {
-                                    "Phe Dân": ("fa-users", "bg-success text-white"),
-                                    "Phe Sói": ("fa-skull-crossbones", "bg-danger-subtle text-danger"),
-                                    "Phe 3": ("fa-user-secret", "bg-dark text-white"),
-                                    "Đổi Phe": ("fa-random", "bg-warning-subtle text-warning")
-                                } %}
-
                                 <td>
                                     <div class="players-list">
                                         {% for p in game.players %}
@@ -129,7 +96,6 @@
                                 </td>
                             </tr>
                             {% endfor %}
-
                         </tbody>
                     </table>
                 </div>
@@ -146,148 +112,6 @@
                 </div>
                 {% endif %}
             </div>
-        </div>
-    </div>
-</div>
-
-<!-- Modal tạo ván mới -->
-<div class="modal fade" id="newGameModal" tabindex="-1" aria-labelledby="newGameModalLabel">
-    <div class="modal-dialog modal-lg modal-dialog-centered">
-        <div class="modal-content">
-            <form id="newGameForm" method="POST" action="{{ url_for('create_game') }}">
-                <div class="modal-header bg-primary text-white">
-                    <h5 class="modal-title">
-                        <i class="fas fa-plus me-2"></i>Tạo ván mới
-                    </h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Đóng"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="row g-4">
-                        <div class="col-12">
-                            <div class="selection-container">
-                                <label for="players" class="form-label fw-semibold">
-                                    <i class="fas fa-users me-2 text-primary"></i>Người chơi:
-                                </label>
-                                <div class="custom-select-wrapper">
-                                    <div class="custom-select" id="playersSelect">
-                                        <div class="select-header" data-target="players">
-                                            <span class="select-placeholder">Chọn người chơi...</span>
-                                            <i class="fas fa-chevron-down"></i>
-                                        </div>
-                                        <div class="select-dropdown">
-                                            <div class="select-search">
-                                                <input type="text" placeholder="Tìm kiếm..." class="form-control form-control-sm">
-                                            </div>
-                                            <div class="select-options">
-                                                {% for u in users %}
-                                                <div class="select-option" data-value="{{ u.id }}" data-name="{{ u.member_id[-3:] }}">
-                                                    <div class="option-content">
-                                                        <div class="avatar-circle bg-primary text-white me-2">
-                                                            {{ u.member_id[-3:].upper() }}
-                                                        </div>
-                                                        <span>{{ u.member_id[-3:] }}</span>
-                                                    </div>
-                                                    <div class="option-checkbox">
-                                                        <i class="fas fa-check"></i>
-                                                    </div>
-                                                </div>
-                                                {% endfor %}
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="selected-items" id="selectedPlayers"></div>
-                                    <select class="form-select d-none" name="players" id="players" multiple required>
-                                        {% for u in users %}
-                                        <option value="{{ u.id }}" data-name="{{ u.member_id[-3:] }}">{{ u.member_id[-3:] }}</option>
-                                        {% endfor %}
-                                    </select>
-
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-12">
-                            <div class="selection-container">
-                                <label for="chars" class="form-label fw-semibold">
-                                    <i class="fas fa-mask me-2 text-primary"></i>Nhân vật:
-                                </label>
-                                <div class="custom-select-wrapper">
-                                    <div class="custom-select" id="charsSelect">
-                                        <div class="select-header" data-target="chars">
-                                            <span class="select-placeholder">Chọn nhân vật...</span>
-                                            <i class="fas fa-chevron-down"></i>
-                                        </div>
-                                        <div class="select-dropdown">
-                                            <div class="select-search">
-                                                <input type="text" placeholder="Tìm kiếm..." class="form-control form-control-sm">
-                                            </div>
-                                            <div class="select-options">
-
-                                                {% set FACTION_ICONS = {
-                                                    "Phe Dân": ("fa-users", "bg-success text-white"),                    
-                                                    "Phe Sói": ("fa-skull-crossbones", "bg-danger-subtle text-danger"), 
-                                                    "Phe 3": ("fa-user-secret", "bg-dark text-white"),                  
-                                                    "Đổi Phe": ("fa-random", "bg-warning-subtle text-warning")        
-                                                } %}
-
-                                                {% for char in chars %}
-                                                <div class="select-options">
-                                                {% for char in chars %}
-                                                    {% set icon, color_class = FACTION_ICONS.get(char.faction, ('fa-question-circle', 'bg-secondary text-white')) %}
-                                                    <div class="select-option" data-value="{{ char.id }}" data-name="{{ char.name }}">
-                                                        <div class="option-content">
-                                                            <div class="character-icon me-2 {{ color_class }}" title="{{ char.faction }}">
-                                                                <i class="fas {{ icon }}"></i>
-                                                            </div>
-                                                            <span>{{ char.name }}</span>
-                                                        </div>
-                                                        <div class="option-checkbox">
-                                                            <i class="fas fa-check"></i>
-                                                        </div>
-                                                    </div>
-                                                {% endfor %}
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="selected-items" id="selectedChars"></div>
-                                </div>
-                                <select class="form-select d-none" name="chars" id="chars" multiple required>
-                                    {% for char in chars %}
-                                    <option value="{{ char.id }}" data-name="{{ char.name }}">{{ char.name }}</option>
-                                    {% endfor %}
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="text-center my-4">
-                        <button type="button" class="btn btn-secondary btn-lg" id="randomizeBtn">
-                            <i class="fas fa-dice me-2"></i>Phân ngẫu nhiên
-                        </button>
-                    </div>
-
-                    <div id="assignmentsBox" class="mb-3" style="display: none;">
-                        <div class="card bg-light">
-                            <div class="card-header">
-                                <h6 class="card-title mb-0">
-                                    <i class="fas fa-check-circle text-success me-2"></i>
-                                    Kết quả phân vai
-                                </h6>
-                            </div>
-                            <div class="card-body">
-                                <ul id="assignmentsList" class="list-unstyled mb-0"></ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                        <i class="fas fa-times me-2"></i>Hủy
-                    </button>
-                    <button type="submit" class="btn btn-success">
-                        <i class="fas fa-save me-2"></i>Xác nhận & lưu
-                    </button>
-                </div>
-            </form>
         </div>
     </div>
 </div>
