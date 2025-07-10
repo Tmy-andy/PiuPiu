@@ -236,7 +236,8 @@
                                                             <div class="character-icon me-2 {{ color_class }}" title="{{ char.faction }}">
                                                                 <i class="fas {{ icon }}"></i>
                                                             </div>
-                                                            <span>{{ char.name }}</span>
+                                                            <span class="char-name">{{ char.name }}</span>
+                                                            <span class="char-count badge bg-secondary ms-2" style="display: none;">x1</span>
                                                         </div>
                                                         <div class="option-checkbox">
                                                             <i class="fas fa-check"></i>
@@ -585,7 +586,7 @@ document.addEventListener("DOMContentLoaded", function () {
         
         addOption(option, value, name) {
             this.selectedItems.push({value, name, option});
-            
+
             const selectedItem = document.createElement('div');
             selectedItem.className = 'selected-item';
             selectedItem.dataset.value = value;
@@ -595,25 +596,30 @@ document.addEventListener("DOMContentLoaded", function () {
                     <i class="fas fa-times"></i>
                 </div>
             `;
-            
+
             selectedItem.querySelector('.remove-item').addEventListener('click', () => {
                 this.deselectOption(option, value);
             });
-            
+
             this.selectedContainer.appendChild(selectedItem);
+
+            // Cập nhật đếm
+            this.updateCharCount(value);
         }
         
         deselectOption(option, value) {
-            option.classList.remove('selected');
-            this.selectedItems = this.selectedItems.filter(item => item.value !== value);
-            
+            // Xóa 1 mục (chỉ xóa 1 nếu chọn trùng)
+            const index = this.selectedItems.findIndex(item => item.value === value);
+            if (index !== -1) {
+                this.selectedItems.splice(index, 1);
+            }
+
             const selectedItem = this.selectedContainer.querySelector(`[data-value="${value}"]`);
             if (selectedItem) {
                 selectedItem.remove();
             }
-            
-            this.updatePlaceholder();
-            this.updateRealSelect();
+
+            this.updateCharCount(value);
         }
         
         updatePlaceholder() {
@@ -632,7 +638,23 @@ document.addEventListener("DOMContentLoaded", function () {
             const allCharIds = this.selectedItems.map(item => item.value);
             hiddenInput.value = allCharIds.join(',');
         }
+        updateCharCount(value) {
+            const count = this.selectedItems.filter(item => item.value === value).length;
 
+            const optionElems = Array.from(this.options).filter(opt => opt.dataset.value === value);
+            optionElems.forEach(opt => {
+                const badge = opt.querySelector('.char-count');
+                if (count > 0) {
+                    badge.style.display = "inline-block";
+                    badge.textContent = `x${count}`;
+                    opt.classList.add("highlighted");
+                } else {
+                    badge.style.display = "none";
+                    badge.textContent = "";
+                    opt.classList.remove("highlighted");
+                }
+            });
+        }
     }
     
     // Initialize custom selects
