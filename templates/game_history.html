@@ -866,4 +866,25 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 </script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  // Thêm dòng mới
+  document.getElementById("addAssignmentRow").addEventListener("click", function () {
+    const container = document.getElementById("manualAssignments");
+    const row = container.querySelector(".row").cloneNode(true);
+    container.appendChild(row);
+  });
+
+  // Xóa dòng
+  document.getElementById("manualAssignments").addEventListener("click", function (e) {
+    if (e.target.classList.contains("remove-row")) {
+      const row = e.target.closest(".row");
+      if (document.querySelectorAll("#manualAssignments .row").length > 1) {
+        row.remove();
+      }
+    }
+  });
+});
+</script>
+
 {% endblock %}
