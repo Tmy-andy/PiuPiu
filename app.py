@@ -771,9 +771,17 @@ def use_kim_bai(user_id):
 def decrease_death(user_id):
     user = User.query.get(user_id)
     if user and user.death_count > 0:
+        # Trừ lượt chết
         user.death_count -= 1
 
-        # Cập nhật lại trạng thái kim bài:
+        # Xóa dòng log gần nhất của người này
+        last_log = KimBaiLog.query.filter_by(user_id=user.id)\
+                                  .order_by(KimBaiLog.timestamp.desc())\
+                                  .first()
+        if last_log:
+            db.session.delete(last_log)
+
+        # Cập nhật kim bài
         if user.death_count > 0 and user.death_count % 2 == 0:
             user.has_kim_bai = True
         else:
@@ -784,7 +792,6 @@ def decrease_death(user_id):
     else:
         flash('Không thể giảm nữa.', 'warning')
     return redirect(url_for('kim_bai'))
-
 
 #Top
 @app.route('/top_tier')
