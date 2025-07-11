@@ -948,9 +948,30 @@ from flask import request, redirect, url_for, flash
 @app.route("/create_game", methods=["POST"])
 @login_required
 def create_game():
+    from models import GameHistory, GamePlayer, db
 
-    from models import GameHistory, GamePlayer, db, CharacterAbility, User
+    # --- THỦ CÔNG ---
+    manual_players = request.form.getlist("manual_players[]")
+    manual_chars = request.form.getlist("manual_chars[]")
 
+    if manual_players and manual_chars:
+        if len(manual_players) != len(manual_chars):
+            flash("Số người chơi và nhân vật không khớp trong phân thủ công.", "danger")
+            return redirect(url_for("game_history"))
+
+        new_game = GameHistory(host_id=current_user.id)
+        db.session.add(new_game)
+        db.session.flush()  # Lấy game_id mới
+
+        for player_id, char_id in zip(manual_players, manual_chars):
+            gp = GamePlayer(game_id=new_game.id, player_id=int(player_id), char_id=int(char_id))
+            db.session.add(gp)
+
+        db.session.commit()
+        flash("Tạo ván (phân thủ công) thành công!", "success")
+        return redirect(url_for("game_history"))
+
+    # --- NGẪU NHIÊN ---
     player_ids = request.form.getlist("players")
     char_ids_str = request.form.get("char_ids", "")
     char_ids = [int(cid) for cid in char_ids_str.split(',') if cid.strip().isdigit()]
@@ -968,7 +989,7 @@ def create_game():
         db.session.add(p)
 
     db.session.commit()
-    flash("Tạo ván mới thành công!", "success")
+    flash("Tạo ván (phân ngẫu nhiên) thành công!", "success")
     return redirect(url_for('game_history'))
 
 @app.route('/update_game_note/<int:game_id>', methods=['POST'])
