@@ -465,43 +465,59 @@
 
     {% block scripts %}
     <script>
-        // Đảm bảo dropdown hoạt động tốt trên mobile
+        // Chỉ xử lý custom dropdown trên mobile, để Bootstrap xử lý trên desktop
         document.addEventListener('DOMContentLoaded', function() {
-            // Xử lý dropdown
-            const dropdowns = document.querySelectorAll('.dropdown-toggle');
-            
-            dropdowns.forEach(dropdown => {
-                dropdown.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    const menu = this.nextElementSibling;
-                    
-                    // Đóng tất cả dropdown khác
-                    document.querySelectorAll('.dropdown-menu.show').forEach(otherMenu => {
-                        if (otherMenu !== menu) {
-                            otherMenu.classList.remove('show');
-                        }
+            function isMobile() {
+                return window.innerWidth <= 768;
+            }
+
+            // Chỉ override Bootstrap dropdown trên mobile
+            if (isMobile()) {
+                const dropdowns = document.querySelectorAll('.dropdown-toggle');
+                
+                dropdowns.forEach(dropdown => {
+                    dropdown.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        
+                        const menu = this.nextElementSibling;
+                        
+                        // Đóng tất cả dropdown khác
+                        document.querySelectorAll('.dropdown-menu.show').forEach(otherMenu => {
+                            if (otherMenu !== menu) {
+                                otherMenu.classList.remove('show');
+                            }
+                        });
+                        
+                        // Toggle dropdown hiện tại
+                        menu.classList.toggle('show');
                     });
-                    
-                    // Toggle dropdown hiện tại
-                    menu.classList.toggle('show');
                 });
-            });
 
-            // Đóng dropdown khi click bên ngoài
-            document.addEventListener('click', function(e) {
-                if (!e.target.closest('.dropdown')) {
-                    document.querySelectorAll('.dropdown-menu.show').forEach(menu => {
-                        menu.classList.remove('show');
-                    });
-                }
-            });
+                // Đóng dropdown khi click bên ngoài (chỉ trên mobile)
+                document.addEventListener('click', function(e) {
+                    if (!e.target.closest('.dropdown')) {
+                        document.querySelectorAll('.dropdown-menu.show').forEach(menu => {
+                            menu.classList.remove('show');
+                        });
+                    }
+                });
 
-            // Đóng dropdown khi click vào item
-            document.querySelectorAll('.dropdown-item').forEach(item => {
-                item.addEventListener('click', function() {
-                    document.querySelectorAll('.dropdown-menu.show').forEach(menu => {
-                        menu.classList.remove('show');
+                // Đóng dropdown khi click vào item (chỉ trên mobile)
+                document.querySelectorAll('.dropdown-item').forEach(item => {
+                    item.addEventListener('click', function() {
+                        document.querySelectorAll('.dropdown-menu.show').forEach(menu => {
+                            menu.classList.remove('show');
+                        });
                     });
+                });
+            }
+
+            // Xử lý khi resize window
+            window.addEventListener('resize', function() {
+                // Đóng tất cả dropdown khi resize
+                document.querySelectorAll('.dropdown-menu.show').forEach(menu => {
+                    menu.classList.remove('show');
                 });
             });
         });
