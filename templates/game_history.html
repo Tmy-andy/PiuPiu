@@ -205,140 +205,181 @@
 
 <!-- Modal tạo ván mới -->
 <div class="modal fade" id="newGameModal" tabindex="-1" aria-labelledby="newGameModalLabel">
-    <div class="modal-dialog modal-lg modal-dialog-centered">
-        <div class="modal-content">
-            <form id="newGameForm" method="POST" action="{{ url_for('create_game') }}">
-                <div class="modal-header bg-primary text-white">
-                    <h5 class="modal-title">
-                        <i class="fas fa-plus me-2"></i>Tạo ván mới
-                    </h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Đóng"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="row g-4">
-                        <div class="col-12">
-                            <div class="selection-container">
-                                <label for="players" class="form-label fw-semibold">
-                                    <i class="fas fa-users me-2 text-primary"></i>Người chơi:
-                                </label>
-                                <div class="custom-select-wrapper">
-                                    <div class="custom-select" id="playersSelect">
-                                        <div class="select-header" data-target="players">
-                                            <span class="select-placeholder">Chọn người chơi...</span>
-                                            <i class="fas fa-chevron-down"></i>
-                                        </div>
-                                        <div class="select-dropdown">
-                                            <div class="select-search">
-                                                <input type="text" placeholder="Tìm kiếm..." class="form-control form-control-sm">
-                                            </div>
-                                            <div class="select-options">
-                                                {% for u in users %}
-                                                <div class="select-option" data-value="{{ u.id }}" data-name="{{ u.member_id[-3:] }}">
-                                                    <div class="option-content">
-                                                        <div class="avatar-circle bg-primary text-white me-2">
-                                                            {{ u.member_id[-3:].upper() }}
-                                                        </div>
-                                                        <span>{{ u.member_id[-3:] }}</span>
-                                                    </div>
-                                                    <div class="option-checkbox">
-                                                        <i class="fas fa-check"></i>
-                                                    </div>
-                                                </div>
-                                                {% endfor %}
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="selected-items" id="selectedPlayers"></div>
-                                    <select class="form-select d-none" name="players" id="players" multiple>
-                                        {% for u in users %}
-                                        <option value="{{ u.id }}" data-name="{{ u.member_id[-3:] }}">{{ u.member_id[-3:] }}</option>
-                                        {% endfor %}
-                                    </select>
-
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-12">
-                            <div class="selection-container">
-                                <label for="chars" class="form-label fw-semibold">
-                                    <i class="fas fa-mask me-2 text-primary"></i>Nhân vật:
-                                </label>
-                                <div class="custom-select-wrapper">
-                                    <div class="custom-select" id="charsSelect">
-                                        <div class="select-header" data-target="chars">
-                                            <span class="select-placeholder">Chọn nhân vật...</span>
-                                            <i class="fas fa-chevron-down"></i>
-                                        </div>
-                                        <div class="select-dropdown">
-                                            <div class="select-search">
-                                                <input type="text" placeholder="Tìm kiếm..." class="form-control form-control-sm">
-                                            </div>
-                                            <div class="select-options">
-
-                                                {% set FACTION_ICONS = {
-                                                    "Phe Dân": ("fa-users", "bg-success text-white"),                    
-                                                    "Phe Sói": ("fa-brands fa-wolf-pack-battalion", "bg-danger-subtle text-danger"), 
-                                                    "Phe Ba": ("fa-user-secret", "bg-secondary-subtle text-dark"),                  
-                                                    "Đổi Phe": ("fa-random", "bg-warning-subtle text-warning")        
-                                                } %}
-
-                                                {% for char in chars %}
-                                                    {% set icon, color_class = FACTION_ICONS.get(char.faction, ('fa-question-circle', 'bg-secondary text-white')) %}
-                                                    <div class="select-option" data-value="{{ char.id }}" data-name="{{ char.name }}">
-                                                        <div class="option-content">
-                                                            <div class="character-icon me-2 {{ color_class }}" title="{{ char.faction }}">
-                                                                <i class="fas {{ icon }}"></i>
-                                                            </div>
-                                                            <span class="char-name">{{ char.name }}</span>
-                                                            <span class="char-count badge bg-secondary ms-2" style="display: none;">x1</span>
-                                                        </div>
-                                                        <div class="option-checkbox">
-                                                            <i class="fas fa-check"></i>
-                                                        </div>
-                                                    </div>
-                                                {% endfor %}
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="selected-items" id="selectedChars"></div>
-                                </div>
-                                <input type="hidden" name="char_ids" id="char_ids">
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="text-center my-4">
-                        <button type="button" class="btn btn-secondary btn-lg" id="randomizeBtn">
-                            <i class="fas fa-dice me-2"></i>Phân ngẫu nhiên
-                        </button>
-                    </div>
-
-                    <div id="assignmentsBox" class="mb-3" style="display: none;">
-                        <div class="card bg-light">
-                            <div class="card-header">
-                                <h6 class="card-title mb-0">
-                                    <i class="fas fa-check-circle text-success me-2"></i>
-                                    Kết quả phân vai
-                                </h6>
-                            </div>
-                            <div class="card-body">
-                                <ul id="assignmentsList" class="list-unstyled mb-0"></ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                        <i class="fas fa-times me-2"></i>Hủy
-                    </button>
-                    <button type="submit" class="btn btn-success">
-                        <i class="fas fa-save me-2"></i>Xác nhận & lưu
-                    </button>
-                </div>
-            </form>
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+      <form id="newGameForm" method="POST" action="{{ url_for('create_game') }}">
+        <div class="modal-header bg-primary text-white">
+          <h5 class="modal-title">
+            <i class="fas fa-plus me-2"></i>Tạo ván mới
+          </h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Đóng"></button>
         </div>
+
+        <div class="modal-body">
+          <!-- Tabs -->
+          <ul class="nav nav-tabs mb-3" id="gameModeTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+              <button class="nav-link active" id="random-tab" data-bs-toggle="tab" data-bs-target="#random-mode" type="button" role="tab">Phân ngẫu nhiên</button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button class="nav-link" id="manual-tab" data-bs-toggle="tab" data-bs-target="#manual-mode" type="button" role="tab">Phân thủ công</button>
+            </li>
+          </ul>
+
+          <div class="tab-content" id="gameModeContent">
+            <!-- 🌀 Tab: Phân ngẫu nhiên -->
+            <div class="tab-pane fade show active" id="random-mode" role="tabpanel">
+              <!-- Giao diện chọn người chơi & nhân vật random -->
+              <div class="row g-4">
+                <div class="col-12">
+                  <div class="selection-container">
+                    <label for="players" class="form-label fw-semibold">
+                      <i class="fas fa-users me-2 text-primary"></i>Người chơi:
+                    </label>
+                    <div class="custom-select-wrapper">
+                      <div class="custom-select" id="playersSelect">
+                        <div class="select-header" data-target="players">
+                          <span class="select-placeholder">Chọn người chơi...</span>
+                          <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="select-dropdown">
+                          <div class="select-search">
+                            <input type="text" placeholder="Tìm kiếm..." class="form-control form-control-sm">
+                          </div>
+                          <div class="select-options">
+                            {% for u in users %}
+                            <div class="select-option" data-value="{{ u.id }}" data-name="{{ u.member_id[-3:] }}">
+                              <div class="option-content">
+                                <div class="avatar-circle bg-primary text-white me-2">
+                                  {{ u.member_id[-3:].upper() }}
+                                </div>
+                                <span>{{ u.member_id[-3:] }}</span>
+                              </div>
+                              <div class="option-checkbox">
+                                <i class="fas fa-check"></i>
+                              </div>
+                            </div>
+                            {% endfor %}
+                          </div>
+                        </div>
+                      </div>
+                      <div class="selected-items" id="selectedPlayers"></div>
+                      <select class="form-select d-none" name="players" id="players" multiple>
+                        {% for u in users %}
+                        <option value="{{ u.id }}" data-name="{{ u.member_id[-3:] }}">{{ u.member_id[-3:] }}</option>
+                        {% endfor %}
+                      </select>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-12">
+                  <div class="selection-container">
+                    <label for="chars" class="form-label fw-semibold">
+                      <i class="fas fa-mask me-2 text-primary"></i>Nhân vật:
+                    </label>
+                    <div class="custom-select-wrapper">
+                      <div class="custom-select" id="charsSelect">
+                        <div class="select-header" data-target="chars">
+                          <span class="select-placeholder">Chọn nhân vật...</span>
+                          <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="select-dropdown">
+                          <div class="select-search">
+                            <input type="text" placeholder="Tìm kiếm..." class="form-control form-control-sm">
+                          </div>
+                          <div class="select-options">
+                            {% for char in chars %}
+                              {% set icon, color_class = FACTION_ICONS.get(char.faction, ('fa-question-circle', 'bg-secondary text-white')) %}
+                              <div class="select-option" data-value="{{ char.id }}" data-name="{{ char.name }}">
+                                <div class="option-content">
+                                  <div class="character-icon me-2 {{ color_class }}" title="{{ char.faction }}">
+                                    <i class="fas {{ icon }}"></i>
+                                  </div>
+                                  <span class="char-name">{{ char.name }}</span>
+                                  <span class="char-count badge bg-secondary ms-2" style="display: none;">x1</span>
+                                </div>
+                                <div class="option-checkbox">
+                                  <i class="fas fa-check"></i>
+                                </div>
+                              </div>
+                            {% endfor %}
+                          </div>
+                        </div>
+                      </div>
+                      <div class="selected-items" id="selectedChars"></div>
+                    </div>
+                    <input type="hidden" name="char_ids" id="char_ids">
+                  </div>
+                </div>
+              </div>
+
+              <div class="text-center my-4">
+                <button type="button" class="btn btn-secondary btn-lg" id="randomizeBtn">
+                  <i class="fas fa-dice me-2"></i>Phân ngẫu nhiên
+                </button>
+              </div>
+
+              <div id="assignmentsBox" class="mb-3" style="display: none;">
+                <div class="card bg-light">
+                  <div class="card-header">
+                    <h6 class="card-title mb-0">
+                      <i class="fas fa-check-circle text-success me-2"></i>
+                      Kết quả phân vai
+                    </h6>
+                  </div>
+                  <div class="card-body">
+                    <ul id="assignmentsList" class="list-unstyled mb-0"></ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- ✋ Tab: Phân thủ công -->
+            <div class="tab-pane fade" id="manual-mode" role="tabpanel">
+              <div class="mb-3">
+                <label class="form-label fw-semibold">Chọn và ghép người chơi với nhân vật:</label>
+                <div id="manualAssignments">
+                  <div class="row mb-2 align-items-center">
+                    <div class="col-md-5">
+                      <select class="form-select" name="manual_players[]">
+                        {% for u in users %}
+                          <option value="{{ u.id }}">{{ u.member_id[-3:] }} - {{ u.display_name }}</option>
+                        {% endfor %}
+                      </select>
+                    </div>
+                    <div class="col-md-5">
+                      <select class="form-select" name="manual_chars[]">
+                        {% for char in chars %}
+                          <option value="{{ char.id }}">{{ char.name }} ({{ char.faction }})</option>
+                        {% endfor %}
+                      </select>
+                    </div>
+                    <div class="col-md-2">
+                      <button type="button" class="btn btn-danger btn-sm remove-row">Xóa</button>
+                    </div>
+                  </div>
+                </div>
+                <button type="button" class="btn btn-outline-primary btn-sm" id="addAssignmentRow">
+                  <i class="fas fa-plus me-1"></i>Thêm cặp
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+            <i class="fas fa-times me-2"></i>Hủy
+          </button>
+          <button type="submit" class="btn btn-success">
+            <i class="fas fa-save me-2"></i>Xác nhận & lưu
+          </button>
+        </div>
+      </form>
     </div>
+  </div>
 </div>
+
 
 <style>
 .avatar-circle {
