@@ -964,6 +964,26 @@ def create_game():
     flash("Tạo ván mới thành công!", "success")
     return redirect(url_for('game_history'))
 
+@app.route('/update_game_note/<int:game_id>', methods=['POST'])
+@admin_required
+def update_game_note(game_id):
+    game = GameHistory.query.get_or_404(game_id)
+    game.notes = request.form.get('notes', '')
+    selected_tags = request.form.getlist('tags')
+    game.tags = ",".join(selected_tags)  # lưu dưới dạng chuỗi
+    db.session.commit()
+    flash('Đã cập nhật ván chơi.', 'success')
+    return redirect(url_for('game_history'))
+
+@app.route('/delete_game/<int:game_id>')
+@admin_required
+def delete_game(game_id):
+    game = GameHistory.query.get_or_404(game_id)
+    db.session.delete(game)
+    db.session.commit()
+    flash('Đã xóa ván chơi.', 'success')
+    return redirect(url_for('game_history'))
+
 @app.route("/day_off", methods=["GET", "POST"])
 @login_required
 def day_off():
