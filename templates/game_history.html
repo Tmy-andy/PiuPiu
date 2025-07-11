@@ -227,7 +227,7 @@
           </ul>
 
           <div class="tab-content" id="gameModeContent">
-            <!-- 🌀 Tab: Phân ngẫu nhiên -->
+            <!-- Tab: Phân ngẫu nhiên -->
             <div class="tab-pane fade show active" id="random-mode" role="tabpanel">
               <!-- Giao diện chọn người chơi & nhân vật random -->
               <div class="row g-4">
@@ -334,7 +334,7 @@
               </div>
             </div>
 
-            <!-- ✋ Tab: Phân thủ công -->
+            <!-- Tab: Phân thủ công -->
             <div class="tab-pane fade" id="manual-mode" role="tabpanel">
               <div class="mb-3">
                 <label class="form-label fw-semibold">Chọn và ghép người chơi với nhân vật:</label>
@@ -871,9 +871,17 @@ document.addEventListener("DOMContentLoaded", function () {
   // Thêm dòng mới
   document.getElementById("addAssignmentRow").addEventListener("click", function () {
     const container = document.getElementById("manualAssignments");
-    const row = container.querySelector(".row").cloneNode(true);
-    container.appendChild(row);
-  });
+    const originalRow = container.querySelector(".row");
+    const newRow = originalRow.cloneNode(true);
+
+    // Reset các select trong dòng mới
+    newRow.querySelectorAll("select").forEach(select => {
+        select.selectedIndex = 0;  // chọn dòng đầu tiên
+    });
+
+    container.appendChild(newRow);
+});
+
 
   // Xóa dòng
   document.getElementById("manualAssignments").addEventListener("click", function (e) {
