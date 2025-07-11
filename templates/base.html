@@ -188,193 +188,267 @@
             margin-right: 0.5rem;
         }
 
-        /* Cải tiến cho navbar trên mobile */
+        /* CUSTOM MOBILE NAVIGATION - CHỈ HIỂN THỊ TRÊN MOBILE */
+        .mobile-nav {
+            display: none;
+        }
+
         @media (max-width: 768px) {
+            /* Ẩn navbar desktop trên mobile */
+            .navbar.navbar-expand-lg {
+                display: none;
+            }
+
+            /* Hiển thị mobile nav */
+            .mobile-nav {
+                display: block;
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                z-index: 1050;
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                backdrop-filter: blur(10px);
+                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            }
+
+            .mobile-nav-container {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 1rem 1.5rem;
+                min-height: 70px;
+            }
+
+            .mobile-nav-brand {
+                color: white;
+                font-size: 1.4rem;
+                font-weight: 700;
+                text-decoration: none;
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+                transition: transform 0.2s ease;
+            }
+
+            .mobile-nav-brand:hover {
+                color: white;
+                transform: scale(1.05);
+            }
+
+            .mobile-nav-brand i {
+                font-size: 1.2rem;
+                background: rgba(255, 255, 255, 0.2);
+                padding: 0.4rem;
+                border-radius: 8px;
+            }
+
+            .mobile-nav-menu {
+                position: relative;
+            }
+
+            .mobile-nav-toggle {
+                background: rgba(255, 255, 255, 0.15);
+                border: 1px solid rgba(255, 255, 255, 0.3);
+                border-radius: 12px;
+                color: white;
+                padding: 0.8rem;
+                font-size: 1.1rem;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                backdrop-filter: blur(5px);
+            }
+
+            .mobile-nav-toggle:hover {
+                background: rgba(255, 255, 255, 0.25);
+                transform: scale(1.05);
+            }
+
+            .mobile-nav-toggle.active {
+                background: rgba(255, 255, 255, 0.3);
+                transform: rotate(90deg);
+            }
+
+            .mobile-nav-dropdown {
+                position: absolute;
+                top: calc(100% + 15px);
+                right: 0;
+                background: white;
+                border-radius: 16px;
+                box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+                min-width: 280px;
+                max-width: 90vw;
+                overflow: hidden;
+                opacity: 0;
+                visibility: hidden;
+                transform: translateY(-10px);
+                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                border: 1px solid rgba(0, 0, 0, 0.05);
+            }
+
+            .mobile-nav-dropdown.show {
+                opacity: 1;
+                visibility: visible;
+                transform: translateY(0);
+            }
+
+            .mobile-nav-header {
+                background: linear-gradient(135deg, #f8fafc, #e2e8f0);
+                padding: 1rem 1.5rem;
+                text-align: center;
+                border-bottom: 1px solid #e5e7eb;
+            }
+
+            .mobile-nav-header strong {
+                color: var(--primary-color);
+                font-size: 1.1rem;
+                font-weight: 600;
+            }
+
+            .mobile-nav-item {
+                display: block;
+                padding: 1rem 1.5rem;
+                color: #374151;
+                text-decoration: none;
+                transition: all 0.2s ease;
+                border-bottom: 1px solid #f3f4f6;
+            }
+
+            .mobile-nav-item:last-child {
+                border-bottom: none;
+            }
+
+            .mobile-nav-item:hover {
+                background: linear-gradient(135deg, #f8fafc, #e2e8f0);
+                color: var(--primary-color);
+                transform: translateX(5px);
+            }
+
+            .mobile-nav-item i {
+                width: 20px;
+                text-align: center;
+                margin-right: 0.75rem;
+                font-size: 1rem;
+            }
+
+            .mobile-nav-item.danger {
+                color: var(--danger-color);
+            }
+
+            .mobile-nav-item.danger:hover {
+                background: linear-gradient(135deg, #fee2e2, #fecaca);
+                color: var(--danger-color);
+            }
+
+            .mobile-nav-divider {
+                height: 1px;
+                background: linear-gradient(90deg, transparent, #e5e7eb, transparent);
+                margin: 0.5rem 0;
+            }
+
+            /* Overlay khi dropdown mở */
+            .mobile-nav-overlay {
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: rgba(0, 0, 0, 0.3);
+                backdrop-filter: blur(2px);
+                z-index: 1040;
+                opacity: 0;
+                visibility: hidden;
+                transition: all 0.3s ease;
+            }
+
+            .mobile-nav-overlay.show {
+                opacity: 1;
+                visibility: visible;
+            }
+
+            /* Điều chỉnh main content để không bị che */
+            main.container-fluid {
+                padding-top: 90px;
+            }
+
+            /* Sidebar cải thiện cho mobile */
             .sidebar {
                 margin-right: 0;
                 margin-bottom: 1rem;
             }
 
-            /* Tối ưu navbar cho mobile */
-            .navbar {
-                padding: 0.5rem 0;
-            }
-
-            .navbar-brand {
-                font-size: 1.25rem;
-                padding: 0.5rem 0;
-            }
-
-            .navbar-brand i {
-                font-size: 1.1rem;
-            }
-
-            /* Cải thiện dropdown menu */
-            .dropdown-menu {
-                border-radius: 12px;
-                box-shadow: 0 8px 25px -5px rgba(0, 0, 0, 0.2);
-                border: none;
-                padding: 0.5rem 0;
-                min-width: calc(100vw - 2rem);
-                width: calc(100vw - 2rem);
-                margin-top: 0.5rem;
-                left: 50% !important;
-                transform: translateX(-50%) !important;
-                right: auto !important;
-            }
-
-            .dropdown-item {
-                padding: 0.75rem 1.5rem;
-                font-size: 0.95rem;
-                border-radius: 8px;
-                margin: 0.25rem 1rem;
-                transition: all 0.2s ease;
-                text-align: left;
-            }
-
-            .dropdown-item:hover {
-                background-color: #f8fafc;
-                transform: translateX(5px);
-                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-            }
-
-            .dropdown-item i {
-                width: 20px;
-                text-align: center;
-            }
-
-            .dropdown-header {
-                font-size: 0.9rem;
-                padding: 0.5rem 1.5rem;
-                margin-bottom: 0.25rem;
-                color: var(--secondary-color);
-                text-align: center;
-                background: linear-gradient(135deg, #f8fafc, #e2e8f0);
-                border-radius: 8px;
-                margin: 0.25rem 1rem;
-            }
-
-            .dropdown-divider {
-                margin: 0.5rem 1rem;
-            }
-
-            /* Cải thiện user dropdown trigger */
-            .nav-link.dropdown-toggle {
-                padding: 0.5rem 0.75rem;
-                border-radius: 8px;
-                transition: all 0.2s ease;
-                background: rgba(255, 255, 255, 0.1);
-                border: 1px solid rgba(255, 255, 255, 0.2);
-            }
-
-            .nav-link.dropdown-toggle:hover {
-                background: rgba(255, 255, 255, 0.2);
-                transform: translateY(-1px);
-            }
-
-            .nav-link.dropdown-toggle i {
-                font-size: 1.1rem;
-            }
-
-            /* Cải thiện container cho mobile */
+            /* Container cải thiện */
             .container {
                 padding-left: 1rem;
                 padding-right: 1rem;
             }
 
-            /* Smooth animation cho dropdown */
-            .dropdown-menu {
-                opacity: 0;
-                transform: translateX(-50%) translateY(-10px);
-                transition: all 0.3s ease;
+            /* Animation cho brand */
+            @keyframes brandPulse {
+                0% { transform: scale(1); }
+                50% { transform: scale(1.05); }
+                100% { transform: scale(1); }
             }
 
-            .dropdown-menu.show {
-                opacity: 1;
-                transform: translateX(-50%) translateY(0);
+            .mobile-nav-brand:active {
+                animation: brandPulse 0.3s ease;
             }
 
-            /* Cải thiện touch target */
-            .navbar-nav .nav-link {
-                min-height: 44px;
-                display: flex;
-                align-items: center;
-                justify-content: right;
+            /* Responsive cho màn hình nhỏ hơn */
+            @media (max-width: 480px) {
+                .mobile-nav-container {
+                    padding: 0.8rem 1rem;
+                    min-height: 60px;
+                }
+
+                .mobile-nav-brand {
+                    font-size: 1.2rem;
+                }
+
+                .mobile-nav-brand i {
+                    font-size: 1rem;
+                    padding: 0.3rem;
+                }
+
+                .mobile-nav-toggle {
+                    padding: 0.7rem;
+                    font-size: 1rem;
+                }
+
+                .mobile-nav-dropdown {
+                    min-width: 260px;
+                    right: -10px;
+                }
+
+                main.container-fluid {
+                    padding-top: 80px;
+                }
+
+                .container {
+                    padding-left: 0.75rem;
+                    padding-right: 0.75rem;
+                }
             }
 
-            /* Responsive text cho navbar brand */
-            .navbar-brand {
-                max-width: 200px;
-                overflow: hidden;
-                text-overflow: ellipsis;
-                white-space: nowrap;
-            }
-            .navbar-nav .dropdown-menu {
-                position: relative;
-            }
-        }
+            /* Landscape mode cho mobile */
+            @media (max-width: 768px) and (orientation: landscape) {
+                .mobile-nav-container {
+                    padding: 0.5rem 1rem;
+                    min-height: 50px;
+                }
 
-        /* Cải tiến thêm cho màn hình rất nhỏ */
-        @media (max-width: 480px) {
-            .navbar-brand {
-                font-size: 1.1rem;
-            }
+                .mobile-nav-brand {
+                    font-size: 1.1rem;
+                }
 
-            .navbar-brand i {
-                font-size: 1rem;
-            }
+                .mobile-nav-toggle {
+                    padding: 0.6rem;
+                }
 
-            .dropdown-menu {
-                width: auto;
-                min-width: 90vw;
-                left: 50% !important;
-                transform: translateX(-50%) !important;
-                right: auto !important;
-                border-radius: 12px;
-                box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-            }
-
-            .dropdown-item {
-                font-size: 0.95rem;
-                padding: 0.6rem 1rem;
-                margin: 0.15rem 0.5rem;
-                display: flex;
-                align-items: center;
-                gap: 0.5rem;
-            }
-
-            .dropdown-header {
-                font-weight: 600;
-                font-size: 0.95rem;
-                padding: 0.75rem 1rem 0.25rem;
-                margin: 0;
-                text-align: center;
-                border-bottom: 1px solid #e5e7eb;
-            }
-
-            .dropdown-divider {
-                margin: 0.5rem 1rem;
-            }
-
-            .container {
-                padding-left: 0.75rem;
-                padding-right: 0.75rem;
-            }
-        }
-
-        /* Cải tiến cho landscape mode trên mobile */
-        @media (max-width: 768px) and (orientation: landscape) {
-            .navbar {
-                padding: 0.25rem 0;
-            }
-
-            .navbar-brand {
-                font-size: 1.1rem;
-                padding: 0.25rem 0;
-            }
-
-            .nav-link.dropdown-toggle {
-                padding: 0.25rem 0.5rem;
+                main.container-fluid {
+                    padding-top: 70px;
+                }
             }
         }
     </style>
@@ -386,7 +460,7 @@
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 </head>
 <body>
-    <!-- Navigation -->
+    <!-- Desktop Navigation (Giữ nguyên) -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
         <div class="container">
             <a class="navbar-brand" href="{{ url_for('dashboard') }}">
@@ -434,6 +508,57 @@
         </div>
     </nav>
 
+    <!-- Mobile Navigation (Chỉ hiển thị trên mobile) -->
+    <nav class="mobile-nav">
+        <div class="mobile-nav-container">
+            <a href="{{ url_for('dashboard') }}" class="mobile-nav-brand">
+                <i class="fas fa-users"></i>
+                <span>Piu Piu</span>
+            </a>
+            
+            {% if session.user_id %}
+            <div class="mobile-nav-menu">
+                <button class="mobile-nav-toggle" id="mobileNavToggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+                
+                <div class="mobile-nav-dropdown" id="mobileNavDropdown">
+                    <div class="mobile-nav-header">
+                        <strong>{{ session.display_name }}</strong>
+                    </div>
+                    
+                    <a href="{{ url_for('dashboard') }}" class="mobile-nav-item">
+                        <i class="fas fa-tachometer-alt"></i>
+                        Dashboard
+                    </a>
+                    
+                    <a href="{{ url_for('profile') }}" class="mobile-nav-item">
+                        <i class="fas fa-user-cog"></i>
+                        Thông tin cá nhân
+                    </a>
+                    
+                    {% if session.user_role == 'admin' and session.display_name == 'Administrator' %}
+                    <a href="{{ url_for('download_db') }}" class="mobile-nav-item">
+                        <i class="fas fa-database"></i>
+                        Tải database
+                    </a>
+                    {% endif %}
+                    
+                    <div class="mobile-nav-divider"></div>
+                    
+                    <a href="{{ url_for('logout') }}" class="mobile-nav-item danger">
+                        <i class="fas fa-sign-out-alt"></i>
+                        Đăng xuất
+                    </a>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </nav>
+
+    <!-- Mobile Navigation Overlay -->
+    <div class="mobile-nav-overlay" id="mobileNavOverlay"></div>
+
     <!-- Flash Messages -->
     {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
@@ -455,6 +580,64 @@
     </main>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Mobile Navigation Script -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const toggle = document.getElementById('mobileNavToggle');
+            const dropdown = document.getElementById('mobileNavDropdown');
+            const overlay = document.getElementById('mobileNavOverlay');
+
+            if (toggle && dropdown && overlay) {
+                toggle.addEventListener('click', function() {
+                    const isOpen = dropdown.classList.contains('show');
+                    
+                    if (isOpen) {
+                        // Đóng menu
+                        dropdown.classList.remove('show');
+                        overlay.classList.remove('show');
+                        toggle.classList.remove('active');
+                        document.body.style.overflow = '';
+                    } else {
+                        // Mở menu
+                        dropdown.classList.add('show');
+                        overlay.classList.add('show');
+                        toggle.classList.add('active');
+                        document.body.style.overflow = 'hidden';
+                    }
+                });
+
+                // Đóng menu khi click overlay
+                overlay.addEventListener('click', function() {
+                    dropdown.classList.remove('show');
+                    overlay.classList.remove('show');
+                    toggle.classList.remove('active');
+                    document.body.style.overflow = '';
+                });
+
+                // Đóng menu khi click vào link
+                const navItems = dropdown.querySelectorAll('.mobile-nav-item');
+                navItems.forEach(item => {
+                    item.addEventListener('click', function() {
+                        dropdown.classList.remove('show');
+                        overlay.classList.remove('show');
+                        toggle.classList.remove('active');
+                        document.body.style.overflow = '';
+                    });
+                });
+
+                // Đóng menu khi resize window
+                window.addEventListener('resize', function() {
+                    if (window.innerWidth > 768) {
+                        dropdown.classList.remove('show');
+                        overlay.classList.remove('show');
+                        toggle.classList.remove('active');
+                        document.body.style.overflow = '';
+                    }
+                });
+            }
+        });
+    </script>
 
     {% block scripts %}
     {% endblock %}
