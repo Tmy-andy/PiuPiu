@@ -137,10 +137,9 @@
                                     <div class="p-3 bg-light border rounded">
                                         <!-- Ghi chú -->
                                         <p class="mb-2">
-                                            <strong>Ghi chú:</strong>
-                                            {{ game.notes or 'Chưa có ghi chú.' }}
+                                            <strong>Ghi chú:</strong><br>
+                                            {{ game.notes.replace('\n', '<br>') | safe if game.notes else 'Chưa có ghi chú.' }}
                                         </p>
-
                                         <!-- Tags -->
                                         <p class="mb-2">
                                             <strong>Tag:</strong>
