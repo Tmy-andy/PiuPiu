@@ -1,0 +1,233 @@
+{% extends "base.html" %}
+{% block title %}Cài đặt Theme - Hệ thống quản lý thành viên{% endblock %}
+
+{% block content %}
+<div class="row">
+    <!-- Sidebar -->
+    <div class="col-lg-3 col-md-4">
+        {% include "_sidebar.html" %}
+    </div>
+
+    <!-- Main Content -->
+    <div class="col-lg-9 col-md-8">
+        <!-- Header Section -->
+        <div class="card mb-4">
+            <div class="card-body">
+                <h1 class="card-title fw-bold">
+                    <i class="fas fa-palette me-2 text-primary"></i>
+                    Cài đặt Theme
+                </h1>
+                <p class="card-text text-muted">
+                    Tùy chỉnh giao diện theo sở thích của bạn. Theme hiện tại: 
+                    <span class="badge bg-primary" id="currentTheme">{{ current_theme_name }}</span>
+                </p>
+            </div>
+        </div>
+
+        <!-- Theme Selection -->
+        <div class="card mb-4">
+            <div class="card-header bg-white">
+                <h5 class="card-title fw-bold mb-0">
+                    <i class="fas fa-swatchbook me-2 text-primary"></i>
+                    Chọn Theme
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row g-4">
+                    {% for theme in available_themes %}
+                    <div class="col-lg-4 col-md-6">
+                        <div class="theme-card">
+                            <div class="theme-preview" data-theme="{{ theme.id }}" 
+                                 {% if theme.id == current_theme %}class="active"{% endif %}>
+                                <div class="theme-preview-header"></div>
+                                <div class="theme-preview-body">
+                                    <div class="theme-preview-card"></div>
+                                    <div class="theme-preview-card"></div>
+                                    <div class="theme-preview-button" style="background: var(--primary-color);"></div>
+                                </div>
+                            </div>
+                            <div class="text-center mt-3">
+                                <h6 class="fw-bold mb-1">
+                                    <i class="fas {{ theme.icon }} me-2"></i>
+                                    {{ theme.name }}
+                                </h6>
+                                {% if theme.id == current_theme %}
+                                <span class="badge bg-success">
+                                    <i class="fas fa-check me-1"></i>Đang sử dụng
+                                </span>
+                                {% else %}
+                                <small class="text-muted">Nhấn để chọn</small>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Theme Features -->
+        <div class="card mb-4">
+            <div class="card-header bg-white">
+                <h5 class="card-title fw-bold mb-0">
+                    <i class="fas fa-star me-2 text-primary"></i>
+                    Tính năng Theme
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <div class="d-flex align-items-center">
+                            <div class="feature-icon bg-primary text-white rounded-circle me-3">
+                                <i class="fas fa-save"></i>
+                            </div>
+                            <div>
+                                <h6 class="mb-1 fw-bold">Lưu tự động</h6>
+                                <small class="text-muted">Theme được lưu vĩnh viễn theo tài khoản</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="d-flex align-items-center">
+                            <div class="feature-icon bg-success text-white rounded-circle me-3">
+                                <i class="fas fa-mobile-alt"></i>
+                            </div>
+                            <div>
+                                <h6 class="mb-1 fw-bold">Responsive</h6>
+                                <small class="text-muted">Hoạt động tốt trên mọi thiết bị</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="d-flex align-items-center">
+                            <div class="feature-icon bg-warning text-white rounded-circle me-3">
+                                <i class="fas fa-bolt"></i>
+                            </div>
+                            <div>
+                                <h6 class="mb-1 fw-bold">Chuyển đổi mượt</h6>
+                                <small class="text-muted">Hiệu ứng chuyển đổi theme mượt mà</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="d-flex align-items-center">
+                            <div class="feature-icon bg-info text-white rounded-circle me-3">
+                                <i class="fas fa-sync-alt"></i>
+                            </div>
+                            <div>
+                                <h6 class="mb-1 fw-bold">Đồng bộ</h6>
+                                <small class="text-muted">Theme đồng bộ trên tất cả thiết bị</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Theme Info -->
+        <div class="card">
+            <div class="card-header bg-white">
+                <h5 class="card-title fw-bold mb-0">
+                    <i class="fas fa-info-circle me-2 text-primary"></i>
+                    Thông tin Theme
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-info">
+                    <i class="fas fa-lightbulb me-2"></i>
+                    <strong>Mẹo:</strong> Theme sẽ được áp dụng ngay lập tức và lưu vĩnh viễn cho tài khoản của bạn. 
+                    Bạn có thể thay đổi theme bất cứ lúc nào từ trang này.
+                </div>
+                
+                <div class="row text-center">
+                    <div class="col-md-4">
+                        <div class="stat-item">
+                            <h3 class="text-primary fw-bold">{{ available_themes|length }}</h3>
+                            <p class="text-muted mb-0">Theme có sẵn</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="stat-item">
+                            <h3 class="text-success fw-bold">100%</h3>
+                            <p class="text-muted mb-0">Tương thích</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="stat-item">
+                            <h3 class="text-warning fw-bold">0.3s</h3>
+                            <p class="text-muted mb-0">Thời gian chuyển đổi</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.theme-card {
+    transition: transform 0.2s ease;
+}
+
+.theme-card:hover {
+    transform: translateY(-2px);
+}
+
+.feature-icon {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+}
+
+.stat-item {
+    padding: 1rem;
+    border-radius: 8px;
+    background: rgba(var(--primary-color), 0.05);
+    margin-bottom: 1rem;
+}
+
+.theme-preview {
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 3px solid transparent;
+}
+
+.theme-preview:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.theme-preview.active {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px rgba(var(--primary-color), 0.2);
+}
+
+@media (max-width: 768px) {
+    .col-lg-4 {
+        margin-bottom: 1rem;
+    }
+    
+    .feature-icon {
+        width: 35px;
+        height: 35px;
+        font-size: 1rem;
+    }
+    
+    .stat-item h3 {
+        font-size: 1.5rem;
+    }
+}
+</style>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Theme preview click handlers are handled by theme.js
+    console.log('Theme page loaded with current theme:', '{{ current_theme }}');
+});
+</script>
+{% endblock %}

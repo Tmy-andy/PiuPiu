@@ -5,6 +5,7 @@ print("✅ Flask đang được yêu cầu chạy ở cổng :", os.environ.get(
 print("📦 Environment:", dict(os.environ))
 
 from flask import Flask, render_template, request, redirect, url_for, flash, session, send_file, Response, abort
+from flask import jsonify
 from docx import Document
 from flask_login import login_required, LoginManager, login_user, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -94,6 +95,9 @@ def inject_user():
     user_id = session.get('user_id')
     user = User.query.get(user_id) if user_id else None
 
+    # Get user's theme preference
+    user_theme = user.theme_preference if user else 'light'
+
     from datetime import datetime
     warning_count = 0
     now = datetime.utcnow()
@@ -127,7 +131,7 @@ def inject_user():
         if not last_play_time or (now - last_play_time).days > 7:
             warning_count += 1
 
-    return dict(user=user, warning_count=warning_count)
+    return dict(user=user, warning_count=warning_count, user_theme=user_theme)
 
 
 
@@ -1150,6 +1154,67 @@ def frequency():
 
     return render_template("frequency.html", data=data)
 
+
+@app.route('/theme')
+@login_required
+def theme_settings():
+    user = User.query.get(session['user_id'])
+    
+    available_themes = [
+        {'id': 'light', 'name': 'Sáng', 'icon': 'fa-sun'},
+        {'id': 'dark', 'name': 'Tối', 'icon': 'fa-moon'},
+        {'id': 'blue', 'name': 'Xanh Dương', 'icon': 'fa-water'},
+        {'id': 'green', 'name': 'Xanh Lá', 'icon': 'fa-leaf'},
+        {'id': 'purple', 'name': 'Tím', 'icon': 'fa-gem'},
+        {'id': 'rose', 'name': 'Hồng', 'icon': 'fa-heart'}
+    ]
+    
+    current_theme = user.theme_preference or 'light'
+    current_theme_name = next((theme['name'] for theme in available_themes if theme['id'] == current_theme), 'Sáng')
+    
+    return render_template('theme.html', 
+                         available_themes=available_themes,
+                         current_theme=current_theme,
+                         current_theme_name=current_theme_name)
+
+@app.route('/change_theme', methods=['POST'])
+@login_required
+def change_theme():
+    try:
+        data = request.get_json()
+        theme = data.get('theme')
+        
+        # Validate theme
+        valid_themes = ['light', 'dark', 'blue', 'green', 'purple', 'rose']
+        if theme not in valid_themes:
+            return jsonify({'success': False, 'message': 'Theme không hợp lệ'})
+        
+        # Update user's theme preference
+        user = User.query.get(session['user_id'])
+        user.theme_preference = theme
+        db.session.commit()
+        
+        # Get theme display name
+        theme_names = {
+            'light': 'Sáng',
+            'dark': 'Tối', 
+            'blue': 'Xanh Dương',
+            'green': 'Xanh Lá',
+            'purple': 'Tím',
+            'rose': 'Hồng'
+        }
+        
+        flash(f'Đã chuyển sang theme {theme_names.get(theme, theme)}!', 'success')
+        
+        return jsonify({
+            'success': True, 
+            'message': f'Đã chuyển sang theme {theme_names.get(theme, theme)}',
+            'theme': theme
+        })
+        
+    except Exception as e:
+        print(f"Error changing theme: {e}")
+        return jsonify({'success': False, 'message': 'Có lỗi xảy ra khi lưu theme'})
 
 
 print(f"📌 Flask app = {app}")
