@@ -100,23 +100,22 @@ def inject_theme():
     return dict(session_theme=theme)
 
 def inject_user():
-    user_id = session.get('user_id')
-    user = User.query.get(user_id) if user_id else None
-
-    # Get user's theme preference
-    user_theme = user.theme_preference if user else 'light'
-
-    from datetime import datetime
+    user = None
+    user_theme = 'default'
     warning_count = 0
     now = datetime.utcnow()
 
+    # Lấy user từ session nếu có
+    user_id = session.get('user_id')
+    if user_id:
+        user = User.query.get(user_id)
+        if user and hasattr(user, 'theme'):
+            user_theme = user.theme or 'default'
+
+    # Đếm số người chơi cần cảnh báo
     users = User.query.all()
     for u in users:
-        # ❌ Nếu chưa có is_active thì bỏ dòng này
-        # if not u.is_active:
-        #     continue
-
-        # Kiểm tra có đang xin nghỉ không
+        # Nếu đang xin nghỉ thì bỏ qua
         on_leave = PlayerOffRequest.query.filter(
             PlayerOffRequest.user_id == u.id,
             PlayerOffRequest.start_date <= now.date(),
@@ -136,6 +135,7 @@ def inject_user():
         )
         last_play_time = last_game.game.created_at if last_game else None
 
+        # Nếu chưa chơi trong 7 ngày -> tăng cảnh báo
         if not last_play_time or (now - last_play_time).days > 7:
             warning_count += 1
 
