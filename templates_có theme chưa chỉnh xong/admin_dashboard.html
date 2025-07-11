@@ -1,0 +1,175 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard Admin - Hệ thống quản lý thành viên{% endblock %}
+
+{% block content %}
+<div class="row">
+    <!-- Sidebar -->
+    <div class="col-lg-3 col-md-4">
+        {% include "_sidebar.html" %}
+    </div>
+
+    <!-- Main Content -->
+    <div class="col-lg-9 col-md-8">
+        <!-- Welcome Section -->
+        <div class="card mb-4">
+            <div class="card-body">
+                <h1 class="card-title fw-bold">
+                    <i class="fas fa-user-shield me-2 text-primary"></i>
+                    Chào mừng, {{ session.display_name }}!
+                </h1>
+                <p class="card-text text-muted">Quản lý và theo dõi thành viên của bạn</p>
+            </div>
+        </div>
+
+        <!-- Statistics Cards -->
+        <div class="row mb-4">
+            <div class="col-lg-4 col-md-6 mb-3">
+                <div class="card stats-card text-white">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="card-title opacity-75">Tổng thành viên</h6>
+                                <h2 class="fw-bold mb-0">{{ total_members }}</h2>
+                            </div>
+                            <i class="fas fa-users fa-2x opacity-75"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card điểm admin -->
+            <div class="col-lg-4 col-md-6 mb-3">
+                <div class="card stats-card text-white bg-success">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="card-title opacity-75">Điểm của tôi</h6>
+                                <h2 class="fw-bold mb-0">{{ admin_points }} điểm</h2>
+                            </div>
+                            <i class="fas fa-star fa-2x opacity-75"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Assigned Members -->
+        <div class="card">
+            <div class="card-header bg-white">
+                <h5 class="card-title fw-bold mb-0">
+                    <i class="fas fa-user-friends me-2 text-primary"></i>
+                    Thành viên được phân công
+                </h5>
+            </div>
+            <div class="card-body">
+                {% if assigned_members %}
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Mã thành viên</th>
+                                <th>Tên hiển thị</th>
+                                <th>Điểm</th>
+                                <th>Ngày tham gia</th>
+                                <th>Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for member in assigned_members %}
+                            <tr>
+                                <td>
+                                    <span class="badge bg-primary">{{ member.member_id }}</span>
+                                </td>
+                                <td class="fw-semibold">{{ member.display_name }}</td>
+                                <td>
+                                    <span class="badge bg-{{ 'success' if member.points >= 80 else 'warning' if member.points >= 60 else 'danger' }}">
+                                        {{ member.points }} điểm
+                                    </span>
+                                </td>
+                                <td class="text-muted">{{ member.created_at.strftime('%Y-%m-%d') }}</td>
+                                <td>
+                                    <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" 
+                                            data-bs-target="#updatePointsModal" 
+                                            data-member-id="{{ member.id }}" 
+                                            data-member-name="{{ member.display_name }}">
+                                        <i class="fas fa-edit me-1"></i>Cập nhật điểm
+                                    </button>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="text-center py-4">
+                    <i class="fas fa-users fa-3x text-muted mb-3"></i>
+                    <h5 class="text-muted">Chưa có thành viên nào được phân công</h5>
+                    <p class="text-muted">Hãy vào trang quản lý thành viên để phân công</p>
+                    <a href="{{ url_for('members') }}" class="btn btn-primary">
+                        <i class="fas fa-users me-2"></i>Quản lý thành viên
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+<!-- Update Points Modal -->
+<div class="modal fade" id="updatePointsModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="fas fa-edit me-2"></i>Cập nhật điểm
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="POST" id="updatePointsForm">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Thành viên:</label>
+                        <p class="fw-bold text-primary" id="memberName"></p>
+                    </div>
+                    <div class="mb-3">
+                        <label for="points_change" class="form-label fw-semibold">Thay đổi điểm:</label>
+                        <input type="number" class="form-control" id="points_change" name="points_change" 
+                               placeholder="Nhập số điểm (âm để trừ điểm)" required>
+                        <div class="form-text">Nhập số dương để cộng điểm, số âm để trừ điểm</div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="reason" class="form-label fw-semibold">Lý do:</label>
+                        <textarea class="form-control" id="reason" name="reason" rows="3" 
+                                  placeholder="Nhập lý do thay đổi điểm" required></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save me-2"></i>Cập nhật
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const updatePointsModal = document.getElementById('updatePointsModal');
+    const updatePointsForm = document.getElementById('updatePointsForm');
+    const memberName = document.getElementById('memberName');
+
+    updatePointsModal.addEventListener('show.bs.modal', function(event) {
+        const button = event.relatedTarget;
+        const memberId = button.getAttribute('data-member-id');
+        const memberNameText = button.getAttribute('data-member-name');
+        
+        memberName.textContent = memberNameText;
+        updatePointsForm.action = `/update_points/${memberId}`;
+    });
+});
+</script>
+{% endblock %}

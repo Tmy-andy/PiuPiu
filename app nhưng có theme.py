@@ -5,6 +5,7 @@ print("✅ Flask đang được yêu cầu chạy ở cổng :", os.environ.get(
 print("📦 Environment:", dict(os.environ))
 
 from flask import Flask, render_template, request, redirect, url_for, flash, session, send_file, Response, abort
+from flask import jsonify
 from docx import Document
 from flask_login import login_required, LoginManager, login_user, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -90,31 +91,32 @@ def load_user(user_id):
     return User.query.get(int(user_id))
 
 @app.context_processor
-def inject_user():
-    user_id = session.get('user_id')
-    user = User.query.get(user_id) if user_id else None
-
+def inject_globals():
     from datetime import datetime
+
+    user = None
+    session_theme = 'default'
     warning_count = 0
     now = datetime.utcnow()
 
+    # Lấy user từ session nếu có
+    user_id = session.get('user_id')
+    if user_id:
+        user = User.query.get(user_id)
+        if user and hasattr(user, 'theme'):
+            session_theme = user.theme or 'default'
+
+    # Đếm số người chơi cần cảnh báo
     users = User.query.all()
     for u in users:
-        # ❌ Nếu chưa có is_active thì bỏ dòng này
-        # if not u.is_active:
-        #     continue
-
-        # Kiểm tra có đang xin nghỉ không
         on_leave = PlayerOffRequest.query.filter(
             PlayerOffRequest.user_id == u.id,
             PlayerOffRequest.start_date <= now.date(),
             PlayerOffRequest.end_date >= now.date()
         ).first()
-
         if on_leave:
             continue
 
-        # Lấy lần chơi gần nhất
         last_game = (
             GamePlayer.query
             .filter_by(player_id=u.id)
@@ -127,7 +129,12 @@ def inject_user():
         if not last_play_time or (now - last_play_time).days > 7:
             warning_count += 1
 
-    return dict(user=user, warning_count=warning_count)
+    return dict(
+        user=user,
+        warning_count=warning_count,
+        user_theme=session_theme,
+        session_theme=session_theme  # nếu bạn vẫn dùng biến này ở HTML
+    )
 
 
 
@@ -1149,5 +1156,23 @@ def frequency():
             })
 
     return render_template("frequency.html", data=data)
+
+@app.route('/choose_theme', methods=['GET', 'POST'])
+@login_required
+def choose_theme():
+    user_id = session.get('user_id')
+    user = User.query.get(user_id) if user_id else None
+    if not user:
+        return redirect(url_for('login'))
+
+    if request.method == 'POST':
+        selected_theme = request.form.get('theme')
+        if selected_theme in ['default', 'dark', 'sakura', 'galaxy', 'ocean', 'forest', 'sunset']:
+            user.theme = selected_theme
+            db.session.commit()
+            flash('Theme đã được cập nhật!', 'success')
+        return redirect(url_for('choose_theme'))
+
+    return render_template('choose_theme.html', current_theme=user.theme or 'default')
 
 print(f"📌 Flask app = {app}")

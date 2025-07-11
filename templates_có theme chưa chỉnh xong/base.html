@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="vi" >
+<head>
+    <title>Hệ thống điểm thành viên Piu Piu</title>
+
+    <!-- Meta cơ bản -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="Tiêu Khắc Minh - QTV Piu Piu">
+    
+    <!-- Open Graph (Facebook, Zalo, Discord) -->
+    <meta property="og:title" content="Hệ thống quản lý điểm thành viên Piu Piu">
+    <meta property="og:description" content="Quản lý điểm số và hoạt động của các thành viên Piu Piu.">
+    <meta property="og:image" content="{{ url_for('static', filename='icon.png', _external=True) }}">
+    <meta property="og:url" content="{{ request.url }}">
+    <meta property="og:type" content="website">
+    <title>{% block title %}Hệ thống quản lý thành viên Piu Piu{% endblock %}</title>
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='logo.png') }}">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/themes.css') }}" rel="stylesheet">
+
+    <!-- Meta cho iOS và Progressive Web App -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="Piu Piu System">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <link rel="apple-touch-icon" href="{{ url_for('static', filename='icon.png', _external=True) }}">
+
+    <!-- Favicon + Android -->
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='logo.png') }}">
+    <link rel="shortcut icon" type="image/png" href="{{ url_for('static', filename='logo.png') }}">
+
+    <style>
+        /* Base styles that work with theme system */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .navbar {
+            box-shadow: var(--card-shadow);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            z-index: 1030;
+            position: relative;
+        }
+
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.5rem;
+            transition: transform 0.2s ease;
+        }
+
+        .navbar-brand:hover {
+            transform: scale(1.05);
+        }
+
+        .navbar-brand i {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 0.4rem;
+            border-radius: 8px;
+            margin-right: 0.5rem;
+        }
+
+        .card {
+            border: none;
+            border-radius: 12px;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-primary {
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            padding: 0.75rem 1.5rem;
+            transition: all 0.2s ease;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4);
+        }
+
+        .btn-outline-primary {
+            border-radius: 8px;
+            font-weight: 600;
+        }
+
+        .form-control, .form-select {
+            border-radius: 8px;
+            border: 2px solid var(--input-border);
+            padding: 0.75rem 1rem;
+            transition: border-color 0.2s ease;
+        }
+
+        .alert {
+            border: none;
+            border-radius: 8px;
+            font-weight: 500;
+        }
+
+        .table {
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .badge {
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 0.5rem 0.75rem;
+            border-radius: 6px;
+        }
+
+        .stats-card {
+            color: white;
+            border-radius: 12px;
+        }
+
+        .stats-card-success {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+        }
+
+        .stats-card-warning {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+
+        .stats-card-info {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+
+        .login-container {
+            min-height: 100vh;
+        }
+
+        .login-card {
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 16px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+
+        .sidebar {
+            border-radius: 12px;
+            margin-right: 1rem;
+        }
+
+        .sidebar .nav-link {
+            color: var(--text-muted);
+            font-weight: 500;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            margin: 0.25rem 0;
+            transition: all 0.2s ease;
+        }
+
+        .sidebar .nav-link:hover, .sidebar .nav-link.active {
+            color: white;
+        }
+
+        .sidebar .nav-link i {
+            width: 20px;
+            margin-right: 0.5rem;
+        }
+
+        /* Mobile Navigation - CHỈ HIỂN THỊ TRÊN MOBILE */
+        .mobile-nav {
+            display: none;
+        }
+
+        /* Media queries cho mobile */
+        @media (max-width: 991.98px) {
+            /* Ẩn navbar desktop trên mobile */
+            .navbar.navbar-expand-lg {
+                display: none;
+            }
+
+            /* Hiển thị mobile nav */
+            .mobile-nav {
+                display: block;
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                z-index: 1050;
+                backdrop-filter: blur(10px);
+                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            }
+
+            /* Điều chỉnh body để không bị che */
+            body {
+                padding-top: 70px;
+            }
+
+            .mobile-nav-container {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 1rem 1.5rem;
+                min-height: 70px;
+            }
+
+            .mobile-nav-brand {
+                color: white;
+                font-size: 1.4rem;
+                font-weight: 700;
+                text-decoration: none;
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+                transition: transform 0.2s ease;
+            }
+
+            .mobile-nav-brand:hover {
+                color: white;
+                transform: scale(1.05);
+            }
+
+            .mobile-nav-brand i {
+                font-size: 1.2rem;
+                background: rgba(255, 255, 255, 0.2);
+                padding: 0.4rem;
+                border-radius: 8px;
+            }
+
+            .mobile-nav-menu {
+                position: relative;
+            }
+
+            .mobile-nav-toggle {
+                background: rgba(255, 255, 255, 0.15);
+                border: 1px solid rgba(255, 255, 255, 0.3);
+                border-radius: 12px;
+                color: white;
+                padding: 0.8rem;
+                font-size: 1.1rem;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                backdrop-filter: blur(5px);
+            }
+
+            .mobile-nav-toggle:hover {
+                background: rgba(255, 255, 255, 0.25);
+                transform: scale(1.05);
+            }
+
+            .mobile-nav-toggle.active {
+                background: rgba(255, 255, 255, 0.3);
+                transform: rotate(90deg);
+            }
+
+            .mobile-nav-dropdown {
+                position: absolute;
+                top: calc(100% + 15px);
+                right: 0;
+                border-radius: 16px;
+                box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+                min-width: 280px;
+                max-width: 90vw;
+                overflow: hidden;
+                opacity: 0;
+                visibility: hidden;
+                transform: translateY(-10px);
+                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                border: 1px solid rgba(0, 0, 0, 0.05);
+            }
+
+            .mobile-nav-dropdown.show {
+                opacity: 1;
+                visibility: visible;
+                transform: translateY(0);
+            }
+
+            .mobile-nav-header {
+                background: linear-gradient(135deg, #f8fafc, #e2e8f0);
+                padding: 1rem 1.5rem;
+                text-align: center;
+                border-bottom: 1px solid #e5e7eb;
+            }
+
+            .mobile-nav-header strong {
+                color: var(--primary-color);
+                font-size: 1.1rem;
+                font-weight: 600;
+            }
+
+            .mobile-nav-item {
+                display: block;
+                padding: 1rem 1.5rem;
+                text-decoration: none;
+                transition: all 0.2s ease;
+                border-bottom: 1px solid var(--border-color);
+            }
+
+            .mobile-nav-item:last-child {
+                border-bottom: none;
+            }
+
+            .mobile-nav-item:hover {
+                transform: translateX(5px);
+            }
+
+            .mobile-nav-item i {
+                width: 20px;
+                text-align: center;
+                margin-right: 0.75rem;
+                font-size: 1rem;
+            }
+
+            .mobile-nav-item.danger {
+                color: var(--danger-color);
+            }
+
+            .mobile-nav-item.danger:hover {
+                background: linear-gradient(135deg, #fee2e2, #fecaca);
+                color: var(--danger-color);
+            }
+
+            .mobile-nav-divider {
+                height: 1px;
+                background: linear-gradient(90deg, transparent, #e5e7eb, transparent);
+                margin: 0.5rem 0;
+            }
+
+            /* Overlay khi dropdown mở */
+            .mobile-nav-overlay {
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: rgba(0, 0, 0, 0.3);
+                backdrop-filter: blur(2px);
+                z-index: 1040;
+                opacity: 0;
+                visibility: hidden;
+                transition: all 0.3s ease;
+            }
+
+            .mobile-nav-overlay.show {
+                opacity: 1;
+                visibility: visible;
+            }
+
+            /* Điều chỉnh main content để không bị che */
+            main.container-fluid {
+                padding-top: 90px;
+            }
+
+            /* Sidebar cải thiện cho mobile */
+            .sidebar {
+                margin-right: 0;
+                margin-bottom: 1rem;
+            }
+
+            /* Container cải thiện */
+            .container {
+                padding-left: 1rem;
+                padding-right: 1rem;
+            }
+        }
+
+        /* Responsive cho màn hình nhỏ hơn */
+        @media (max-width: 480px) {
+            .mobile-nav-container {
+                padding: 0.8rem 1rem;
+                min-height: 60px;
+            }
+
+            .mobile-nav-brand {
+                font-size: 1.2rem;
+            }
+
+            .mobile-nav-brand i {
+                font-size: 1rem;
+                padding: 0.3rem;
+            }
+
+            .mobile-nav-toggle {
+                padding: 0.7rem;
+                font-size: 1rem;
+            }
+
+            .mobile-nav-dropdown {
+                min-width: 260px;
+                right: -10px;
+            }
+
+            main.container-fluid {
+                padding-top: 80px;
+            }
+
+            .container {
+                padding-left: 0.75rem;
+                padding-right: 0.75rem;
+            }
+        }
+
+        /* Landscape mode cho mobile */
+        @media (max-width: 991.98px) and (orientation: landscape) {
+            .mobile-nav-container {
+                padding: 0.5rem 1rem;
+                min-height: 50px;
+            }
+
+            .mobile-nav-brand {
+                font-size: 1.1rem;
+            }
+
+            .mobile-nav-toggle {
+                padding: 0.6rem;
+            }
+
+            main.container-fluid {
+                padding-top: 70px;
+            }
+        }
+    </style>
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Select2 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <!-- Select2 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+</head>
+<body data-theme="{{ user_theme if user_theme else 'light' }}">
+    <!-- Desktop Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="{{ url_for('dashboard') }}">
+                <i class="fas fa-users"></i>Quản lý thành viên
+            </a>
+            <!-- Collapsible nav items -->
+            <ul class="navbar-nav ms-auto d-flex align-items-center">
+                {% if session.user_id %}
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle text-white align-items-center gap-2" href="#" role="button" data-bs-toggle="dropdown">
+                        <i class="fas fa-user"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li class="dropdown-header">
+                            <strong>{{ session.display_name }}</strong>
+                        </li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li>
+                            <a class="dropdown-item" href="{{ url_for('dashboard') }}">
+                                <i class="fas fa-tachometer-alt text-primary"></i> Dashboard
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="{{ url_for('profile') }}">
+                                <i class="fas fa-user-cog text-secondary"></i> Thông tin cá nhân
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="{{ url_for('choose_theme') }}">
+                                <i class="fas fa-palette text-info"></i> Cài đặt Theme
+                            </a>
+                        </li>
+                        {% if session.user_role == 'admin' and session.display_name == 'Administrator' %}
+                        <li>
+                            <a class="dropdown-item" href="{{ url_for('download_db') }}">
+                                <i class="fas fa-database text-warning"></i> Tải database
+                            </a>
+                        </li>
+                        {% endif %}
+                        <li><hr class="dropdown-divider"></li>
+                        <li>
+                            <a class="dropdown-item text-danger" href="{{ url_for('logout') }}">
+                                <i class="fas fa-sign-out-alt"></i> Đăng xuất
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                {% endif %}
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Mobile Navigation -->
+    <nav class="mobile-nav">
+        <div class="mobile-nav-container">
+            <a href="{{ url_for('dashboard') }}" class="mobile-nav-brand">
+                <i class="fas fa-users"></i>
+                <span>Piu Piu</span>
+            </a>
+            
+            {% if session.user_id %}
+            <div class="mobile-nav-menu">
+                <button class="mobile-nav-toggle" id="mobileNavToggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+                
+                <div class="mobile-nav-dropdown" id="mobileNavDropdown">
+                    <div class="mobile-nav-header">
+                        <strong>{{ session.display_name }}</strong>
+                    </div>
+                    
+                    <a href="{{ url_for('dashboard') }}" class="mobile-nav-item">
+                        <i class="fas fa-tachometer-alt"></i>
+                        Dashboard
+                    </a>
+                    
+                    <a href="{{ url_for('profile') }}" class="mobile-nav-item">
+                        <i class="fas fa-user-cog"></i>
+                        Thông tin cá nhân
+                    </a>
+                    
+                    <a href="{{ url_for('choose_theme') }}" class="mobile-nav-item">
+                        <i class="fas fa-palette"></i>
+                        Cài đặt Theme
+                    </a>
+                    
+                    {% if session.user_role == 'admin' and session.display_name == 'Administrator' %}
+                    <a href="{{ url_for('download_db') }}" class="mobile-nav-item">
+                        <i class="fas fa-database"></i>
+                        Tải database
+                    </a>
+                    {% endif %}
+                    
+                    <div class="mobile-nav-divider"></div>
+                    
+                    <a href="{{ url_for('logout') }}" class="mobile-nav-item danger">
+                        <i class="fas fa-sign-out-alt"></i>
+                        Đăng xuất
+                    </a>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </nav>
+
+    <!-- Mobile Navigation Overlay -->
+    <div class="mobile-nav-overlay" id="mobileNavOverlay"></div>
+
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="container mt-3">
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ 'danger' if category == 'error' else category }} alert-dismissible fade show" role="alert">
+                        <i class="fas fa-{{ 'exclamation-triangle' if category == 'error' else 'check-circle' if category == 'success' else 'info-circle' }} me-2"></i>
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
+    <!-- Main Content -->
+    <main class="container-fluid py-4">
+        {% block content %}{% endblock %}
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ url_for('static', filename='js/theme.js') }}"></script>
+
+    <!-- Mobile Navigation Script -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const toggle = document.getElementById('mobileNavToggle');
+            const dropdown = document.getElementById('mobileNavDropdown');
+            const overlay = document.getElementById('mobileNavOverlay');
+
+            if (toggle && dropdown && overlay) {
+                toggle.addEventListener('click', function() {
+                    const isOpen = dropdown.classList.contains('show');
+                    
+                    if (isOpen) {
+                        // Đóng menu
+                        dropdown.classList.remove('show');
+                        overlay.classList.remove('show');
+                        toggle.classList.remove('active');
+                        document.body.style.overflow = '';
+                    } else {
+                        // Mở menu
+                        dropdown.classList.add('show');
+                        overlay.classList.add('show');
+                        toggle.classList.add('active');
+                        document.body.style.overflow = 'hidden';
+                    }
+                });
+
+                // Đóng menu khi click overlay
+                overlay.addEventListener('click', function() {
+                    dropdown.classList.remove('show');
+                    overlay.classList.remove('show');
+                    toggle.classList.remove('active');
+                    document.body.style.overflow = '';
+                });
+
+                // Đóng menu khi click vào link
+                const navItems = dropdown.querySelectorAll('.mobile-nav-item');
+                navItems.forEach(item => {
+                    item.addEventListener('click', function() {
+                        dropdown.classList.remove('show');
+                        overlay.classList.remove('show');
+                        toggle.classList.remove('active');
+                        document.body.style.overflow = '';
+                    });
+                });
+
+                // Đóng menu khi resize window
+                window.addEventListener('resize', function() {
+                    if (window.innerWidth > 991.98) {
+                        dropdown.classList.remove('show');
+                        overlay.classList.remove('show');
+                        toggle.classList.remove('active');
+                        document.body.style.overflow = '';
+                    }
+                });
+            }
+        });
+    </script>
+    <script src="{{ url_for('static', filename='js/theme-effects.js') }}"></script>
+    {% block scripts %}
+    {% endblock %}
+</body>
+</html>

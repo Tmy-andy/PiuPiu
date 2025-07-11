@@ -1,0 +1,129 @@
+{% extends "base.html" %}
+{% block title %}Nội quy - Hệ thống quản lý thành viên{% endblock %}
+
+{% block content %}
+<div class="row">
+    <!-- Sidebar -->
+    <div class="col-lg-3 col-md-4">
+        {% include "_sidebar.html" %}
+    </div>
+
+    <!-- Main Content -->
+    <div class="col-lg-9 col-md-8">
+        <!-- Welcome Section -->
+        <div class="card mb-4">
+            <div class="card-body">
+                <h1 class="card-title fw-bold">
+                    <i class="fas fa-gavel me-2 text-primary"></i>
+                    Nội quy và Luật lệ
+                </h1>
+                <p class="card-text text-muted">Các quy định và luật lệ mà thành viên cần tuân thủ</p>
+            </div>
+        </div>
+
+        <!-- Rules Content -->
+        <div class="card">
+            <div class="card-header bg-white">
+                <h5 class="card-title fw-bold mb-0">
+                    <i class="fas fa-scroll me-2 text-primary"></i>
+                    Nội dung luật lệ
+                </h5>
+            </div>
+            <div class="card-body">
+                {% if rule %}
+                <div class="rules-content">
+                    {{ rule.content|safe }}
+                </div>
+                {% else %}
+                <div class="text-center py-5">
+                    <i class="fas fa-scroll fa-3x text-muted mb-3"></i>
+                    <h5 class="text-muted">Chưa có nội dung luật lệ</h5>
+                    <p class="text-muted">Nội dung luật lệ sẽ được cập nhật sau</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.rules-content {
+    line-height: 1.6;
+    font-size: 16px;
+}
+
+.rules-content h1,
+.rules-content h2,
+.rules-content h3,
+.rules-content h4,
+.rules-content h5,
+.rules-content h6 {
+    color: #2c3e50;
+    margin-top: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.rules-content p {
+    margin-bottom: 1rem;
+    text-align: justify;
+}
+
+.rules-content ul,
+.rules-content ol {
+    margin-bottom: 1rem;
+    padding-left: 1.5rem;
+}
+
+.rules-content li {
+    margin-bottom: 0.5rem;
+}
+
+.rules-content blockquote {
+    border-left: 4px solid #007bff;
+    padding-left: 1rem;
+    margin: 1rem 0;
+    font-style: italic;
+    color: #6c757d;
+}
+
+.rules-content table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1rem 0;
+}
+
+.rules-content th,
+.rules-content td {
+    border: 1px solid #dee2e6;
+    padding: 0.5rem;
+    text-align: left;
+}
+
+.rules-content th {
+    background-color: #f8f9fa;
+    font-weight: bold;
+}
+
+.rules-content code {
+    background-color: #f8f9fa;
+    padding: 0.2rem 0.4rem;
+    border-radius: 0.25rem;
+    font-family: 'Courier New', monospace;
+}
+
+.rules-content pre {
+    background-color: #f8f9fa;
+    padding: 1rem;
+    border-radius: 0.25rem;
+    overflow-x: auto;
+}
+
+.rules-content strong {
+    color: #dc3545;
+}
+
+.rules-content em {
+    color: #0066cc;
+}
+</style>
+{% endblock %}
