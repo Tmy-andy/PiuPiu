@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="vi" data-theme="{{ session_theme or 'default' }}">
 <head>
     <title>Hệ thống điểm thành viên Piu Piu</title>
 
@@ -26,6 +26,7 @@
     <meta name="apple-mobile-web-app-title" content="Piu Piu System">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <link rel="apple-touch-icon" href="{{ url_for('static', filename='icon.png', _external=True) }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/themes.css') }}">
 
     <!-- Favicon + Android -->
     <link rel="icon" type="image/png" href="{{ url_for('static', filename='logo.png') }}">
@@ -619,6 +620,7 @@
         });
     </script>
 
+    <script src="{{ url_for('static', filename='js/theme-effects.js') }}"></script>
     {% block scripts %}
     {% endblock %}
 </body>

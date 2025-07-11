@@ -91,6 +91,12 @@ def load_user(user_id):
     return User.query.get(int(user_id))
 
 @app.context_processor
+def inject_theme():
+    if 'user_id' in session:
+        user = User.query.get(session['user_id'])
+        return dict(session_theme=user.theme if user else 'default')
+    return dict(session_theme='default')
+
 def inject_user():
     user_id = session.get('user_id')
     user = User.query.get(user_id) if user_id else None
@@ -1154,7 +1160,12 @@ def frequency():
 
     return render_template("frequency.html", data=data)
 
+@app.route('/choose_theme', methods=['GET', 'POST'])
+def choose_theme():
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
 
+<<<<<<< HEAD
 @app.route('/theme')
 @login_required
 def theme_settings():
@@ -1216,5 +1227,30 @@ def change_theme():
         print(f"Error changing theme: {e}")
         return jsonify({'success': False, 'message': 'Có lỗi xảy ra khi lưu theme'})
 
+=======
+    user = User.query.get(session['user_id'])
+
+    if request.method == 'POST':
+        selected_theme = request.form.get('theme')
+        if selected_theme:
+            user.theme = selected_theme
+            db.session.commit()
+            flash('Đã cập nhật theme thành công!', 'success')
+        return redirect(url_for('choose_theme'))
+
+    current_theme = user.theme or 'default'
+    return render_template('choose_theme.html', current_theme=current_theme)
+
+@app.before_request
+def apply_user_theme():
+    if 'user_id' in session:
+        user = User.query.get(session['user_id'])
+        if user:
+            g.current_theme = user.theme or 'default'
+        else:
+            g.current_theme = 'default'
+    else:
+        g.current_theme = 'default'
+>>>>>>> 7cf015f (cập nhật)
 
 print(f"📌 Flask app = {app}")
