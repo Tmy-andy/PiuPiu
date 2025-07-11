@@ -233,21 +233,19 @@
                 font-size: 1.1rem;
             }
 
-            /* Dropdown menu */
+            /* Dropdown menu - Đơn giản hóa */
             .dropdown-menu {
-                position: absolute !important;
-                top: 100% !important;
-                right: 0 !important;
-                left: auto !important;
-                transform: none !important;
                 border-radius: 12px;
                 box-shadow: 0 8px 25px -5px rgba(0, 0, 0, 0.2);
                 border: none;
                 padding: 0.5rem 0;
                 min-width: 280px;
-                max-width: 90vw;
                 margin-top: 0.5rem;
-                z-index: 1050;
+            }
+
+            /* Sử dụng Bootstrap built-in classes */
+            .dropdown-menu-end {
+                --bs-position: end;
             }
 
             .dropdown-item {
@@ -465,105 +463,8 @@
 
     {% block scripts %}
     <script>
-        // Navbar dropdown handler - Compatible với tất cả trang
-        (function() {
-            function isMobile() {
-                return window.innerWidth <= 768;
-            }
-
-            function initDropdown() {
-                // Đợi Bootstrap load xong
-                if (typeof bootstrap === 'undefined') {
-                    setTimeout(initDropdown, 100);
-                    return;
-                }
-
-                const dropdowns = document.querySelectorAll('.dropdown-toggle');
-                
-                dropdowns.forEach(function(dropdown) {
-                    // Xóa event listeners cũ nếu có
-                    dropdown.removeEventListener('click', handleDropdownClick);
-                    
-                    if (isMobile()) {
-                        // Trên mobile: sử dụng custom logic
-                        dropdown.addEventListener('click', handleDropdownClick);
-                    } else {
-                        // Trên desktop: để Bootstrap xử lý
-                        // Không cần làm gì, Bootstrap sẽ tự xử lý
-                    }
-                });
-            }
-
-            function handleDropdownClick(e) {
-                if (!isMobile()) return; // Chỉ xử lý trên mobile
-                
-                e.preventDefault();
-                e.stopPropagation();
-                
-                const menu = this.nextElementSibling;
-                if (!menu || !menu.classList.contains('dropdown-menu')) return;
-                
-                // Đóng tất cả dropdown khác
-                document.querySelectorAll('.dropdown-menu.show').forEach(function(otherMenu) {
-                    if (otherMenu !== menu) {
-                        otherMenu.classList.remove('show');
-                    }
-                });
-                
-                // Toggle dropdown hiện tại
-                menu.classList.toggle('show');
-            }
-
-            // Đóng dropdown khi click bên ngoài
-            function handleOutsideClick(e) {
-                if (!isMobile()) return;
-                
-                if (!e.target.closest('.dropdown')) {
-                    document.querySelectorAll('.dropdown-menu.show').forEach(function(menu) {
-                        menu.classList.remove('show');
-                    });
-                }
-            }
-
-            // Đóng dropdown khi click vào item
-            function handleItemClick() {
-                if (!isMobile()) return;
-                
-                document.querySelectorAll('.dropdown-menu.show').forEach(function(menu) {
-                    menu.classList.remove('show');
-                });
-            }
-
-            // Xử lý khi resize
-            function handleResize() {
-                // Đóng tất cả dropdown khi resize
-                document.querySelectorAll('.dropdown-menu.show').forEach(function(menu) {
-                    menu.classList.remove('show');
-                });
-                
-                // Reinit dropdown
-                setTimeout(initDropdown, 100);
-            }
-
-            // Initialize khi DOM ready
-            if (document.readyState === 'loading') {
-                document.addEventListener('DOMContentLoaded', initDropdown);
-            } else {
-                initDropdown();
-            }
-
-            // Event listeners
-            document.addEventListener('click', handleOutsideClick);
-            window.addEventListener('resize', handleResize);
-            
-            // Handle dropdown items
-            document.addEventListener('click', function(e) {
-                if (e.target.closest('.dropdown-item')) {
-                    handleItemClick();
-                }
-            });
-
-        })();
+        // Chỉ cần đảm bảo Bootstrap dropdown hoạt động bình thường
+        // Không override gì cả, để Bootstrap tự xử lý
     </script>
     {% endblock %}
 </body>
