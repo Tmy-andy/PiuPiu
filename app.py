@@ -968,9 +968,14 @@ def create_game():
 @admin_required
 def update_game_note(game_id):
     game = GameHistory.query.get_or_404(game_id)
-    game.notes = request.form.get('notes', '')
+    print("Before:", game.notes, game.tags)
+
+    game.notes = request.form.get('note', '')  # sửa lại đúng name
     selected_tags = request.form.getlist('tags')
-    game.tags = ",".join(selected_tags)  # lưu dưới dạng chuỗi
+    game.tags = ",".join(selected_tags)
+    
+    print("After:", game.notes, game.tags)
+
     db.session.commit()
     flash('Đã cập nhật ván chơi.', 'success')
     return redirect(url_for('game_history'))
