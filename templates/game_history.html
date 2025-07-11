@@ -135,11 +135,6 @@
                             <tr class="game-detail-row" style="display: none;">
                                 <td colspan="3">
                                     <div class="p-3 bg-light border rounded">
-                                        <!-- Ghi chú -->
-                                        <p class="mb-2">
-                                            <strong>Ghi chú:</strong><br>
-                                            {{ game.notes.replace('\n', '<br>') | safe if game.notes else 'Chưa có ghi chú.' }}
-                                        </p>
                                         <!-- Tags -->
                                         <p class="mb-2">
                                             <strong>Tag:</strong>
@@ -151,6 +146,11 @@
                                             {% else %}
                                                 <span class="text-muted">Chưa có</span>
                                             {% endif %}
+                                        </p>
+                                        <!-- Ghi chú -->
+                                        <p class="mb-2">
+                                            <strong>Ghi chú:</strong><br>
+                                            {{ game.notes.replace('\n', '<br>') | safe if game.notes else 'Chưa có ghi chú.' }}
                                         </p>
 
                                         {% if session.user_role == 'admin' %}
