@@ -1160,7 +1160,11 @@ def frequency():
 @app.route('/choose_theme', methods=['GET', 'POST'])
 @login_required
 def choose_theme():
-    user = get_current_user()  # dùng session hoặc current_user
+    user_id = session.get('user_id')
+    user = User.query.get(user_id) if user_id else None
+    if not user:
+        return redirect(url_for('login'))
+
     if request.method == 'POST':
         selected_theme = request.form.get('theme')
         if selected_theme in ['default', 'dark', 'sakura', 'galaxy', 'ocean', 'forest', 'sunset']:
