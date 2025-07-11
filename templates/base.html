@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="vi" >
+<html lang="vi">
 <head>
     <title>Hệ thống điểm thành viên Piu Piu</title>
 
@@ -19,7 +19,6 @@
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <link href="{{ url_for('static', filename='css/themes.css') }}" rel="stylesheet">
 
     <!-- Meta cho iOS và Progressive Web App -->
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -32,12 +31,24 @@
     <link rel="shortcut icon" type="image/png" href="{{ url_for('static', filename='logo.png') }}">
 
     <style>
-        /* Base styles that work with theme system */
+        :root {
+            --primary-color: #2563eb;
+            --primary-dark: #1d4ed8;
+            --secondary-color: #64748b;
+            --success-color: #059669;
+            --warning-color: #d97706;
+            --danger-color: #dc2626;
+            --light-bg: #f8fafc;
+            --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
         body {
+            background-color: var(--light-bg);
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
         .navbar {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             box-shadow: var(--card-shadow);
             backdrop-filter: blur(10px);
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
@@ -65,6 +76,7 @@
         .card {
             border: none;
             border-radius: 12px;
+            box-shadow: var(--card-shadow);
             transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
 
@@ -74,6 +86,7 @@
         }
 
         .btn-primary {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
             border: none;
             border-radius: 8px;
             font-weight: 600;
@@ -87,15 +100,27 @@
         }
 
         .btn-outline-primary {
+            border-color: var(--primary-color);
+            color: var(--primary-color);
             border-radius: 8px;
             font-weight: 600;
         }
 
+        .btn-outline-primary:hover {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+
         .form-control, .form-select {
             border-radius: 8px;
-            border: 2px solid var(--input-border);
+            border: 2px solid #e2e8f0;
             padding: 0.75rem 1rem;
             transition: border-color 0.2s ease;
+        }
+
+        .form-control:focus, .form-select:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.2rem rgba(37, 99, 235, 0.25);
         }
 
         .alert {
@@ -107,6 +132,14 @@
         .table {
             border-radius: 8px;
             overflow: hidden;
+            box-shadow: var(--card-shadow);
+        }
+
+        .table thead th {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            color: white;
+            font-weight: 600;
+            border: none;
         }
 
         .badge {
@@ -117,6 +150,7 @@
         }
 
         .stats-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             border-radius: 12px;
         }
@@ -145,12 +179,14 @@
         }
 
         .sidebar {
+            background: white;
+            box-shadow: var(--card-shadow);
             border-radius: 12px;
             margin-right: 1rem;
         }
 
         .sidebar .nav-link {
-            color: var(--text-muted);
+            color: var(--secondary-color);
             font-weight: 500;
             padding: 0.75rem 1rem;
             border-radius: 8px;
@@ -159,6 +195,7 @@
         }
 
         .sidebar .nav-link:hover, .sidebar .nav-link.active {
+            background-color: var(--primary-color);
             color: white;
         }
 
@@ -187,6 +224,7 @@
                 left: 0;
                 right: 0;
                 z-index: 1050;
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
                 backdrop-filter: blur(10px);
                 box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
                 border-bottom: 1px solid rgba(255, 255, 255, 0.1);
@@ -258,6 +296,7 @@
                 position: absolute;
                 top: calc(100% + 15px);
                 right: 0;
+                background: white;
                 border-radius: 16px;
                 box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
                 min-width: 280px;
@@ -292,9 +331,10 @@
             .mobile-nav-item {
                 display: block;
                 padding: 1rem 1.5rem;
+                color: #374151;
                 text-decoration: none;
                 transition: all 0.2s ease;
-                border-bottom: 1px solid var(--border-color);
+                border-bottom: 1px solid #f3f4f6;
             }
 
             .mobile-nav-item:last-child {
@@ -302,6 +342,8 @@
             }
 
             .mobile-nav-item:hover {
+                background: linear-gradient(135deg, #f8fafc, #e2e8f0);
+                color: var(--primary-color);
                 transform: translateX(5px);
             }
 
@@ -428,7 +470,7 @@
     <!-- Select2 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 </head>
-<body data-theme="{{ user_theme if user_theme else 'light' }}">
+<body>
     <!-- Desktop Navigation -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
         <div class="container">
@@ -455,11 +497,6 @@
                         <li>
                             <a class="dropdown-item" href="{{ url_for('profile') }}">
                                 <i class="fas fa-user-cog text-secondary"></i> Thông tin cá nhân
-                            </a>
-                        </li>
-                        <li>
-                            <a class="dropdown-item" href="{{ url_for('choose_theme') }}">
-                                <i class="fas fa-palette text-info"></i> Cài đặt Theme
                             </a>
                         </li>
                         {% if session.user_role == 'admin' and session.display_name == 'Administrator' %}
@@ -511,11 +548,6 @@
                         Thông tin cá nhân
                     </a>
                     
-                    <a href="{{ url_for('choose_theme') }}" class="mobile-nav-item">
-                        <i class="fas fa-palette"></i>
-                        Cài đặt Theme
-                    </a>
-                    
                     {% if session.user_role == 'admin' and session.display_name == 'Administrator' %}
                     <a href="{{ url_for('download_db') }}" class="mobile-nav-item">
                         <i class="fas fa-database"></i>
@@ -559,7 +591,6 @@
     </main>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="{{ url_for('static', filename='js/theme.js') }}"></script>
 
     <!-- Mobile Navigation Script -->
     <script>
@@ -618,7 +649,7 @@
             }
         });
     </script>
-    <script src="{{ url_for('static', filename='js/theme-effects.js') }}"></script>
+
     {% block scripts %}
     {% endblock %}
 </body>
