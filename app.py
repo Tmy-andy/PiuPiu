@@ -91,17 +91,11 @@ def load_user(user_id):
     return User.query.get(int(user_id))
 
 @app.context_processor
-def inject_theme():
-    theme = 'default'
-    if 'user_id' in session:
-        user = User.query.get(session['user_id'])
-        if user:
-            theme = user.theme or 'default'
-    return dict(session_theme=theme)
+def inject_globals():
+    from datetime import datetime
 
-def inject_user():
     user = None
-    user_theme = 'default'
+    session_theme = 'default'
     warning_count = 0
     now = datetime.utcnow()
 
@@ -110,22 +104,19 @@ def inject_user():
     if user_id:
         user = User.query.get(user_id)
         if user and hasattr(user, 'theme'):
-            user_theme = user.theme or 'default'
+            session_theme = user.theme or 'default'
 
     # Đếm số người chơi cần cảnh báo
     users = User.query.all()
     for u in users:
-        # Nếu đang xin nghỉ thì bỏ qua
         on_leave = PlayerOffRequest.query.filter(
             PlayerOffRequest.user_id == u.id,
             PlayerOffRequest.start_date <= now.date(),
             PlayerOffRequest.end_date >= now.date()
         ).first()
-
         if on_leave:
             continue
 
-        # Lấy lần chơi gần nhất
         last_game = (
             GamePlayer.query
             .filter_by(player_id=u.id)
@@ -135,11 +126,15 @@ def inject_user():
         )
         last_play_time = last_game.game.created_at if last_game else None
 
-        # Nếu chưa chơi trong 7 ngày -> tăng cảnh báo
         if not last_play_time or (now - last_play_time).days > 7:
             warning_count += 1
 
-    return dict(user=user, warning_count=warning_count, user_theme=user_theme)
+    return dict(
+        user=user,
+        warning_count=warning_count,
+        user_theme=session_theme,
+        session_theme=session_theme  # nếu bạn vẫn dùng biến này ở HTML
+    )
 
 
 
