@@ -69,6 +69,8 @@ class GameHistory(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     host_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     players = db.relationship('GamePlayer', backref='game', cascade="all, delete", lazy=True)
+    notes = db.Column(db.Text, default='')
+    tags = db.Column(db.String(255), default='')
 
 class GamePlayer(db.Model):
     id = db.Column(db.Integer, primary_key=True)
