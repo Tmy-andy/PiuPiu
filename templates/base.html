@@ -48,13 +48,27 @@
         }
 
         .navbar {
-            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             box-shadow: var(--card-shadow);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .navbar-brand {
             font-weight: 700;
             font-size: 1.5rem;
+            transition: transform 0.2s ease;
+        }
+
+        .navbar-brand:hover {
+            transform: scale(1.05);
+        }
+
+        .navbar-brand i {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 0.4rem;
+            border-radius: 8px;
+            margin-right: 0.5rem;
         }
 
         .card {
@@ -193,6 +207,7 @@
             display: none;
         }
 
+        /* Cải tiến cho navbar trên mobile */
         @media (max-width: 768px) {
             /* Ẩn navbar desktop trên mobile */
             .navbar.navbar-expand-lg {
@@ -460,11 +475,11 @@
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 </head>
 <body>
-    <!-- Desktop Navigation (Giữ nguyên) -->
+    <!-- Desktop Navigation (Cập nhật đồng bộ) -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
         <div class="container">
             <a class="navbar-brand" href="{{ url_for('dashboard') }}">
-                <i class="fas fa-users me-2"></i>Quản lý thành viên
+                <i class="fas fa-users"></i>Quản lý thành viên
             </a>
             <!-- Collapsible nav items -->
             <ul class="navbar-nav ms-auto d-flex align-items-center">
@@ -477,28 +492,28 @@
                         <li class="dropdown-header">
                             <strong>{{ session.display_name }}</strong>
                         </li>
-                        <li><hr class="dropdown-divider d-sm-none"></li>
+                        <li><hr class="dropdown-divider"></li>
                         <li>
                             <a class="dropdown-item" href="{{ url_for('dashboard') }}">
-                                <i class="fas fa-tachometer-alt me-2 text-primary"></i> Dashboard
+                                <i class="fas fa-tachometer-alt text-primary"></i> Dashboard
                             </a>
                         </li>
                         <li>
                             <a class="dropdown-item" href="{{ url_for('profile') }}">
-                                <i class="fas fa-user-cog me-2 text-secondary"></i> Thông tin cá nhân
+                                <i class="fas fa-user-cog text-secondary"></i> Thông tin cá nhân
                             </a>
                         </li>
                         {% if session.user_role == 'admin' and session.display_name == 'Administrator' %}
                         <li>
                             <a class="dropdown-item" href="{{ url_for('download_db') }}">
-                                <i class="fas fa-database me-2 text-warning"></i> Tải database
+                                <i class="fas fa-database text-warning"></i> Tải database
                             </a>
                         </li>
                         {% endif %}
                         <li><hr class="dropdown-divider"></li>
                         <li>
-                            <a class="dropdown-item" href="{{ url_for('logout') }}">
-                                <i class="fas fa-sign-out-alt me-2 text-danger"></i> Đăng xuất
+                            <a class="dropdown-item text-danger" href="{{ url_for('logout') }}">
+                                <i class="fas fa-sign-out-alt"></i> Đăng xuất
                             </a>
                         </li>
                     </ul>
