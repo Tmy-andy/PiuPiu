@@ -30,6 +30,13 @@
     <link rel="icon" type="image/png" href="{{ url_for('static', filename='logo.png') }}">
     <link rel="shortcut icon" type="image/png" href="{{ url_for('static', filename='logo.png') }}">
 
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Select2 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <!-- Select2 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
     <style>
         :root {
             --primary-color: #2563eb;
@@ -188,20 +195,15 @@
             margin-right: 0.5rem;
         }
 
-        /* Cải tiến cho navbar trên mobile */
+        /* Navbar responsive cho mobile */
         @media (max-width: 768px) {
-            .sidebar {
-                margin-right: 0;
-                margin-bottom: 1rem;
-            }
-
-            /* Tối ưu navbar cho mobile */
             .navbar {
-                padding: 0.5rem 0;
+                padding: 0.5rem 1rem;
+                position: relative;
             }
 
             .navbar-brand {
-                font-size: 1.25rem;
+                font-size: 1.2rem;
                 padding: 0.5rem 0;
             }
 
@@ -209,18 +211,43 @@
                 font-size: 1.1rem;
             }
 
-            /* Cải thiện dropdown menu */
+            /* User dropdown button */
+            .nav-link.dropdown-toggle {
+                padding: 0.5rem 0.75rem;
+                border-radius: 8px;
+                transition: all 0.2s ease;
+                background: rgba(255, 255, 255, 0.1);
+                border: 1px solid rgba(255, 255, 255, 0.2);
+                min-height: 44px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .nav-link.dropdown-toggle:hover {
+                background: rgba(255, 255, 255, 0.2);
+                transform: translateY(-1px);
+            }
+
+            .nav-link.dropdown-toggle i {
+                font-size: 1.1rem;
+            }
+
+            /* Dropdown menu */
             .dropdown-menu {
+                position: absolute !important;
+                top: 100% !important;
+                right: 0 !important;
+                left: auto !important;
+                transform: none !important;
                 border-radius: 12px;
                 box-shadow: 0 8px 25px -5px rgba(0, 0, 0, 0.2);
                 border: none;
                 padding: 0.5rem 0;
-                min-width: calc(100vw - 2rem);
-                width: calc(100vw - 2rem);
+                min-width: 280px;
+                max-width: 90vw;
                 margin-top: 0.5rem;
-                left: 50% !important;
-                transform: translateX(-50%) !important;
-                right: auto !important;
+                z-index: 1050;
             }
 
             .dropdown-item {
@@ -229,7 +256,9 @@
                 border-radius: 8px;
                 margin: 0.25rem 1rem;
                 transition: all 0.2s ease;
-                text-align: left;
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
             }
 
             .dropdown-item:hover {
@@ -245,115 +274,68 @@
 
             .dropdown-header {
                 font-size: 0.9rem;
-                padding: 0.5rem 1.5rem;
+                padding: 0.75rem 1.5rem 0.5rem;
                 margin-bottom: 0.25rem;
                 color: var(--secondary-color);
                 text-align: center;
                 background: linear-gradient(135deg, #f8fafc, #e2e8f0);
                 border-radius: 8px;
                 margin: 0.25rem 1rem;
+                font-weight: 600;
             }
 
             .dropdown-divider {
                 margin: 0.5rem 1rem;
             }
 
-            /* Cải thiện user dropdown trigger */
-            .nav-link.dropdown-toggle {
-                padding: 0.5rem 0.75rem;
-                border-radius: 8px;
-                transition: all 0.2s ease;
-                background: rgba(255, 255, 255, 0.1);
-                border: 1px solid rgba(255, 255, 255, 0.2);
+            .sidebar {
+                margin-right: 0;
+                margin-bottom: 1rem;
             }
 
-            .nav-link.dropdown-toggle:hover {
-                background: rgba(255, 255, 255, 0.2);
-                transform: translateY(-1px);
-            }
-
-            .nav-link.dropdown-toggle i {
-                font-size: 1.1rem;
-            }
-
-            /* Cải thiện container cho mobile */
             .container {
                 padding-left: 1rem;
                 padding-right: 1rem;
             }
+        }
 
-            /* Smooth animation cho dropdown */
-            .dropdown-menu {
-                opacity: 0;
-                transform: translateX(-50%) translateY(-10px);
-                transition: all 0.3s ease;
+        /* Màn hình rất nhỏ */
+        @media (max-width: 480px) {
+            .navbar {
+                padding: 0.5rem 0.75rem;
             }
 
-            .dropdown-menu.show {
-                opacity: 1;
-                transform: translateX(-50%) translateY(0);
-            }
-
-            /* Cải thiện touch target */
-            .navbar-nav .nav-link {
-                min-height: 44px;
-                display: flex;
-                align-items: center;
-                justify-content: right;
-            }
-
-            /* Responsive text cho navbar brand */
             .navbar-brand {
+                font-size: 1.1rem;
                 max-width: 200px;
                 overflow: hidden;
                 text-overflow: ellipsis;
                 white-space: nowrap;
-            }
-            .navbar-nav .dropdown-menu {
-                position: relative;
-            }
-        }
-
-        /* Cải tiến thêm cho màn hình rất nhỏ */
-        @media (max-width: 480px) {
-            .navbar-brand {
-                font-size: 1.1rem;
             }
 
             .navbar-brand i {
                 font-size: 1rem;
             }
 
+            .nav-link.dropdown-toggle {
+                padding: 0.4rem 0.6rem;
+                min-height: 40px;
+            }
+
             .dropdown-menu {
-                width: auto;
-                min-width: 90vw;
-                left: 50% !important;
-                transform: translateX(-50%) !important;
-                right: auto !important;
-                border-radius: 12px;
-                box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+                min-width: 260px;
+                max-width: 85vw;
             }
 
             .dropdown-item {
-                font-size: 0.95rem;
+                font-size: 0.9rem;
                 padding: 0.6rem 1rem;
                 margin: 0.15rem 0.5rem;
-                display: flex;
-                align-items: center;
-                gap: 0.5rem;
             }
 
             .dropdown-header {
-                font-weight: 600;
-                font-size: 0.95rem;
-                padding: 0.75rem 1rem 0.25rem;
-                margin: 0;
-                text-align: center;
-                border-bottom: 1px solid #e5e7eb;
-            }
-
-            .dropdown-divider {
-                margin: 0.5rem 1rem;
+                font-size: 0.85rem;
+                padding: 0.6rem 1rem 0.4rem;
             }
 
             .container {
@@ -362,28 +344,31 @@
             }
         }
 
-        /* Cải tiến cho landscape mode trên mobile */
+        /* Landscape mode trên mobile */
         @media (max-width: 768px) and (orientation: landscape) {
             .navbar {
-                padding: 0.25rem 0;
+                padding: 0.4rem 1rem;
             }
 
             .navbar-brand {
                 font-size: 1.1rem;
-                padding: 0.25rem 0;
+                padding: 0.3rem 0;
             }
 
             .nav-link.dropdown-toggle {
-                padding: 0.25rem 0.5rem;
+                padding: 0.3rem 0.6rem;
+                min-height: 40px;
+            }
+        }
+
+        /* Đảm bảo dropdown không bị tràn màn hình */
+        @media (max-width: 320px) {
+            .dropdown-menu {
+                min-width: 240px;
+                max-width: 95vw;
             }
         }
     </style>
-    <!-- jQuery -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <!-- Select2 JS -->
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-    <!-- Select2 CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 </head>
 <body>
     <!-- Navigation -->
@@ -392,39 +377,43 @@
             <a class="navbar-brand" href="{{ url_for('dashboard') }}">
                 <i class="fas fa-users me-2"></i>Quản lý thành viên
             </a>
-            <!-- Collapsible nav items -->
+            <!-- User dropdown -->
             <div class="navbar-nav ms-auto d-flex align-items-center">
                 {% if session.user_id %}
                 <li class="nav-item dropdown list-unstyled">
-                    <a class="nav-link dropdown-toggle text-white align-items-center gap-2" href="#" role="button" data-bs-toggle="dropdown">
+                    <a class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         <i class="fas fa-user"></i>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end">
                         <li class="dropdown-header">
                             <strong>{{ session.display_name }}</strong>
                         </li>
-                        <li><hr class="dropdown-divider d-sm-none"></li>
+                        <li><hr class="dropdown-divider"></li>
                         <li>
                             <a class="dropdown-item" href="{{ url_for('dashboard') }}">
-                                <i class="fas fa-tachometer-alt me-2 text-primary"></i> Dashboard
+                                <i class="fas fa-tachometer-alt text-primary"></i>
+                                <span>Dashboard</span>
                             </a>
                         </li>
                         <li>
                             <a class="dropdown-item" href="{{ url_for('profile') }}">
-                                <i class="fas fa-user-cog me-2 text-secondary"></i> Thông tin cá nhân
+                                <i class="fas fa-user-cog text-secondary"></i>
+                                <span>Thông tin cá nhân</span>
                             </a>
                         </li>
                         {% if session.user_role == 'admin' and session.display_name == 'Administrator' %}
                         <li>
                             <a class="dropdown-item" href="{{ url_for('download_db') }}">
-                                <i class="fas fa-database me-2 text-warning"></i> Tải database
+                                <i class="fas fa-database text-warning"></i>
+                                <span>Tải database</span>
                             </a>
                         </li>
                         {% endif %}
                         <li><hr class="dropdown-divider"></li>
                         <li>
                             <a class="dropdown-item" href="{{ url_for('logout') }}">
-                                <i class="fas fa-sign-out-alt me-2 text-danger"></i> Đăng xuất
+                                <i class="fas fa-sign-out-alt text-danger"></i>
+                                <span>Đăng xuất</span>
                             </a>
                         </li>
                     </ul>
@@ -451,26 +440,68 @@
 
     <!-- Main Content -->
     <main class="container-fluid py-4">
-        {% block content %}{% endblock %}
+        {% block content %}
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Demo Navbar cho Mobile</h5>
+                        <p class="card-text">Navbar đã được tối ưu hóa cho hiển thị trên điện thoại:</p>
+                        <ul>
+                            <li>Dropdown menu được định vị chính xác</li>
+                            <li>Kích thước phù hợp với touch screen</li>
+                            <li>Responsive tốt trên các kích thước màn hình</li>
+                            <li>Animation mượt mà</li>
+                        </ul>
+                        <p class="text-muted">Hãy test trên điện thoại để xem kết quả!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endblock %}
     </main>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
     {% block scripts %}
     <script>
-        // Thêm smooth animation cho dropdown
+        // Đảm bảo dropdown hoạt động tốt trên mobile
         document.addEventListener('DOMContentLoaded', function() {
+            // Xử lý dropdown
             const dropdowns = document.querySelectorAll('.dropdown-toggle');
             
             dropdowns.forEach(dropdown => {
                 dropdown.addEventListener('click', function(e) {
+                    e.preventDefault();
                     const menu = this.nextElementSibling;
-                    if (menu) {
-                        // Thêm class show với animation
-                        setTimeout(() => {
-                            menu.classList.add('show');
-                        }, 10);
-                    }
+                    
+                    // Đóng tất cả dropdown khác
+                    document.querySelectorAll('.dropdown-menu.show').forEach(otherMenu => {
+                        if (otherMenu !== menu) {
+                            otherMenu.classList.remove('show');
+                        }
+                    });
+                    
+                    // Toggle dropdown hiện tại
+                    menu.classList.toggle('show');
+                });
+            });
+
+            // Đóng dropdown khi click bên ngoài
+            document.addEventListener('click', function(e) {
+                if (!e.target.closest('.dropdown')) {
+                    document.querySelectorAll('.dropdown-menu.show').forEach(menu => {
+                        menu.classList.remove('show');
+                    });
+                }
+            });
+
+            // Đóng dropdown khi click vào item
+            document.querySelectorAll('.dropdown-item').forEach(item => {
+                item.addEventListener('click', function() {
+                    document.querySelectorAll('.dropdown-menu.show').forEach(menu => {
+                        menu.classList.remove('show');
+                    });
                 });
             });
         });
