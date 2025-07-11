@@ -129,7 +129,12 @@ def inject_user():
 
     return dict(user=user, warning_count=warning_count)
 
+from flask_compress import Compress
+Compress(app)
 
+from flask_caching import Cache
+
+cache = Cache(app, config={'CACHE_TYPE': 'SimpleCache', 'CACHE_DEFAULT_TIMEOUT': 60})
 
 # Error handlers
 @app.errorhandler(403)
