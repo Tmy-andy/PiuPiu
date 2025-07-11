@@ -13,16 +13,16 @@ from datetime import datetime
 from database import init_app, db
 from models import User, MemberID, PointLog, Rule, CharacterAbility, BlacklistEntry, KimBaiLog, PlayerOffRequest, GamePlayer, GameHistory
 from functools import wraps
+from sqlalchemy import func, union_all
 from sqlalchemy.orm import aliased
+from sqlalchemy.inspection import inspect
 from flask_sqlalchemy import SQLAlchemy
 import logging
 from zipfile import ZipFile
 import tempfile
-from sqlalchemy.sql import func
 import csv
 import io
 from flask_migrate import Migrate
-from sqlalchemy.inspection import inspect
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -1028,6 +1028,8 @@ from datetime import datetime, timedelta
 from sqlalchemy import func
 from flask import render_template
 
+from sqlalchemy import func, union_all, select
+
 @app.route("/frequency")
 @login_required
 def frequency():
@@ -1047,27 +1049,37 @@ def frequency():
 
     off_dict = {user_id: latest_end for user_id, latest_end in current_offs}
 
-    # Lấy số lần chơi và lần cuối tham gia từ bảng GamePlayer
+    # Tạo subquery union giữa player_id (GamePlayer) và host_id (GameHistory)
+    gp_sub = db.session.query(
+        GamePlayer.player_id.label("user_id"),
+        GameHistory.created_at.label("played_at")
+    ).join(GameHistory, GamePlayer.game_id == GameHistory.id)
+
+    host_sub = db.session.query(
+        GameHistory.host_id.label("user_id"),
+        GameHistory.created_at.label("played_at")
+    )
+
+    union_q = gp_sub.union_all(host_sub).subquery()
+
+    # Tính số lượt chơi và lần cuối chơi (gộp cả host)
     stats = db.session.query(
-        GamePlayer.player_id,
-        func.count(GamePlayer.id).label("play_count"),
-        func.max(GameHistory.created_at).label("last_play")
-    ).join(GameHistory, GamePlayer.game_id == GameHistory.id)\
-     .group_by(GamePlayer.player_id).all()
+        union_q.c.user_id,
+        func.count().label("play_count"),
+        func.max(union_q.c.played_at).label("last_play")
+    ).group_by(union_q.c.user_id).all()
 
     data = []
-
-    # Tạo danh sách đã có số liệu
     handled_ids = set()
 
-    for player_id, play_count, last_play in stats:
-        user = User.query.get(player_id)
+    for user_id, play_count, last_play in stats:
+        user = User.query.get(user_id)
         if not user:
             continue
 
-        # Nếu đang trong kỳ nghỉ, tính lần cuối từ end_date
-        if player_id in off_dict:
-            adjusted_last_play = max(last_play.date(), off_dict[player_id])
+        # Nếu người này đang nghỉ
+        if user_id in off_dict:
+            adjusted_last_play = max(last_play.date(), off_dict[user_id])
         else:
             adjusted_last_play = last_play.date()
 
@@ -1078,16 +1090,15 @@ def frequency():
             "play_count": play_count,
             "last_play": adjusted_last_play,
             "inactive": inactive,
-            "on_leave": player_id in off_dict
+            "on_leave": user_id in off_dict
         })
-        handled_ids.add(player_id)
+        handled_ids.add(user_id)
 
     # Người chưa từng chơi
     for u in users:
         if u.id in handled_ids:
             continue
 
-        # Nếu người này đang xin nghỉ
         if u.id in off_dict:
             adjusted_last_play = off_dict[u.id]
             inactive = (today - adjusted_last_play).days > 7
@@ -1099,7 +1110,6 @@ def frequency():
                 "on_leave": True
             })
         else:
-            # Không có ván nào và không xin nghỉ
             data.append({
                 "user": u,
                 "play_count": 0,
@@ -1109,6 +1119,7 @@ def frequency():
             })
 
     return render_template("frequency.html", data=data)
+
 
 
 print(f"📌 Flask app = {app}")
