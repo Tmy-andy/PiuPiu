@@ -1,11 +1,6 @@
-:root[data-theme="light"] {
-=======
-/* themes.css - Định nghĩa các theme với hiệu ứng đặc biệt */
-
 /* Default Theme (Tím xanh) */
 :root,
 [data-theme="default"] {
->>>>>>> 7cf015f (cập nhật)
     --primary-color: #2563eb;
     --primary-dark: #1d4ed8;
     --secondary-color: #64748b;
@@ -51,7 +46,6 @@
     --danger-color: #ef4444;
     --light-bg: #111827;
     --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
-<<<<<<< HEAD
     --text-color: #f9fafb;
     --text-muted: #9ca3af;
     --card-bg: #1f2937;
@@ -69,7 +63,6 @@
     --primary-color: #0ea5e9;
     --primary-dark: #0284c7;
     --secondary-color: #64748b;
-=======
     --navbar-bg: linear-gradient(135deg, #1f2937 0%, #374151 100%);
     --stats-card-bg: linear-gradient(135deg, #1f2937 0%, #374151 100%);
     --text-color: #f9fafb;
@@ -134,13 +127,11 @@
     --primary-color: #0ea5e9;
     --primary-dark: #0284c7;
     --secondary-color: #0369a1;
->>>>>>> 7cf015f (cập nhật)
     --success-color: #059669;
     --warning-color: #d97706;
     --danger-color: #dc2626;
     --light-bg: #f0f9ff;
     --card-shadow: 0 4px 6px -1px rgba(14, 165, 233, 0.1);
-<<<<<<< HEAD
     --text-color: #0c4a6e;
     --text-muted: #475569;
     --card-bg: #ffffff;
@@ -402,7 +393,6 @@ body {
 
 .theme-preview[data-theme="rose"] .theme-preview-body {
     background: #fff1f2;
-=======
     --navbar-bg: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
     --stats-card-bg: linear-gradient(135deg, #1e40af 0%, #1e3a8a 100%);
     --text-color: #0c4a6e;
@@ -750,5 +740,4 @@ body {
 
 [data-theme="sunset"] ::selection {
     background: rgba(249, 115, 22, 0.3);
->>>>>>> 7cf015f (cập nhật)
 }
