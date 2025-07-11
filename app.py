@@ -921,11 +921,13 @@ def game_history():
     }
 
     games = GameHistory.query.order_by(GameHistory.created_at.desc()).all()
-    users = User.query.all()
+    # users = User.query.all()
     chars = CharacterAbility.query.all()
 
     # Sắp xếp chars theo phe
     chars_sorted = sorted(chars, key=lambda c: faction_order.get(c.faction, 999))
+    # Sắp xếp user theo member_id (tăng dần)
+    users = User.query.order_by(User.member_id.asc()).all()
 
     FACTION_ICONS = {
         "Phe Dân": ("fa-users", "bg-success text-white"),
