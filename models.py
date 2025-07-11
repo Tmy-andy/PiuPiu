@@ -22,7 +22,7 @@ class User(db.Model, UserMixin):
 
 class MemberID(db.Model):
     __tablename__ = 'member_ids'
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     member_id = db.Column(db.String(100), unique=True, nullable=False)
     is_used = db.Column(db.Boolean, default=False)
     used_by = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=True)
