@@ -1161,9 +1161,17 @@ def frequency():
     return render_template("frequency.html", data=data)
 
 @app.route('/choose_theme', methods=['GET', 'POST'])
+@login_required
 def choose_theme():
-    if 'user_id' not in session:
-        return redirect(url_for('login'))
+    user = get_current_user()  # dùng session hoặc current_user
+    if request.method == 'POST':
+        selected_theme = request.form.get('theme')
+        if selected_theme in ['default', 'dark', 'sakura', 'galaxy', 'ocean', 'forest', 'sunset']:
+            user.theme = selected_theme
+            db.session.commit()
+            flash('Theme đã được cập nhật!', 'success')
+        return redirect(url_for('choose_theme'))
 
+    return render_template('choose_theme.html', current_theme=user.theme or 'default')
 
 print(f"📌 Flask app = {app}")
