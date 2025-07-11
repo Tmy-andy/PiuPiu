@@ -140,8 +140,9 @@
                                         <!-- Tags -->
                                         <p class="mb-2">
                                             <strong>Tag:</strong>
-                                            {% if game.tags %}
-                                                {% for tag in game.tags %}
+                                            {% set tag_list = game.tags.split(',') if game.tags else [] %}
+                                            {% if tag_list %}
+                                                {% for tag in tag_list %}
                                                     <span class="badge bg-secondary me-1">{{ tag }}</span>
                                                 {% endfor %}
                                             {% else %}
@@ -162,7 +163,7 @@
                                                 {% for tag in all_tags %}
                                                 <div class="form-check form-check-inline">
                                                     <input class="form-check-input" type="checkbox" name="tags" id="tag_{{ game.id }}_{{ loop.index }}" value="{{ tag }}"
-                                                        {% if game.tags and tag in game.tags %}checked{% endif %}>
+                                                        {% if tag in tag_list %}checked{% endif %}>
                                                     <label class="form-check-label" for="tag_{{ game.id }}_{{ loop.index }}">{{ tag }}</label>
                                                 </div>
                                                 {% endfor %}
