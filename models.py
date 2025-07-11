@@ -18,6 +18,7 @@ class User(db.Model, UserMixin):
     # Thêm:
     hosted_games = db.relationship('GameHistory', backref='host', lazy=True, foreign_keys='GameHistory.host_id')
     played_games = db.relationship('GamePlayer', backref='player_info', lazy=True, foreign_keys='GamePlayer.player_id')
+    theme = db.Column(db.String(50), nullable=True, default='default')
 
 
 class MemberID(db.Model):
