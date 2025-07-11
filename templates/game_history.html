@@ -115,15 +115,18 @@
 
                                 <td>
                                     <div class="players-list">
-                                        {% for p in game.players %}
-                                            {% set icon, color_class = FACTION_ICONS.get(p.char.faction, ('fa-question-circle', 'bg-secondary text-white')) %}
-                                            <div class="player-item mb-1">
-                                                <span class="badge bg-secondary me-1">{{ p.player.member_id[-3:] }}</span>
-                                                <span class="text-muted"> : </span>
-                                                <span class="badge ms-1 {{ color_class }}">
-                                                    <i class="fas {{ icon }} me-1"></i>{{ p.char.name }}
-                                                </span>
-                                            </div>
+                                        {% set factions_order = ['Phe Dân', 'Phe Sói', 'Phe Ba', 'Đổi Phe'] %}
+                                        {% for faction in factions_order %}
+                                            {% for p in game.players if p.char.faction == faction %}
+                                                {% set icon, color_class = FACTION_ICONS.get(p.char.faction, ('fa-question-circle', 'bg-secondary text-white')) %}
+                                                <div class="player-item mb-1">
+                                                    <span class="badge bg-secondary me-1">{{ p.player.member_id[-3:] }}</span>
+                                                    <span class="text-muted"> : </span>
+                                                    <span class="badge ms-1 {{ color_class }}">
+                                                        <i class="fas {{ icon }} me-1"></i>{{ p.char.name }}
+                                                    </span>
+                                                </div>
+                                            {% endfor %}
                                         {% endfor %}
                                     </div>
                                 </td>
