@@ -93,11 +93,10 @@ def load_user(user_id):
 @app.context_processor
 def inject_theme():
     theme = 'default'
-    user = None
     if 'user_id' in session:
         user = User.query.get(session['user_id'])
-        if user and hasattr(user, 'theme'):
-            theme = user.theme
+        if user:
+            theme = user.theme or 'default'
     return dict(session_theme=theme)
 
 def inject_user():
