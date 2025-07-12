@@ -1089,7 +1089,7 @@ def day_off():
     offs = PlayerOffRequest.query.order_by(PlayerOffRequest.start_date.desc()).all()
 
     # ✅ Nếu là admin, cung cấp danh sách users để chọn trong form
-    users = User.query.order_by(User.display_name).all() if user.role == 'admin' else []
+    users = User.query.order_by(User.member_id.asc()).all() if user.role == 'admin' else []
 
     return render_template(
         "day_off.html",
