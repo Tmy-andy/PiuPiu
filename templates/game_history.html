@@ -819,6 +819,49 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 </script>
 <script>
+document.addEventListener("DOMContentLoaded", function () {
+    // Thêm dòng mới
+    document.getElementById("addAssignmentRow").addEventListener("click", function () {
+        const container = document.getElementById("manualAssignments");
+
+        // Tạo dòng mới từ HTML template
+        const newRow = document.createElement("div");
+        newRow.className = "row mb-2 align-items-center";
+        newRow.innerHTML = `
+            <div class="col-md-5">
+                <select class="form-select" name="manual_players[]" required>
+                    <option disabled selected value="">-- Chọn người chơi --</option>
+                    ${[...document.querySelectorAll('select[name="manual_players[]"] option')]
+                        .map(opt => `<option value="${opt.value}">${opt.textContent}</option>`).join('')}
+                </select>
+            </div>
+            <div class="col-md-5">
+                <select class="form-select" name="manual_chars[]" required>
+                    <option disabled selected value="">-- Chọn nhân vật --</option>
+                    ${[...document.querySelectorAll('select[name="manual_chars[]"] option')]
+                        .map(opt => `<option value="${opt.value}">${opt.textContent}</option>`).join('')}
+                </select>
+            </div>
+            <div class="col-md-2">
+                <button type="button" class="btn btn-danger btn-sm remove-row">Xóa</button>
+            </div>
+        `;
+        container.appendChild(newRow);
+    });
+
+    // Xóa dòng
+    document.getElementById("manualAssignments").addEventListener("click", function (e) {
+        if (e.target.classList.contains("remove-row")) {
+            const row = e.target.closest(".row");
+            const allRows = document.querySelectorAll("#manualAssignments .row");
+            if (allRows.length > 1) {
+                row.remove();
+            }
+        }
+    });
+});
+</script>
+<script>
 document.addEventListener('DOMContentLoaded', function () {
     const rows = document.querySelectorAll('.game-row');
     const detailRows = document.querySelectorAll('.game-detail-row');
