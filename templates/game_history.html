@@ -619,8 +619,8 @@
 {% block scripts %}
 
 <script>
-    const originalPlayers = {{ users | tojson | safe }};
-    const originalChars = {{ chars | tojson | safe }};
+    const originalPlayers = {{ user_dicts | tojson | safe }};
+    const originalChars = {{ char_dicts | tojson | safe }};
 </script>
 
 <script>

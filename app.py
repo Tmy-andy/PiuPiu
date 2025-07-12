@@ -932,7 +932,6 @@ def edit_blacklist_author(entry_id):
 def game_history():
     from models import GameHistory, User, CharacterAbility
 
-    # Thứ tự phe
     faction_order = {
         "Phe Dân": 1,
         "Phe Sói": 2,
@@ -941,12 +940,8 @@ def game_history():
     }
 
     games = GameHistory.query.order_by(GameHistory.created_at.desc()).all()
-    # users = User.query.all()
     chars = CharacterAbility.query.all()
-
-    # Sắp xếp chars theo phe
     chars_sorted = sorted(chars, key=lambda c: faction_order.get(c.faction, 999))
-    # Sắp xếp user theo member_id (tăng dần)
     users = User.query.order_by(User.member_id.asc()).all()
 
     FACTION_ICONS = {
@@ -956,12 +951,24 @@ def game_history():
         "Đổi Phe": ("fa-random", "bg-warning-subtle text-warning")
     }
 
+    # ✅ Chuyển users và chars sang dict để dùng với tojson trong template
+    user_dicts = [
+        {"id": u.id, "display_name": u.display_name, "member_id": u.member_id}
+        for u in users
+    ]
+    char_dicts = [
+        {"id": c.id, "name": c.name, "faction": c.faction}
+        for c in chars_sorted
+    ]
+
     return render_template(
         "game_history.html",
         games=games,
         users=users,
         chars=chars_sorted,
-        FACTION_ICONS=FACTION_ICONS
+        FACTION_ICONS=FACTION_ICONS,
+        user_dicts=user_dicts,         # ✅ thêm
+        char_dicts=char_dicts          # ✅ thêm
     )
 
 
