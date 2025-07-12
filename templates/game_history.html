@@ -818,6 +818,24 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 </script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const rows = document.querySelectorAll('.game-row');
+    const detailRows = document.querySelectorAll('.game-detail-row');
+
+    rows.forEach((row, index) => {
+        row.addEventListener('click', () => {
+            detailRows.forEach((r, i) => {
+                if (i === index) {
+                    r.style.display = (r.style.display === 'table-row') ? 'none' : 'table-row';
+                } else {
+                    r.style.display = 'none';
+                }
+            });
+        });
+    });
+});
+</script>
 
 
 {% endblock %}
