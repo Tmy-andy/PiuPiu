@@ -1092,7 +1092,7 @@ from sqlalchemy import func
 from flask import render_template
 
 from sqlalchemy import func, union_all, select
-
+import sys
 @app.route("/frequency")
 @login_required
 def frequency():
@@ -1131,6 +1131,11 @@ def frequency():
         func.count().label("play_count"),
         func.max(union_q.c.played_at).label("last_play")
     ).group_by(union_q.c.user_id).all()
+
+    print("📊 Danh sách user đã chơi:")
+    for row in stats:
+        print(f"user_id={row.user_id}, play_count={row.play_count}, last_play={row.last_play}")
+    sys.stdout.flush()
 
     data = []
     handled_ids = set()
