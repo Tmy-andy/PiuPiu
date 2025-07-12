@@ -119,14 +119,14 @@
                             {% for o in offs %}
                             <tr>
                                 <td>
-                                    <span class="badge bg-primary">{{ o.user.username }}</span>
+                                    <span class="badge bg-primary">{{ o.user.display_name }}</span>
                                 </td>
                                 <td class="fw-semibold">{{ o.start_date.strftime('%d/%m/%Y') }}</td>
                                 <td class="fw-semibold">{{ o.end_date.strftime('%d/%m/%Y') }}</td>
                                 <td class="text-muted">{{ o.reason or "Không có lý do" }}</td>
                                 <td>
                                     {% if o.creator %}
-                                        <span class="badge bg-secondary">{{ o.creator.username }}</span>
+                                        <span class="badge bg-secondary">{{ o.creator.display_name }}</span>
                                     {% else %}
                                         <span class="text-muted">-</span>
                                     {% endif %}
