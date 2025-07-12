@@ -973,28 +973,31 @@ def create_game():
     from models import GameHistory, GamePlayer, db
 
     # --- THỦ CÔNG ---
-    manual_players = request.form.getlist("manual_players[]")
-    manual_chars = request.form.getlist("manual_chars[]")
+    manual_players = request.form.getlist('manual_players[]')
+    manual_chars = request.form.getlist('manual_chars[]')
 
-    if 'manual_players[]' in request.form and 'manual_chars[]' in request.form:
-        player_ids = request.form.getlist('manual_players[]')
-        char_ids = request.form.getlist('manual_chars[]')
+    if manual_players and manual_chars:
+        print("👤 Người chơi:", manual_players)
+        print("🎭 Nhân vật:", manual_chars)
 
-        if len(player_ids) != len(char_ids):
-            flash("Số lượng người chơi và nhân vật không khớp!", "danger")
-            return redirect(url_for("game_history"))
-
+        if len(manual_players) != len(manual_chars) or len(manual_players) == 0:
+            flash("Số lượng người chơi và nhân vật phải bằng nhau và lớn hơn 0.", "danger")
+            return redirect(url_for('game_history'))
+        
+        # ✅ Tạo game
         new_game = GameHistory(host_id=session['user_id'])
         db.session.add(new_game)
         db.session.commit()
 
-        for pid, cid in zip(player_ids, char_ids):
-            gp = GamePlayer(game_id=new_game.id, player_id=pid, char_id=cid)
-            db.session.add(gp)
-
+        for pid, cid in zip(manual_players, manual_chars):
+            db.session.add(GamePlayer(game_id=new_game.id, player_id=pid, char_id=cid))
         db.session.commit()
-        flash("Đã lưu ván chơi phân thủ công!", "success")
-        return redirect(url_for("game_history"))
+
+        flash("Đã tạo ván chơi phân thủ công!", "success")
+        return redirect(url_for('game_history'))
+
+    flash("Dữ liệu không hợp lệ.", "danger")
+    return redirect(url_for('game_history'))
 
     # --- NGẪU NHIÊN ---
     player_ids = request.form.getlist("players")
