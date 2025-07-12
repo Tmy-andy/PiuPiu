@@ -341,14 +341,14 @@
                 <div id="manualAssignments">
                   <div class="row mb-2 align-items-center">
                     <div class="col-md-5">
-                      <select class="form-select" name="manual_players[]">
+                      <select class="form-select" name="manual_players[]" required>
                         {% for u in users %}
                           <option value="{{ u.id }}">{{ u.member_id[-3:] }} - {{ u.display_name }}</option>
                         {% endfor %}
                       </select>
                     </div>
                     <div class="col-md-5">
-                      <select class="form-select" name="manual_chars[]">
+                      <select class="form-select" name="manual_chars[]" required>
                         {% for char in chars %}
                           <option value="{{ char.id }}">{{ char.name }} ({{ char.faction }})</option>
                         {% endfor %}
@@ -639,12 +639,9 @@ document.addEventListener("DOMContentLoaded", function () {
         init() {
             this.header.addEventListener('click', () => this.toggleDropdown());
             this.searchInput.addEventListener('input', (e) => this.filterOptions(e.target.value));
-            
             this.options.forEach(option => {
                 option.addEventListener('click', () => this.selectOption(option));
             });
-            
-            // Close dropdown when clicking outside
             document.addEventListener('click', (e) => {
                 if (!this.container.contains(e.target)) {
                     this.closeDropdown();
@@ -674,22 +671,17 @@ document.addEventListener("DOMContentLoaded", function () {
         selectOption(option) {
             const value = option.dataset.value;
             const name = option.dataset.name;
-
-            // Nếu là người chơi thì không cho chọn lại
             if (this.container.id === 'playersSelect') {
                 const exists = this.selectedItems.find(item => item.value === value);
                 if (exists) return;
             }
             this.addOption(option, value, name);
-
             this.updatePlaceholder();
             this.updateRealSelect();
         }
 
-        
         addOption(option, value, name) {
             this.selectedItems.push({value, name, option});
-
             const selectedItem = document.createElement('div');
             selectedItem.className = 'selected-item';
             selectedItem.dataset.value = value;
@@ -699,43 +691,25 @@ document.addEventListener("DOMContentLoaded", function () {
                     <i class="fas fa-times"></i>
                 </div>
             `;
-
             selectedItem.querySelector('.remove-item').addEventListener('click', () => {
                 this.deselectOption(option, value);
             });
-
             this.selectedContainer.appendChild(selectedItem);
-
-            // Cập nhật đếm
             if (this.container.id === 'charsSelect') {
                 this.updateCharCount(value);
             }
-
         }
-        
+
         deselectOption(option, value) {
-            // Xóa 1 mục (chỉ xóa 1 nếu chọn trùng)
             const index = this.selectedItems.findIndex(item => item.value === value);
-            if (index !== -1) {
-                this.selectedItems.splice(index, 1);
-            }
-
+            if (index !== -1) this.selectedItems.splice(index, 1);
             const selectedItem = this.selectedContainer.querySelector(`[data-value="${value}"]`);
-            if (selectedItem) {
-                selectedItem.remove();
-            }
-
+            if (selectedItem) selectedItem.remove();
             if (this.container.id === 'charsSelect') {
                 this.updateCharCount(value);
             }
-
-            // Xóa khỏi real select
             const realOption = this.realSelect.querySelector(`option[value="${value}"]`);
-            if (realOption) {
-                realOption.selected = false;
-            }
-
-            // Cập nhật placeholder và real select
+            if (realOption) realOption.selected = false;
             this.updatePlaceholder();
             this.updateRealSelect();    
         }
@@ -755,17 +729,15 @@ document.addEventListener("DOMContentLoaded", function () {
             const hiddenInput = document.getElementById("char_ids");
             const allCharIds = this.selectedItems.map(item => item.value);
             hiddenInput.value = allCharIds.join(',');
-
-            // ✅ Cập nhật lại các option được chọn trong select thật
             const options = this.realSelect.options;
             for (let i = 0; i < options.length; i++) {
                 const opt = options[i];
                 opt.selected = this.selectedItems.some(item => item.value === opt.value);
             }
         }
+
         updateCharCount(value) {
             const count = this.selectedItems.filter(item => item.value === value).length;
-
             const optionElems = Array.from(this.options).filter(opt => opt.dataset.value === value);
             optionElems.forEach(opt => {
                 const badge = opt.querySelector('.char-count');
@@ -781,7 +753,7 @@ document.addEventListener("DOMContentLoaded", function () {
             });
         }
     }
-    
+
     // Initialize custom selects
     const playersSelect = new CustomSelect(
         document.getElementById('playersSelect'),
@@ -802,27 +774,23 @@ document.addEventListener("DOMContentLoaded", function () {
         listBox.innerHTML = "";
         box.style.display = "none";
 
-        let players = playersSelect.selectedItems;  // lấy từ custom select
-        let chars = charsSelect.selectedItems.map(item => {
-            return {
-                value: item.value,
-                name: item.name
-            };
-        });
+        let players = playersSelect.selectedItems;
+        let chars = charsSelect.selectedItems.map(item => ({
+            value: item.value,
+            name: item.name
+        }));
 
         if (players.length !== chars.length || players.length === 0) {
             alert("Số lượng người chơi và nhân vật phải bằng nhau và lớn hơn 0.");
             return;
         }
 
-        // Shuffle nhân vật
         let shuffledChars = chars.slice();
         for (let i = shuffledChars.length - 1; i > 0; i--) {
             let j = Math.floor(Math.random() * (i + 1));
             [shuffledChars[i], shuffledChars[j]] = [shuffledChars[j], shuffledChars[i]];
         }
 
-        // Hiển thị kết quả phân vai
         players.forEach((player, index) => {
             let li = document.createElement("li");
             li.innerHTML = `<i class="fas fa-user-check text-success me-2"></i><strong>${player.name}</strong> làm <strong class="text-primary">${shuffledChars[index].name}</strong>`;
@@ -832,7 +800,11 @@ document.addEventListener("DOMContentLoaded", function () {
         box.style.display = "block";
         randomizedCharIds = shuffledChars.map(opt => opt.value);
     });
+
     document.getElementById("newGameForm").addEventListener("submit", function (e) {
+        const activeTab = document.querySelector(".nav-tabs .nav-link.active");
+        if (!activeTab || activeTab.id !== "random-tab") return;
+
         const selectedPlayers = Array.from(document.getElementById("players").selectedOptions);
         const selectedChars = randomizedCharIds;
 
@@ -842,56 +814,10 @@ document.addEventListener("DOMContentLoaded", function () {
             return;
         }
 
-        // Gán char_ids vào input ẩn
         document.getElementById("char_ids").value = selectedChars.join(",");
     });
 });
 </script>
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const rows = document.querySelectorAll('.game-row');
-        const detailRows = document.querySelectorAll('.game-detail-row');
 
-        rows.forEach((row, index) => {
-            row.addEventListener('click', () => {
-                detailRows.forEach((r, i) => {
-                    if (i === index) {
-                        r.style.display = (r.style.display === 'table-row') ? 'none' : 'table-row';
-                    } else {
-                        r.style.display = 'none';
-                    }
-                });
-            });
-        });
-    });
-</script>
-<script>
-document.addEventListener("DOMContentLoaded", function () {
-  // Thêm dòng mới
-  document.getElementById("addAssignmentRow").addEventListener("click", function () {
-    const container = document.getElementById("manualAssignments");
-    const originalRow = container.querySelector(".row");
-    const newRow = originalRow.cloneNode(true);
-
-    // Reset các select trong dòng mới
-    newRow.querySelectorAll("select").forEach(select => {
-        select.selectedIndex = 0;  // chọn dòng đầu tiên
-    });
-
-    container.appendChild(newRow);
-});
-
-
-  // Xóa dòng
-  document.getElementById("manualAssignments").addEventListener("click", function (e) {
-    if (e.target.classList.contains("remove-row")) {
-      const row = e.target.closest(".row");
-      if (document.querySelectorAll("#manualAssignments .row").length > 1) {
-        row.remove();
-      }
-    }
-  });
-});
-</script>
 
 {% endblock %}
