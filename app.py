@@ -975,21 +975,24 @@ def create_game():
     manual_players = request.form.getlist("manual_players[]")
     manual_chars = request.form.getlist("manual_chars[]")
 
-    if manual_players and manual_chars:
-        if len(manual_players) != len(manual_chars):
-            flash("Số người chơi và nhân vật không khớp trong phân thủ công.", "danger")
+    if 'manual_players[]' in request.form and 'manual_chars[]' in request.form:
+        player_ids = request.form.getlist('manual_players[]')
+        char_ids = request.form.getlist('manual_chars[]')
+
+        if len(player_ids) != len(char_ids):
+            flash("Số lượng người chơi và nhân vật không khớp!", "danger")
             return redirect(url_for("game_history"))
 
-        new_game = GameHistory(host_id=current_user.id)
+        new_game = GameHistory(host_id=session['user_id'])
         db.session.add(new_game)
-        db.session.flush()  # Lấy game_id mới
+        db.session.commit()
 
-        for player_id, char_id in zip(manual_players, manual_chars):
-            gp = GamePlayer(game_id=new_game.id, player_id=int(player_id), char_id=int(char_id))
+        for pid, cid in zip(player_ids, char_ids):
+            gp = GamePlayer(game_id=new_game.id, player_id=pid, char_id=cid)
             db.session.add(gp)
 
         db.session.commit()
-        flash("Tạo ván (phân thủ công) thành công!", "success")
+        flash("Đã lưu ván chơi phân thủ công!", "success")
         return redirect(url_for("game_history"))
 
     # --- NGẪU NHIÊN ---
