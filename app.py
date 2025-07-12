@@ -1085,7 +1085,7 @@ def day_off():
     # ✅ Dữ liệu để render form
     users = User.query.all() if user.role == 'admin' else []
     my_offs = PlayerOffRequest.query.filter_by(user_id=user.id).order_by(PlayerOffRequest.start_date.desc()).all()
-    return render_template("day_off.html", users=users, my_offs=my_offs, current_user=user, user=user)
+    return render_template("day_off.html", users=users, offs=my_offs, current_user=user, user=user)
 
 from datetime import datetime, timedelta
 from sqlalchemy import func
