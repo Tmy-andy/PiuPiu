@@ -31,7 +31,7 @@ class MemberID(db.Model):
 
 class PointLog(db.Model):
     __tablename__ = 'point_logs'
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     member_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     points_change = db.Column(db.Integer, nullable=False)
     reason = db.Column(db.String(255), nullable=False)
@@ -40,7 +40,7 @@ class PointLog(db.Model):
 
 class BlacklistEntry(db.Model):
     __tablename__ = 'blacklist'
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(200), nullable=False)
     facebook_link = db.Column(db.String(500))
     created_by_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
@@ -48,7 +48,7 @@ class BlacklistEntry(db.Model):
     created_by = db.relationship('User', backref='blacklist_entries')
 
 class CharacterAbility(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     faction = db.Column(db.String(100), nullable=False)
     order_in_faction = db.Column(db.Integer, nullable=False)
     name = db.Column(db.String(100), nullable=False)
@@ -61,12 +61,12 @@ class Rule(db.Model):
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
 class KimBaiLog(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     timestamp = db.Column(db.DateTime, default=datetime.utcnow)
 
 class GameHistory(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     host_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     players = db.relationship('GamePlayer', backref='game', cascade="all, delete", lazy=True)
@@ -74,7 +74,7 @@ class GameHistory(db.Model):
     tags = db.Column(db.String(255), default='')
 
 class GamePlayer(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     game_id = db.Column(db.Integer, db.ForeignKey('game_history.id'))
     player_id = db.Column(db.Integer, db.ForeignKey('users.id')) 
     char_id = db.Column(db.Integer, db.ForeignKey('character_ability.id'))
@@ -83,7 +83,7 @@ class GamePlayer(db.Model):
     char = db.relationship('CharacterAbility', foreign_keys=[char_id])
 
 class PlayerOffRequest(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     start_date = db.Column(db.Date)
     end_date = db.Column(db.Date)

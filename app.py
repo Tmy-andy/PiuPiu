@@ -11,7 +11,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import timedelta
 from datetime import datetime
 from database import init_app, db
-from models import User, MemberID, PointLog, Rule, CharacterAbility, BlacklistEntry, KimBaiLog, PlayerOffRequest, GamePlayer, GameHistory
+from models import User, MemberID, PointLog, Rule, CharacterAbility, BlacklistEntry, KimBaiLog, PlayerOffRequest, GamePlayer, GameHistory, DebugToolbarExtension
 from functools import wraps
 from sqlalchemy import func, union_all
 from sqlalchemy.orm import aliased
@@ -68,6 +68,20 @@ with app.app_context():
 
 #         return f(*args, **kwargs)
 #     return decorated_function
+
+def init_debug_toolbar(app):
+    # Chỉ bật khi chạy local và có user là ADMIN-001
+    if app.env == 'development':
+        with app.app_context():
+            from models import User
+            user_id = session.get('user_id')
+            if user_id:
+                user = User.query.get(user_id)
+                if user and user.member_id == 'ADMIN-001':
+                    app.debug = True
+                    app.config['SECRET_KEY'] = 'your_key'
+                    app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
+                    DebugToolbarExtension(app)
 
 def admin_required(f):
     @wraps(f)

@@ -9,3 +9,4 @@ python-dotenv
 flask-migrate
 Flask-Compress
 Flask-Caching
+flask-debugtoolbar
