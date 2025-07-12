@@ -1055,6 +1055,9 @@ def delete_game(game_id):
 @app.route("/day_off", methods=["GET", "POST"])
 @login_required
 def day_off():
+    from datetime import datetime
+    from models import User, PlayerOffRequest
+
     user_id = session.get("user_id")
     user = User.query.get(user_id)
 
@@ -1066,7 +1069,7 @@ def day_off():
         actual_user_id = user.id
         created_by = user.id
 
-        # ✅ Nếu là admin thì được chọn người khác
+        # ✅ Nếu là admin thì được chọn người khác để tạo hộ
         if user.role == 'admin' and request.form.get("user_id"):
             actual_user_id = int(request.form["user_id"])
 
@@ -1079,13 +1082,39 @@ def day_off():
         )
         db.session.add(request_off)
         db.session.commit()
-        flash("Đã gửi yêu cầu xin nghỉ!", "success")
+        flash("✔️ Đã gửi yêu cầu xin nghỉ!", "success")
         return redirect(url_for("day_off"))
 
-    # ✅ Dữ liệu để render form
-    users = User.query.all() if user.role == 'admin' else []
-    my_offs = PlayerOffRequest.query.filter_by(user_id=user.id).order_by(PlayerOffRequest.start_date.desc()).all()
-    return render_template("day_off.html", users=users, offs=my_offs, current_user=user, user=user)
+    # ✅ Tất cả người dùng đều thấy danh sách đầy đủ
+    offs = PlayerOffRequest.query.order_by(PlayerOffRequest.start_date.desc()).all()
+
+    # ✅ Nếu là admin, cung cấp danh sách users để chọn trong form
+    users = User.query.order_by(User.username).all() if user.role == 'admin' else []
+
+    return render_template(
+        "day_off.html",
+        offs=offs,
+        users=users,
+        current_user=user,
+        user=user  # dùng cho template nếu cần
+    )
+
+@app.route("/delete_off/<int:off_id>", methods=["POST"])
+@login_required
+def delete_off(off_id):
+    user_id = session.get("user_id")
+    user = User.query.get(user_id)
+
+    if user.role != 'admin':
+        flash("Bạn không có quyền xóa yêu cầu nghỉ!", "danger")
+        return redirect(url_for("day_off"))
+
+    off = PlayerOffRequest.query.get_or_404(off_id)
+    db.session.delete(off)
+    db.session.commit()
+    flash("✔️ Đã xóa yêu cầu nghỉ!", "success")
+    return redirect(url_for("day_off"))
+
 
 from datetime import datetime, timedelta
 from sqlalchemy import func
