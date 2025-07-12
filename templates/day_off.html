@@ -40,7 +40,7 @@
                             <select class="form-select" name="user_id" required>
                                 <option disabled selected>-- Chọn người --</option>
                                 {% for u in users %}
-                                    <option value="{{ u.id }}">{{ u.display_name }}</option>
+                                    <option value="{{ u.id }}">{{ u.id }}</option>
                                 {% endfor %}
                             </select>
                         </div>
