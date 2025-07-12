@@ -619,9 +619,14 @@
 {% block scripts %}
 
 <script>
+    const originalPlayers = {{ users | tojson | safe }};
+    const originalChars = {{ chars | tojson | safe }};
+</script>
+
+<script>
 let randomizedCharIds = [];
 document.addEventListener("DOMContentLoaded", function () {
-    // Custom Select Implementation
+    // ----- Custom Select Implementation -----
     class CustomSelect {
         constructor(container, realSelect) {
             this.container = container;
@@ -632,7 +637,6 @@ document.addEventListener("DOMContentLoaded", function () {
             this.options = container.querySelectorAll('.select-option');
             this.selectedContainer = container.parentElement.querySelector('.selected-items');
             this.selectedItems = [];
-            
             this.init();
         }
         
@@ -651,9 +655,7 @@ document.addEventListener("DOMContentLoaded", function () {
         
         toggleDropdown() {
             this.dropdown.classList.toggle('show');
-            if (this.dropdown.classList.contains('show')) {
-                this.searchInput.focus();
-            }
+            if (this.dropdown.classList.contains('show')) this.searchInput.focus();
         }
         
         closeDropdown() {
@@ -695,9 +697,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 this.deselectOption(option, value);
             });
             this.selectedContainer.appendChild(selectedItem);
-            if (this.container.id === 'charsSelect') {
-                this.updateCharCount(value);
-            }
+            if (this.container.id === 'charsSelect') this.updateCharCount(value);
         }
 
         deselectOption(option, value) {
@@ -705,9 +705,7 @@ document.addEventListener("DOMContentLoaded", function () {
             if (index !== -1) this.selectedItems.splice(index, 1);
             const selectedItem = this.selectedContainer.querySelector(`[data-value="${value}"]`);
             if (selectedItem) selectedItem.remove();
-            if (this.container.id === 'charsSelect') {
-                this.updateCharCount(value);
-            }
+            if (this.container.id === 'charsSelect') this.updateCharCount(value);
             const realOption = this.realSelect.querySelector(`option[value="${value}"]`);
             if (realOption) realOption.selected = false;
             this.updatePlaceholder();
@@ -754,18 +752,17 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
-    // Initialize custom selects
+    // Init Custom Selects
     const playersSelect = new CustomSelect(
         document.getElementById('playersSelect'),
         document.getElementById('players')
     );
-    
     const charsSelect = new CustomSelect(
         document.getElementById('charsSelect'),
         document.getElementById('chars')
     );
-    
-    // Randomize functionality
+
+    // ----- Randomize Roles -----
     const randomizeBtn = document.getElementById("randomizeBtn");
     const listBox = document.getElementById("assignmentsList");
     const box = document.getElementById("assignmentsBox");
@@ -774,8 +771,8 @@ document.addEventListener("DOMContentLoaded", function () {
         listBox.innerHTML = "";
         box.style.display = "none";
 
-        let players = playersSelect.selectedItems;
-        let chars = charsSelect.selectedItems.map(item => ({
+        const players = playersSelect.selectedItems;
+        const chars = charsSelect.selectedItems.map(item => ({
             value: item.value,
             name: item.name
         }));
@@ -785,14 +782,14 @@ document.addEventListener("DOMContentLoaded", function () {
             return;
         }
 
-        let shuffledChars = chars.slice();
+        const shuffledChars = chars.slice();
         for (let i = shuffledChars.length - 1; i > 0; i--) {
-            let j = Math.floor(Math.random() * (i + 1));
+            const j = Math.floor(Math.random() * (i + 1));
             [shuffledChars[i], shuffledChars[j]] = [shuffledChars[j], shuffledChars[i]];
         }
 
         players.forEach((player, index) => {
-            let li = document.createElement("li");
+            const li = document.createElement("li");
             li.innerHTML = `<i class="fas fa-user-check text-success me-2"></i><strong>${player.name}</strong> làm <strong class="text-primary">${shuffledChars[index].name}</strong>`;
             listBox.appendChild(li);
         });
@@ -801,6 +798,7 @@ document.addEventListener("DOMContentLoaded", function () {
         randomizedCharIds = shuffledChars.map(opt => opt.value);
     });
 
+    // ----- Form Submit Handler -----
     document.getElementById("newGameForm").addEventListener("submit", function (e) {
         const activeTab = document.querySelector(".nav-tabs .nav-link.active");
         if (!activeTab || activeTab.id !== "random-tab") return;
@@ -816,30 +814,30 @@ document.addEventListener("DOMContentLoaded", function () {
 
         document.getElementById("char_ids").value = selectedChars.join(",");
     });
-});
-</script>
-<script>
-document.addEventListener("DOMContentLoaded", function () {
-    // Thêm dòng mới
-    document.getElementById("addAssignmentRow").addEventListener("click", function () {
-        const container = document.getElementById("manualAssignments");
 
-        // Tạo dòng mới từ HTML template
+    // ----- Thêm/Xóa dòng phân thủ công -----
+    const container = document.getElementById("manualAssignments");
+    document.getElementById("addAssignmentRow").addEventListener("click", function () {
         const newRow = document.createElement("div");
         newRow.className = "row mb-2 align-items-center";
+
+        const playerOptions = originalPlayers.map(u =>
+            `<option value="${u.id}">${u.member_id.slice(-3)} - ${u.display_name}</option>`).join('');
+
+        const charOptions = originalChars.map(c =>
+            `<option value="${c.id}">${c.name} (${c.faction})</option>`).join('');
+
         newRow.innerHTML = `
             <div class="col-md-5">
                 <select class="form-select" name="manual_players[]" required>
                     <option disabled selected value="">-- Chọn người chơi --</option>
-                    ${[...document.querySelectorAll('select[name="manual_players[]"] option')]
-                        .map(opt => `<option value="${opt.value}">${opt.textContent}</option>`).join('')}
+                    ${playerOptions}
                 </select>
             </div>
             <div class="col-md-5">
                 <select class="form-select" name="manual_chars[]" required>
                     <option disabled selected value="">-- Chọn nhân vật --</option>
-                    ${[...document.querySelectorAll('select[name="manual_chars[]"] option')]
-                        .map(opt => `<option value="${opt.value}">${opt.textContent}</option>`).join('')}
+                    ${charOptions}
                 </select>
             </div>
             <div class="col-md-2">
@@ -849,36 +847,26 @@ document.addEventListener("DOMContentLoaded", function () {
         container.appendChild(newRow);
     });
 
-    // Xóa dòng
-    document.getElementById("manualAssignments").addEventListener("click", function (e) {
+    container.addEventListener("click", function (e) {
         if (e.target.classList.contains("remove-row")) {
             const row = e.target.closest(".row");
-            const allRows = document.querySelectorAll("#manualAssignments .row");
-            if (allRows.length > 1) {
-                row.remove();
-            }
+            const allRows = container.querySelectorAll(".row");
+            if (allRows.length > 1) row.remove();
         }
     });
-});
-</script>
-<script>
-document.addEventListener('DOMContentLoaded', function () {
+
+    // ----- Hiện/Ẩn chi tiết ván chơi -----
     const rows = document.querySelectorAll('.game-row');
     const detailRows = document.querySelectorAll('.game-detail-row');
 
     rows.forEach((row, index) => {
         row.addEventListener('click', () => {
             detailRows.forEach((r, i) => {
-                if (i === index) {
-                    r.style.display = (r.style.display === 'table-row') ? 'none' : 'table-row';
-                } else {
-                    r.style.display = 'none';
-                }
+                r.style.display = (i === index && r.style.display !== 'table-row') ? 'table-row' : 'none';
             });
         });
     });
 });
 </script>
-
 
 {% endblock %}
