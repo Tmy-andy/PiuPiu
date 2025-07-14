@@ -235,17 +235,17 @@ document.addEventListener('DOMContentLoaded', function() {
     
     /* Collapsed state */
     .sidebar-nav.collapsed {
-        max-height: 0;
+        height: 0;
         overflow: hidden;
         margin-top: 0;
-        transition: max-height 0.3s ease-out, margin-top 0.3s ease-out;
+        transition: height 0.3s ease-out, margin-top 0.3s ease-out;
     }
     
     /* Expanded state */
     .sidebar-nav:not(.collapsed) {
-        max-height: 800px;
+        height: auto;
         margin-top: 1rem;
-        transition: max-height 0.3s ease-in, margin-top 0.3s ease-in;
+        transition: height 0.3s ease-in, margin-top 0.3s ease-in;
     }
     
     .sidebar-header.expanded {
@@ -280,7 +280,7 @@ document.addEventListener('DOMContentLoaded', function() {
 @media (min-width: 992px) {
     .sidebar-nav {
         display: flex !important;
-        max-height: none !important;
+        height: auto !important;
         margin-top: 0 !important;
     }
     
