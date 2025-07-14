@@ -726,13 +726,30 @@ document.addEventListener("DOMContentLoaded", function () {
         }
         
         updateRealSelect() {
-            const hiddenInput = document.getElementById("char_ids");
-            const allCharIds = this.selectedItems.map(item => item.value);
-            hiddenInput.value = allCharIds.join(',');
             const options = this.realSelect.options;
+
+            // Reset toàn bộ selected
             for (let i = 0; i < options.length; i++) {
-                const opt = options[i];
-                opt.selected = this.selectedItems.some(item => String(item.value) === String(opt.value));
+                options[i].selected = false;
+            }
+
+            // Set selected cho các item đã chọn
+            this.selectedItems.forEach(item => {
+                for (let i = 0; i < options.length; i++) {
+                    if (String(options[i].value) === String(item.value)) {
+                        options[i].selected = true;
+                        break;
+                    }
+                }
+            });
+
+            // Nếu là char thì cập nhật hidden input
+            if (this.realSelect.name === "players") return;
+
+            if (this.realSelect.name === "char_ids") {
+                const hiddenInput = document.getElementById("char_ids");
+                const allCharIds = this.selectedItems.map(item => item.value);
+                hiddenInput.value = allCharIds.join(',');
             }
         }
 
@@ -805,8 +822,9 @@ document.addEventListener("DOMContentLoaded", function () {
         const activeTab = document.querySelector(".nav-tabs .nav-link.active");
         if (!activeTab || activeTab.id !== "random-tab") return;
 
-        // CẬP NHẬT CHỌN THẬT
+        // ❗️ BẮT BUỘC GỌI UPDATE THẬT
         playersSelect.updateRealSelect();
+        charsSelect.updateRealSelect();
 
         const selectedPlayers = Array.from(document.getElementById("players").selectedOptions);
         const selectedChars = randomizedCharIds;
