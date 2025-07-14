@@ -805,6 +805,9 @@ document.addEventListener("DOMContentLoaded", function () {
         const activeTab = document.querySelector(".nav-tabs .nav-link.active");
         if (!activeTab || activeTab.id !== "random-tab") return;
 
+        // CẬP NHẬT CHỌN THẬT
+        playersSelect.updateRealSelect();
+
         const selectedPlayers = Array.from(document.getElementById("players").selectedOptions);
         const selectedChars = randomizedCharIds;
 
