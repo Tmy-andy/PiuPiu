@@ -210,6 +210,7 @@
   <div class="modal-dialog modal-lg modal-dialog-centered">
     <div class="modal-content">
       <form id="newGameForm" method="POST" action="{{ url_for('create_game') }}">
+        <input type="hidden" name="mode" id="gameModeInput" value="random">
         <div class="modal-header bg-primary text-white">
           <h5 class="modal-title">
             <i class="fas fa-plus me-2"></i>Tạo ván mới
@@ -311,7 +312,7 @@
                       <div class="selected-items" id="selectedChars"></div>
                     </div>
                     <input type="hidden" name="char_ids" id="char_ids">
-                    <select class="form-select d-none" name="chars" id="chars" multiple></select>
+                    <select class="form-select d-none" name="char_ids[]" id="chars" multiple></select>
                   </div>
                 </div>
               </div>
@@ -771,6 +772,14 @@ document.addEventListener("DOMContentLoaded", function () {
             });
         }
     }
+    // 🔁 Ghi nhận chế độ chơi vào input ẩn
+    const gameModeInput = document.getElementById('gameModeInput');
+    document.getElementById('random-tab').addEventListener('click', () => {
+        gameModeInput.value = 'random';
+    });
+    document.getElementById('manual-tab').addEventListener('click', () => {
+        gameModeInput.value = 'manual';
+    });
 
     // Init Custom Selects
     const playersSelect = new CustomSelect(

@@ -979,18 +979,22 @@ from models import GameHistory, GamePlayer, User, PointLog, db
 @app.route("/create_game", methods=["POST"])
 @login_required
 def create_game():
-    # --- THỦ CÔNG ---
-    manual_players = request.form.getlist('manual_players[]')
-    manual_chars = request.form.getlist('manual_chars[]')
+    from models import GameHistory, GamePlayer, User, PointLog, db
 
-    if manual_players and manual_chars:
+    mode = request.form.get("mode")
+
+    # ✅ PHÂN THỦ CÔNG
+    if mode == "manual":
+        manual_players = request.form.getlist('manual_players[]')
+        manual_chars = request.form.getlist('manual_chars[]')
+
         print("👤 Người chơi:", manual_players)
         print("🎭 Nhân vật:", manual_chars)
 
         if len(manual_players) != len(manual_chars) or len(manual_players) == 0:
             flash("Số lượng người chơi và nhân vật phải bằng nhau và lớn hơn 0.", "danger")
             return redirect(url_for('game_history'))
-        
+
         new_game = GameHistory(host_id=session['user_id'])
         db.session.add(new_game)
         db.session.commit()
@@ -999,7 +1003,7 @@ def create_game():
             db.session.add(GamePlayer(game_id=new_game.id, player_id=pid, char_id=cid))
         db.session.commit()
 
-        # ✅ Cộng điểm sau khi tạo thủ công
+        # ✅ Cộng điểm
         for pid in manual_players:
             user = User.query.get(pid)
             if user and user.points < 10:
@@ -1017,41 +1021,48 @@ def create_game():
         flash("Đã tạo ván chơi phân thủ công!", "success")
         return redirect(url_for('game_history'))
 
-    # --- NGẪU NHIÊN ---
-    player_ids = request.form.getlist("players")
-    print(f"🧪 player_ids raw: {player_ids}")
-    
-    char_ids_str = request.form.get("char_ids", "")
-    char_ids = [int(cid) for cid in char_ids_str.split(',') if cid.strip().isdigit()]
+    # ✅ PHÂN NGẪU NHIÊN
+    elif mode == "random":
+        player_ids = request.form.getlist("players")
+        char_ids_str = request.form.get("char_ids", "")
+        char_ids = [int(cid) for cid in char_ids_str.split(',') if cid.strip().isdigit()]
 
-    if len(player_ids) != len(char_ids):
-        flash("Số lượng người chơi và nhân vật phải bằng nhau", "danger")
+        print("🧪 Form raw:", request.form)
+        print("👤 Người chơi:", player_ids)
+        print("🎭 Nhân vật:", char_ids)
+
+        if len(player_ids) != len(char_ids) or len(player_ids) == 0:
+            flash("Số lượng người chơi và nhân vật phải bằng nhau và lớn hơn 0.", "danger")
+            return redirect(url_for('game_history'))
+
+        new_game = GameHistory(host_id=session['user_id'])
+        db.session.add(new_game)
+        db.session.flush()
+
+        for pid, cid in zip(player_ids, char_ids):
+            db.session.add(GamePlayer(game_id=new_game.id, player_id=int(pid), char_id=int(cid)))
+        db.session.commit()
+
+        # ✅ Cộng điểm
+        for pid in player_ids:
+            user = User.query.get(pid)
+            if user and user.points < 10:
+                before = user.points
+                user.points = min(user.points + 2, 10)
+                db.session.add(PointLog(
+                    member_id=user.id,
+                    points_change=user.points - before,
+                    reason="Tham gia ván chơi",
+                    admin_id=session.get("user_id")
+                ))
+                print(f"✔️ +{user.points - before} điểm cho {user.display_name} (ID {user.id}): {before} ➜ {user.points}")
+        db.session.commit()
+
+        flash("Tạo ván (phân ngẫu nhiên) thành công!", "success")
         return redirect(url_for('game_history'))
 
-    new_game = GameHistory(host_id=current_user.id)
-    db.session.add(new_game)
-    db.session.flush()
-
-    for player_id, char_id in zip(player_ids, char_ids):
-        db.session.add(GamePlayer(game_id=new_game.id, player_id=int(player_id), char_id=int(char_id)))
-    db.session.commit()
-
-    # ✅ Cộng điểm sau khi tạo ngẫu nhiên
-    for pid in player_ids:
-        user = User.query.get(pid)
-        if user and user.points < 10:
-            before = user.points
-            user.points = min(user.points + 2, 10)
-            db.session.add(PointLog(
-                member_id=user.id,
-                points_change=user.points - before,
-                reason="Tham gia ván chơi",
-                admin_id=session.get("user_id")
-            ))
-            print(f"✔️ +{user.points - before} điểm cho {user.display_name} (ID {user.id}): {before} ➜ {user.points}")
-    db.session.commit()
-
-    flash("Tạo ván (phân ngẫu nhiên) thành công!", "success")
+    # ❌ Trường hợp không xác định
+    flash("Dữ liệu không hợp lệ.", "danger")
     return redirect(url_for('game_history'))
 
 @app.route('/update_game_note/<int:game_id>', methods=['POST'])
