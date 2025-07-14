@@ -101,7 +101,7 @@
                                 <td>
                                     <div class="d-flex align-items-center">
                                         <div class="avatar-circle bg-success text-white me-2">
-                                            {{ game.host.member_id[-3:].upper() }}
+                                            {{ game.host.member_id[-3:].upper() if game.host else "None" }}
                                         </div>
                                     </div>
                                 </td>
@@ -119,7 +119,9 @@
                                             {% for p in game.players if p.char.faction == faction %}
                                                 {% set icon, color_class = FACTION_ICONS.get(p.char.faction, ('fa-question-circle', 'bg-secondary text-white')) %}
                                                 <div class="player-item mb-1">
-                                                    <span class="badge bg-secondary me-1">{{ p.player.member_id[-3:] }}</span>
+                                                    <span class="badge bg-secondary me-1">
+                                                    {{ p.player.member_id[-3:] if p.player else "None" }}
+                                                </span>
                                                     <span class="text-muted"> : </span>
                                                     <span class="badge ms-1 {{ color_class }}">
                                                         <i class="fas {{ icon }} me-1"></i>{{ p.char.name }}
