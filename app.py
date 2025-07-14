@@ -1019,6 +1019,8 @@ def create_game():
 
     # --- NGẪU NHIÊN ---
     player_ids = request.form.getlist("players")
+    print(f"🧪 player_ids raw: {player_ids}")
+    
     char_ids_str = request.form.get("char_ids", "")
     char_ids = [int(cid) for cid in char_ids_str.split(',') if cid.strip().isdigit()]
 
