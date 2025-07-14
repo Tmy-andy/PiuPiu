@@ -974,11 +974,11 @@ def game_history():
 
 import random
 from flask import request, redirect, url_for, flash
+from models import GameHistory, GamePlayer, User, PointLog, db
+
 @app.route("/create_game", methods=["POST"])
 @login_required
 def create_game():
-    from models import GameHistory, GamePlayer, db
-
     # --- THỦ CÔNG ---
     manual_players = request.form.getlist('manual_players[]')
     manual_chars = request.form.getlist('manual_chars[]')
@@ -991,7 +991,6 @@ def create_game():
             flash("Số lượng người chơi và nhân vật phải bằng nhau và lớn hơn 0.", "danger")
             return redirect(url_for('game_history'))
         
-        # ✅ Tạo game
         new_game = GameHistory(host_id=session['user_id'])
         db.session.add(new_game)
         db.session.commit()
@@ -1000,11 +999,23 @@ def create_game():
             db.session.add(GamePlayer(game_id=new_game.id, player_id=pid, char_id=cid))
         db.session.commit()
 
+        # ✅ Cộng điểm sau khi tạo thủ công
+        for pid in manual_players:
+            user = User.query.get(pid)
+            if user and user.points < 10:
+                before = user.points
+                user.points = min(user.points + 2, 10)
+                db.session.add(PointLog(
+                    member_id=user.id,
+                    points_change=user.points - before,
+                    reason="Tham gia ván chơi",
+                    admin_id=session.get("user_id")
+                ))
+                print(f"✔️ +{user.points - before} điểm cho {user.display_name} (ID {user.id}): {before} ➜ {user.points}")
+        db.session.commit()
+
         flash("Đã tạo ván chơi phân thủ công!", "success")
         return redirect(url_for('game_history'))
-
-    flash("Dữ liệu không hợp lệ.", "danger")
-    return redirect(url_for('game_history'))
 
     # --- NGẪU NHIÊN ---
     player_ids = request.form.getlist("players")
@@ -1017,13 +1028,27 @@ def create_game():
 
     new_game = GameHistory(host_id=current_user.id)
     db.session.add(new_game)
-    db.session.flush()  # để lấy id game mới
+    db.session.flush()
 
     for player_id, char_id in zip(player_ids, char_ids):
-        p = GamePlayer(game_id=new_game.id, player_id=int(player_id), char_id=int(char_id))
-        db.session.add(p)
-
+        db.session.add(GamePlayer(game_id=new_game.id, player_id=int(player_id), char_id=int(char_id)))
     db.session.commit()
+
+    # ✅ Cộng điểm sau khi tạo ngẫu nhiên
+    for pid in player_ids:
+        user = User.query.get(pid)
+        if user and user.points < 10:
+            before = user.points
+            user.points = min(user.points + 2, 10)
+            db.session.add(PointLog(
+                member_id=user.id,
+                points_change=user.points - before,
+                reason="Tham gia ván chơi",
+                admin_id=session.get("user_id")
+            ))
+            print(f"✔️ +{user.points - before} điểm cho {user.display_name} (ID {user.id}): {before} ➜ {user.points}")
+    db.session.commit()
+
     flash("Tạo ván (phân ngẫu nhiên) thành công!", "success")
     return redirect(url_for('game_history'))
 
