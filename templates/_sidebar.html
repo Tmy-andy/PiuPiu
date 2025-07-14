@@ -1,14 +1,15 @@
 <!-- templates/_sidebar.html -->
 <div class="sidebar p-3">
-    <h5 class="fw-bold text-dark mb-3">
+    <h5 class="fw-bold text-dark mb-3 sidebar-header" id="sidebarHeader">
         <i class="fas fa-tachometer-alt me-2"></i>
         {% if user is defined and user.role == 'admin' %}
             Menu Admin
         {% else %}
             Menu Member
         {% endif %}
+        <i class="fas fa-chevron-down sidebar-toggle-icon ms-auto"></i>
     </h5>
-    <nav class="nav flex-column">
+    <nav class="nav flex-column sidebar-nav" id="sidebarNav">
         <a class="nav-link {% if request.endpoint == 'dashboard' %}active{% endif %}" href="{{ url_for('dashboard') }}">
             <i class="fas fa-chart-bar"></i>Thống kê
         </a>
@@ -62,6 +63,65 @@
         {% endif %}
     </nav>
 </div>
+
+<!-- Mobile Sidebar Script -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const sidebarHeader = document.getElementById('sidebarHeader');
+    const sidebarNav = document.getElementById('sidebarNav');
+    const toggleIcon = document.querySelector('.sidebar-toggle-icon');
+    
+    // Chỉ áp dụng cho mobile
+    function isMobile() {
+        return window.innerWidth <= 991.98;
+    }
+    
+    // Khởi tạo trạng thái sidebar
+    function initSidebar() {
+        if (isMobile()) {
+            sidebarNav.style.display = 'none';
+            sidebarHeader.style.cursor = 'pointer';
+            toggleIcon.style.display = 'inline-block';
+            sidebarHeader.classList.add('mobile-collapsible');
+        } else {
+            sidebarNav.style.display = 'flex';
+            sidebarHeader.style.cursor = 'default';
+            toggleIcon.style.display = 'none';
+            sidebarHeader.classList.remove('mobile-collapsible');
+        }
+    }
+    
+    // Toggle sidebar
+    function toggleSidebar() {
+        if (!isMobile()) return;
+        
+        const isOpen = sidebarNav.style.display === 'flex';
+        
+        if (isOpen) {
+            // Đóng sidebar
+            sidebarNav.style.display = 'none';
+            toggleIcon.style.transform = 'rotate(0deg)';
+            sidebarHeader.classList.remove('sidebar-open');
+        } else {
+            // Mở sidebar
+            sidebarNav.style.display = 'flex';
+            toggleIcon.style.transform = 'rotate(180deg)';
+            sidebarHeader.classList.add('sidebar-open');
+        }
+    }
+    
+    // Event listeners
+    sidebarHeader.addEventListener('click', toggleSidebar);
+    
+    // Khởi tạo khi load trang
+    initSidebar();
+    
+    // Xử lý khi resize window
+    window.addEventListener('resize', function() {
+        initSidebar();
+    });
+});
+</script>
 
 <style>
 /* Sidebar CSS đồng bộ với base.html */
@@ -245,10 +305,76 @@
     }
 }
 
-/* Mobile - ẩn sidebar trên mobile vì đã có mobile nav */
+/* Mobile - sidebar collapsible chỉ trên mobile */
 @media (max-width: 991.98px) {
     .sidebar {
+        display: block; /* Hiển thị lại sidebar trên mobile */
+        margin-bottom: 1rem;
+    }
+    
+    /* Header có thể click trên mobile */
+    .sidebar-header.mobile-collapsible {
+        cursor: pointer;
+        user-select: none;
+        transition: all 0.3s ease;
+    }
+    
+    .sidebar-header.mobile-collapsible:hover {
+        background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%);
+    }
+    
+    .sidebar-header.mobile-collapsible:active {
+        transform: scale(0.98);
+    }
+    
+    /* Toggle icon */
+    .sidebar-toggle-icon {
         display: none;
+        font-size: 0.9rem;
+        transition: transform 0.3s ease;
+        margin-left: auto;
+    }
+    
+    /* Navigation ẩn mặc định trên mobile */
+    .sidebar-nav {
+        display: none;
+        flex-direction: column;
+        animation: slideDown 0.3s ease-out;
+    }
+    
+    @keyframes slideDown {
+        from {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    /* Khi sidebar mở */
+    .sidebar-header.sidebar-open {
+        margin-bottom: 1rem;
+    }
+}
+
+/* Desktop - sidebar luôn mở */
+@media (min-width: 992px) {
+    .sidebar {
+        display: block;
+    }
+    
+    .sidebar-toggle-icon {
+        display: none !important;
+    }
+    
+    .sidebar-nav {
+        display: flex !important;
+    }
+    
+    .sidebar-header {
+        cursor: default !important;
     }
 }
 
