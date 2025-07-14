@@ -46,8 +46,6 @@
         body {
             background-color: var(--light-bg);
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            /* Thêm padding-top để tránh content bị che bởi navbar cố định */
-            padding-top: var(--navbar-height);
         }
 
         .navbar {
@@ -55,13 +53,22 @@
             box-shadow: var(--card-shadow);
             backdrop-filter: blur(10px);
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            /* Làm navbar cố định */
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
             z-index: 1030;
             min-height: var(--navbar-height);
+        }
+
+        /* Chỉ cố định navbar trên desktop */
+        @media (min-width: 992px) {
+            .navbar {
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+            }
+            
+            body {
+                padding-top: var(--navbar-height);
+            }
         }
 
         .navbar-brand {
@@ -217,6 +224,59 @@
             display: none;
         }
 
+        /* Scroll to top button - CHỈ HIỂN THỊ TRÊN MOBILE */
+        .scroll-to-top {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+            display: none;
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            backdrop-filter: blur(10px);
+        }
+
+        .scroll-to-top:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .scroll-to-top:active {
+            transform: translateY(-1px) scale(0.95);
+        }
+
+        .scroll-to-top i {
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+        }
+
+        .scroll-to-top.show {
+            display: flex;
+            animation: fadeInUp 0.3s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
         /* Media queries cho mobile */
         @media (max-width: 991.98px) {
             /* Ẩn navbar desktop trên mobile */
@@ -227,20 +287,22 @@
             /* Hiển thị mobile nav */
             .mobile-nav {
                 display: block;
-                position: fixed;
-                top: 0;
-                left: 0;
-                right: 0;
-                z-index: 1050;
+                /* Không cố định trên mobile */
+                position: relative;
                 background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
                 backdrop-filter: blur(10px);
                 box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
                 border-bottom: 1px solid rgba(255, 255, 255, 0.1);
             }
 
-            /* Điều chỉnh body để không bị che */
+            /* Hiển thị scroll to top button trên mobile */
+            .scroll-to-top {
+                display: none;
+            }
+
+            /* Body không cần padding-top trên mobile */
             body {
-                padding-top: var(--navbar-height);
+                padding-top: 0;
             }
 
             .mobile-nav-container {
@@ -397,7 +459,7 @@
                 visibility: visible;
             }
 
-            /* Điều chỉnh main content để không bị che */
+            /* Điều chỉnh main content */
             main.container-fluid {
                 padding-top: 1rem;
             }
@@ -417,13 +479,9 @@
 
         /* Responsive cho màn hình nhỏ hơn */
         @media (max-width: 480px) {
-            :root {
-                --navbar-height: 60px;
-            }
-
             .mobile-nav-container {
                 padding: 0.8rem 1rem;
-                min-height: var(--navbar-height);
+                min-height: 60px;
             }
 
             .mobile-nav-brand {
@@ -445,25 +503,24 @@
                 right: -10px;
             }
 
-            main.container-fluid {
-                padding-top: 1rem;
-            }
-
             .container {
                 padding-left: 0.75rem;
                 padding-right: 0.75rem;
+            }
+
+            .scroll-to-top {
+                width: 45px;
+                height: 45px;
+                bottom: 15px;
+                right: 15px;
             }
         }
 
         /* Landscape mode cho mobile */
         @media (max-width: 991.98px) and (orientation: landscape) {
-            :root {
-                --navbar-height: 50px;
-            }
-
             .mobile-nav-container {
                 padding: 0.5rem 1rem;
-                min-height: var(--navbar-height);
+                min-height: 50px;
             }
 
             .mobile-nav-brand {
@@ -472,10 +529,6 @@
 
             .mobile-nav-toggle {
                 padding: 0.6rem;
-            }
-
-            main.container-fluid {
-                padding-top: 1rem;
             }
         }
 
