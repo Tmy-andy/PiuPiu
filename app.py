@@ -61,7 +61,7 @@ with app.app_context():
 #         if not user_id:
 #             return redirect(url_for('login'))
 
-#         user = User.query.get(user_id)
+#         user = User.query.get(user_id) if user_id else None
 #         if not user:
 #             session.clear()
 #             flash('Tài khoản không tồn tại hoặc đã bị xóa.', 'error')
@@ -77,7 +77,7 @@ def init_debug_toolbar(app):
             from models import User
             user_id = session.get('user_id')
             if user_id:
-                user = User.query.get(user_id)
+                user = User.query.get(user_id) if user_id else None
                 if user and user.member_id == 'ADMIN-001':
                     app.debug = True
                     app.config['SECRET_KEY'] = 'your_key'
@@ -107,7 +107,7 @@ def load_user(user_id):
 @app.context_processor
 def inject_user():
     user_id = session.get('user_id')
-    user = User.query.get(user_id) if user_id else None
+    user = User.query.get(user_id) if user_id else None if user_id else None
 
     from datetime import datetime
     warning_count = 0
@@ -303,7 +303,7 @@ def assign_member(user_id):
     try:
         new_admin_id = request.form.get('admin_id')
 
-        user = User.query.get(user_id)
+        user = User.query.get(user_id) if user_id else None
         if not user or user.role != 'member':
             flash('Không tìm thấy thành viên hợp lệ.', 'danger')
             return redirect(url_for('members'))
@@ -398,7 +398,7 @@ def logout():
 @app.route('/delete_member/<int:user_id>', methods=['POST'])
 @admin_required
 def delete_member(user_id):
-    user = User.query.get(user_id)
+    user = User.query.get(user_id) if user_id else None
     if user:
         member_id_obj = MemberID.query.filter_by(member_id=user.member_id).first()
         if member_id_obj:
@@ -759,7 +759,7 @@ def kim_bai():
 @app.route('/increase_death/<int:user_id>', methods=['POST'])
 @admin_required
 def increase_death(user_id):
-    user = User.query.get(user_id)
+    user = User.query.get(user_id) if user_id else None
     if user:
         user.death_count += 1
         # Nếu death_count chia hết cho 2 → cấp kim bài
@@ -777,7 +777,7 @@ def increase_death(user_id):
 @app.route('/use_kim_bai/<int:user_id>', methods=['POST'])
 @admin_required
 def use_kim_bai(user_id):
-    user = User.query.get(user_id)
+    user = User.query.get(user_id) if user_id else None
     if user and user.has_kim_bai:
         user.has_kim_bai = False
         db.session.commit()
@@ -789,7 +789,7 @@ def use_kim_bai(user_id):
 @app.route('/decrease_death/<int:user_id>', methods=['POST'])
 @admin_required
 def decrease_death(user_id):
-    user = User.query.get(user_id)
+    user = User.query.get(user_id) if user_id else None
     if user and user.death_count > 0:
         # Trừ lượt chết
         user.death_count -= 1
@@ -1084,7 +1084,7 @@ def day_off():
     from models import User, PlayerOffRequest
 
     user_id = session.get("user_id")
-    user = User.query.get(user_id)
+    user = User.query.get(user_id) if user_id else None
 
     if request.method == "POST":
         start_date = datetime.strptime(request.form["start_date"], "%Y-%m-%d").date()
@@ -1128,7 +1128,7 @@ def day_off():
 @login_required
 def delete_off(off_id):
     user_id = session.get("user_id")
-    user = User.query.get(user_id)
+    user = User.query.get(user_id) if user_id else None
 
     if user.role != 'admin':
         flash("Bạn không có quyền xóa yêu cầu nghỉ!", "danger")
@@ -1189,7 +1189,7 @@ def frequency():
     handled_ids = set()
 
     for user_id, play_count, last_play in stats:
-        user = User.query.get(user_id)
+        user = User.query.get(user_id) if user_id else None
         if not user:
             continue
 
