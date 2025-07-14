@@ -40,11 +40,14 @@
             --danger-color: #dc2626;
             --light-bg: #f8fafc;
             --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --navbar-height: 70px;
         }
 
         body {
             background-color: var(--light-bg);
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            /* Thêm padding-top để tránh content bị che bởi navbar cố định */
+            padding-top: var(--navbar-height);
         }
 
         .navbar {
@@ -52,8 +55,13 @@
             box-shadow: var(--card-shadow);
             backdrop-filter: blur(10px);
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            /* Làm navbar cố định */
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
             z-index: 1030;
-            position: relative;
+            min-height: var(--navbar-height);
         }
 
         .navbar-brand {
@@ -232,7 +240,7 @@
 
             /* Điều chỉnh body để không bị che */
             body {
-                padding-top: 70px;
+                padding-top: var(--navbar-height);
             }
 
             .mobile-nav-container {
@@ -240,7 +248,7 @@
                 justify-content: space-between;
                 align-items: center;
                 padding: 1rem 1.5rem;
-                min-height: 70px;
+                min-height: var(--navbar-height);
             }
 
             .mobile-nav-brand {
@@ -391,7 +399,7 @@
 
             /* Điều chỉnh main content để không bị che */
             main.container-fluid {
-                padding-top: 90px;
+                padding-top: 1rem;
             }
 
             /* Sidebar cải thiện cho mobile */
@@ -409,9 +417,13 @@
 
         /* Responsive cho màn hình nhỏ hơn */
         @media (max-width: 480px) {
+            :root {
+                --navbar-height: 60px;
+            }
+
             .mobile-nav-container {
                 padding: 0.8rem 1rem;
-                min-height: 60px;
+                min-height: var(--navbar-height);
             }
 
             .mobile-nav-brand {
@@ -434,7 +446,7 @@
             }
 
             main.container-fluid {
-                padding-top: 80px;
+                padding-top: 1rem;
             }
 
             .container {
@@ -445,9 +457,13 @@
 
         /* Landscape mode cho mobile */
         @media (max-width: 991.98px) and (orientation: landscape) {
+            :root {
+                --navbar-height: 50px;
+            }
+
             .mobile-nav-container {
                 padding: 0.5rem 1rem;
-                min-height: 50px;
+                min-height: var(--navbar-height);
             }
 
             .mobile-nav-brand {
@@ -459,8 +475,34 @@
             }
 
             main.container-fluid {
-                padding-top: 70px;
+                padding-top: 1rem;
             }
+        }
+
+        /* Flash messages container - điều chỉnh để không bị che */
+        .flash-messages {
+            position: fixed;
+            top: var(--navbar-height);
+            left: 0;
+            right: 0;
+            z-index: 1020;
+            padding: 1rem;
+            pointer-events: none;
+        }
+
+        .flash-messages .alert {
+            pointer-events: auto;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Điều chỉnh main content */
+        main.container-fluid {
+            padding-top: 1rem;
+        }
+
+        /* Smooth scrolling */
+        html {
+            scroll-behavior: smooth;
         }
     </style>
     <!-- jQuery -->
@@ -573,7 +615,7 @@
     <!-- Flash Messages -->
     {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
-            <div class="container mt-3">
+            <div class="flash-messages">
                 {% for category, message in messages %}
                     <div class="alert alert-{{ 'danger' if category == 'error' else category }} alert-dismissible fade show" role="alert">
                         <i class="fas fa-{{ 'exclamation-triangle' if category == 'error' else 'check-circle' if category == 'success' else 'info-circle' }} me-2"></i>
