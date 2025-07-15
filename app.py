@@ -1320,7 +1320,7 @@ THEME_PRESETS = {
     },
     'forest': {
         'name': 'Rừng xanh',
-        'description': 'Theme xanh nhưng greenflag mà em chê',
+        'description': 'Theme xanh như greenflag mà em chê',
         'effects': True
     },
     'sunset': {
