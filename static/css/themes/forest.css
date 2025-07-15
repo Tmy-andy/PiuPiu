@@ -1,104 +1,33 @@
 [data-theme="forest"] {
-    /* Primary Colors - Darker tones */
-    --primary-color: #4a7c23;
-    --primary-dark: #3e6b1f;
-    --secondary-color: #5a8f2a;
-    --success-color: #6ba032;
-    --warning-color: #d4a015;
-    --danger-color: #c53030;
-    
-    /* Background Colors - Darker theme */
-    --bg-primary: #eefae8;
-    --bg-secondary: #e6f5dd;
-    --bg-tertiary: #d9eccd;
-
-    
-    /* Text Colors - Adjusted for dark theme */
-    --text-primary: #1f3b1f;
-    --text-secondary: #3e6b1f;
-    --text-muted: #658b65;
-    
-    /* Border Colors - Darker tones */
-    --border-color: #2d5016;
-    --border-dark: #1a3009;
-    --border-focus: #4a7c23;
-    
-    /* Gradients - Enhanced dark forest gradients */
-    --gradient-primary: linear-gradient(135deg, #2d5016 0%, #3e6b1f 30%, #4a7c23 60%, #5a8f2a 100%);
-    --gradient-secondary: linear-gradient(135deg, #202520, #2a3226);
-    --gradient-success: linear-gradient(135deg, #2d5016 0%, #4a7c23 100%);
-    --gradient-warning: linear-gradient(135deg, #8b7355 0%, #b8860b 100%);
-    --gradient-info: linear-gradient(135deg, #1e3a3a 0%, #2d5555 100%);
-    
-    /* Navbar gradient - Dark forest theme */
-    --navbar-gradient-start: #2d5016;
-    --navbar-gradient-end: #3e6b1f;
-    
-    /* Stats card gradients */
-    --success-gradient-start: #2d5016;
-    --success-gradient-end: #4a7c23;
-    --warning-gradient-start: #8b7355;
-    --warning-gradient-end: #b8860b;
-    --info-gradient-start: #1e3a3a;
-    --info-gradient-end: #2d5555;
-    
-    /* Table header */
-    --table-header-start: #2d5016;
-    --table-header-end: #1a3009;
-    
-    /* Shadows - Forest themed */
-    --shadow-md: 0 4px 6px -1px rgba(45, 80, 22, 0.3);
-    --shadow-hover: 0 8px 25px -5px rgba(45, 80, 22, 0.4);
-    --shadow-focus: 0 0 0 0.2rem rgba(74, 124, 35, 0.5);
-    --card-shadow: 0 4px 6px -1px rgba(45, 80, 22, 0.2);
-    
-    /* Sidebar - Dark theme */
-    --sidebar-bg: #0f1b0a;
-    --sidebar-link-color: #c4e4c4;
-    --sidebar-link-hover-bg: #2d5016;
-    --sidebar-link-hover-color: #e8f5e8;
-    
-    /* Mobile Navigation - Dark theme */
-    --mobile-nav-bg: #0f1b0a;
-    --mobile-nav-text: #e8f5e8;
-    --mobile-nav-border: #2d5016;
-    --mobile-nav-hover-bg: #1a2814;
-    --mobile-nav-dropdown-bg: #0f1b0a;
-    --mobile-nav-dropdown-shadow: rgba(45, 80, 22, 0.5);
-    --mobile-nav-item-color: #e8f5e8;
-    --mobile-nav-item-border: #2d5016;
-    --mobile-nav-danger-hover-bg: linear-gradient(135deg, #4a1a1a, #5a2020);
-    --mobile-nav-divider: #2d5016;
-    
-    /* Form Colors - Dark theme */
-    --form-control-bg: #ffffff;
-    --form-control-border: #cceac2;
-    --form-control-focus-border: #4a7c23;
-    
-    /* Glass Effect - Dark forest */
-    --glass-bg: rgba(45, 80, 22, 0.2);
-    --glass-border: rgba(62, 107, 31, 0.3);
-    
-    /* Login Card - Dark theme */
-    --login-card-bg: rgba(15, 27, 10, 0.95);
-    
-    /* Navbar Brand - Dark theme */
-    --navbar-brand-icon-bg: rgba(232, 245, 232, 0.2);
-    
-    /* Scroll button gradient */
-    --scroll-btn-gradient-start: #2d5016;
-    --scroll-btn-gradient-end: #3e6b1f;
+    --primary-color: #16a34a;
+    --primary-dark: #15803d;
+    --secondary-color: #166534;
+    --success-color: #22c55e;
+    --warning-color: #eab308;
+    --danger-color: #dc2626;
+    --light-bg: #f0fdf4;
+    --card-shadow: 0 4px 6px -1px rgba(22, 163, 74, 0.1);
+    --navbar-bg: linear-gradient(135deg, #2d5016 0%, #3e6b1f 30%, #4a7c23 60%, #5a8f2a 100%);
+    --stats-card-bg: linear-gradient(135deg, #166534 0%, #15803d 100%);
+    --text-color: #14532d;
+    --text-muted: #166534;
+    --border-color: #bbf7d0;
+    --card-bg: #ffffff;
+    --input-bg: #ffffff;
+    --input-border: #86efac;
+    --table-header-bg: linear-gradient(135deg, #16a34a, #15803d);
+    --glass-bg: rgba(22, 163, 74, 0.1);
+    --glass-border: rgba(134, 239, 172, 0.2);
 }
 
-/* Forest theme specific effects - Enhanced for dark theme */
 [data-theme="forest"] .forest-leaf {
     position: fixed;
     width: 8px;
     height: 12px;
-    background: linear-gradient(45deg, #4a7c23, #5a8f2a);
+    background: linear-gradient(45deg, #16a34a, #22c55e);
     border-radius: 0 100% 0 100%;
-    animation: fallLeaf 12s linear infinite;
-    opacity: 0.4;
+    animation: fallLeaf 10s linear infinite;
+    opacity: 0.6;
     pointer-events: none;
     z-index: -1;
 }
@@ -108,222 +37,17 @@
         transform: translateY(-100vh) rotate(0deg) translateX(0);
         opacity: 0;
     }
-    10%, 90% {
-        opacity: 0.4;
+    10% {
+        opacity: 0.6;
     }
     50% {
-        transform: translateY(50vh) rotate(180deg) translateX(30px);
+        transform: translateY(50vh) rotate(180deg) translateX(20px);
+    }
+    90% {
+        opacity: 0.6;
     }
     100% {
         transform: translateY(100vh) rotate(360deg) translateX(0);
         opacity: 0;
     }
-}
-
-[data-theme="forest"] body {
-    background: var(--bg-primary) !important;
-    color: var(--text-primary) !important;
-}
-
-[data-theme="forest"] main.container-fluid,
-[data-theme="forest"] .container,
-[data-theme="forest"] .container-fluid {
-    background: var(--bg-primary) !important;
-}
-
-/* Dark theme form overrides */
-[data-theme="forest"] .form-control,
-[data-theme="forest"] .form-select {
-    background-color: var(--form-control-bg);
-    border-color: var(--form-control-border);
-    color: var(--text-primary);
-}
-
-[data-theme="forest"] .form-control:focus,
-[data-theme="forest"] .form-select:focus {
-    border-color: var(--form-control-focus-border);
-    box-shadow: 0 0 0 0.2rem rgba(74, 124, 35, 0.4);
-    background-color: var(--form-control-bg);
-}
-
-[data-theme="forest"] .form-control::placeholder {
-    color: var(--text-muted);
-}
-
-/* Dark theme card overrides */
-[data-theme="forest"] .card {
-    background-color: var(--bg-primary);
-    border: 1px solid var(--border-color);
-    color: var(--text-primary);
-}
-
-[data-theme="forest"] .card:hover {
-    box-shadow: 0 8px 25px -5px rgba(45, 80, 22, 0.3);
-}
-
-/* Dark theme table overrides */
-[data-theme="forest"] .table {
-    background-color: var(--bg-primary);
-    color: var(--text-primary);
-}
-
-[data-theme="forest"] .table tbody tr {
-    background-color: var(--bg-primary);
-    color: var(--text-primary);
-    border-color: var(--border-color);
-}
-
-[data-theme="forest"] .table tbody tr:hover {
-    background-color: var(--bg-secondary);
-}
-
-/* Dark theme alert overrides */
-[data-theme="forest"] .alert {
-    background-color: var(--bg-secondary);
-    border-color: var(--border-color);
-    color: var(--text-primary);
-}
-
-[data-theme="forest"] .alert-success {
-    background: linear-gradient(135deg, rgba(45, 80, 22, 0.2), rgba(74, 124, 35, 0.2));
-    border-color: var(--success-color);
-    color: var(--text-primary);
-}
-
-[data-theme="forest"] .alert-warning {
-    background: linear-gradient(135deg, rgba(184, 134, 11, 0.2), rgba(139, 115, 85, 0.2));
-    border-color: var(--warning-color);
-    color: var(--text-primary);
-}
-
-[data-theme="forest"] .alert-danger {
-    background: linear-gradient(135deg, rgba(139, 0, 0, 0.2), rgba(180, 0, 0, 0.2));
-    border-color: var(--danger-color);
-    color: var(--text-primary);
-}
-
-/* Dark theme mobile navigation enhancements */
-[data-theme="forest"] .mobile-nav-dropdown {
-    background-color: var(--mobile-nav-dropdown-bg);
-    border: 1px solid var(--border-color);
-    box-shadow: 0 20px 25px -5px var(--mobile-nav-dropdown-shadow);
-}
-
-[data-theme="forest"] .mobile-nav-header {
-    background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary));
-    border-bottom: 1px solid var(--border-color);
-    color: var(--text-primary);
-}
-
-[data-theme="forest"] .mobile-nav-header strong {
-    color: var(--success-color);
-}
-
-[data-theme="forest"] .mobile-nav-item {
-    color: var(--mobile-nav-item-color);
-    border-bottom: 1px solid var(--mobile-nav-item-border);
-}
-
-[data-theme="forest"] .mobile-nav-item:hover {
-    background: linear-gradient(135deg, var(--mobile-nav-hover-bg), var(--bg-tertiary));
-    color: var(--success-color);
-}
-
-[data-theme="forest"] .mobile-nav-item.danger:hover {
-    background: var(--mobile-nav-danger-hover-bg);
-    color: var(--danger-color);
-}
-
-/* Dark theme sidebar enhancements */
-[data-theme="forest"] .sidebar {
-    background-color: var(--sidebar-bg);
-    border: 1px solid var(--border-color);
-}
-
-[data-theme="forest"] .sidebar .nav-link {
-    color: var(--sidebar-link-color);
-}
-
-[data-theme="forest"] .sidebar .nav-link:hover, 
-[data-theme="forest"] .sidebar .nav-link.active {
-    background-color: var(--sidebar-link-hover-bg);
-    color: var(--sidebar-link-hover-color);
-}
-
-/* Dark theme login card */
-[data-theme="forest"] .login-card {
-    background: var(--login-card-bg);
-    border: 1px solid var(--border-color);
-    color: var(--text-primary);
-}
-
-/* Dark theme badges */
-[data-theme="forest"] .badge {
-    background-color: var(--bg-secondary);
-    color: var(--text-primary);
-    border: 1px solid var(--border-color);
-}
-
-[data-theme="forest"] .badge.bg-success {
-    background: var(--gradient-success) !important;
-}
-
-[data-theme="forest"] .badge.bg-warning {
-    background: var(--gradient-warning) !important;
-}
-
-[data-theme="forest"] .badge.bg-danger {
-    background: linear-gradient(135deg, var(--danger-color), #a00000) !important;
-}
-
-/* Dark theme button overrides */
-[data-theme="forest"] .btn-primary {
-    background: var(--gradient-primary);
-    border: none;
-    color: var(--text-primary);
-}
-
-[data-theme="forest"] .btn-primary:hover {
-    background: linear-gradient(135deg, #3e6b1f 0%, #4a7c23 30%, #5a8f2a 60%, #6ba032 100%);
-    box-shadow: 0 4px 12px rgba(74, 124, 35, 0.4);
-}
-
-[data-theme="forest"] .btn-outline-primary {
-    border-color: var(--primary-color);
-    color: var(--primary-color);
-}
-
-[data-theme="forest"] .btn-outline-primary:hover {
-    background-color: var(--primary-color);
-    border-color: var(--primary-color);
-    color: var(--text-primary);
-}
-
-/* Dark theme scroll button */
-[data-theme="forest"] .scroll-to-top {
-    background: linear-gradient(135deg, var(--scroll-btn-gradient-start) 0%, var(--scroll-btn-gradient-end) 100%);
-    border: 1px solid var(--border-color);
-}
-
-[data-theme="forest"] .scroll-to-top:hover {
-    box-shadow: 0 8px 25px rgba(45, 80, 22, 0.4);
-}
-
-/* Override any remaining light backgrounds */
-[data-theme="forest"] * {
-    scrollbar-color: var(--primary-color) var(--bg-secondary);
-}
-
-[data-theme="forest"] ::-webkit-scrollbar {
-    width: 8px;
-    background: var(--bg-secondary);
-}
-
-[data-theme="forest"] ::-webkit-scrollbar-thumb {
-    background: var(--primary-color);
-    border-radius: 4px;
-}
-
-[data-theme="forest"] ::-webkit-scrollbar-thumb:hover {
-    background: var(--success-color);
 }
