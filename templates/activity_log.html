@@ -19,7 +19,7 @@
                 </h5>
             </div>
             <div class="card-body">
-                {% if current_user.member_id != 'ADMIN-001' %}
+                {% if current_user.role != 'admin' %}
                     <div class="alert alert-danger">
                         <i class="fas fa-lock me-2"></i>Bạn không có quyền truy cập trang này.
                     </div>
