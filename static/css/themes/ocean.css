@@ -1,26 +1,77 @@
 [data-theme="ocean"] {
+    /* Base Color System */
     --primary-color: #0ea5e9;
     --primary-dark: #0284c7;
     --secondary-color: #0369a1;
     --success-color: #059669;
     --warning-color: #d97706;
     --danger-color: #dc2626;
+    --primary-color-rgba: 14, 165, 233;
+
+    /* Background */
     --light-bg: #f0f9ff;
-    --card-shadow: 0 4px 6px -1px rgba(14, 165, 233, 0.1);
-    --navbar-bg: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
-    --stats-card-bg: linear-gradient(135deg, #1e40af 0%, #1e3a8a 100%);
+    --bg-primary: #f0f9ff;
+    --bg-secondary: #e0f2fe;
+
+    /* Text */
     --text-color: #0c4a6e;
     --text-muted: #0369a1;
+    --text-primary: #0c4a6e;
+    --text-secondary: #0369a1;
+
+    /* Border + Shadow */
     --border-color: #bae6fd;
+    --card-shadow: 0 4px 6px -1px rgba(14, 165, 233, 0.1);
+
+    /* Card + Form */
     --card-bg: #ffffff;
     --input-bg: #ffffff;
     --input-border: #7dd3fc;
+
+    /* Gradients */
+    --navbar-bg: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+    --navbar-gradient-start: #1e3c72;
+    --navbar-gradient-end: #2a5298;
+    --stats-card-bg: linear-gradient(135deg, #1e40af 0%, #1e3a8a 100%);
+
+    --success-gradient-start: #059669;
+    --success-gradient-end: #34d399;
+    --warning-gradient-start: #d97706;
+    --warning-gradient-end: #facc15;
+    --info-gradient-start: #0ea5e9;
+    --info-gradient-end: #38bdf8;
+
+    --scroll-btn-gradient-start: #1e3c72;
+    --scroll-btn-gradient-end: #2a5298;
+
+    /* Table */
     --table-header-bg: linear-gradient(135deg, #0ea5e9, #0284c7);
+    --table-header-start: #0ea5e9;
+    --table-header-end: #0284c7;
+
+    /* Mobile Navigation */
+    --mobile-nav-bg: var(--bg-primary);
+    --mobile-nav-text: var(--text-primary);
+    --mobile-nav-border: #bae6fd;
+    --mobile-nav-hover-bg: #dbeafe;
+
+    /* Glass effect */
     --glass-bg: rgba(14, 165, 233, 0.1);
     --glass-border: rgba(125, 211, 252, 0.2);
+
+    /* Optional extensions */
+    --navbar-brand-icon-bg: rgba(255, 255, 255, 0.2);
+    --login-card-bg: rgba(255, 255, 255, 0.95);
+
+    /* Sidebar customizations */
+    --sidebar-link-color: var(--text-secondary);
+    --sidebar-link-hover-bg: var(--primary-color);
+    --sidebar-link-hover-color: #ffffff;
+    --sidebar-active-bg: var(--primary-dark);
+    --sidebar-active-color: #ffffff;
 }
 
-/* Ocean wave effect */
+/* Hiệu ứng sóng biển */
 [data-theme="ocean"] body::before {
     content: '';
     position: fixed;
@@ -37,4 +88,23 @@
 @keyframes wave {
     0%, 100% { transform: translateX(0) scaleY(1); }
     50% { transform: translateX(10px) scaleY(1.1); }
+}
+
+/* Sidebar fix */
+[data-theme="ocean"] .sidebar .nav-link {
+    color: var(--sidebar-link-color);
+}
+
+[data-theme="ocean"] .sidebar .nav-link:hover {
+    background-color: var(--sidebar-link-hover-bg);
+    color: var(--sidebar-link-hover-color);
+}
+
+[data-theme="ocean"] .sidebar .nav-link.active {
+    background-color: var(--sidebar-active-bg);
+    color: var(--sidebar-active-color) !important;
+}
+
+[data-theme="ocean"] .sidebar .nav-link.active i {
+    color: var(--sidebar-active-color);
 }
