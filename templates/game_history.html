@@ -425,12 +425,12 @@
     border: 1px solid var(--input-border);
     border-radius: 0.375rem;
     transition: all 0.3s ease;
-    color: var(--text-theme-primary);
+    color: var(--text-primary);
 }
 
 .custom-select:focus-within {
     border-color: var(--primary-color);
-    box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25); /* vẫn giữ để dễ focus */
+    box-shadow: 0 0 0 0.2rem rgba(var(--primary-color-rgba), 0.25);
 }
 
 .select-header {
@@ -491,7 +491,7 @@
     transition: all 0.2s ease;
     min-height: 48px;
     overflow-y: auto;
-    color: var(--text-theme-primary);
+    color: var(--text-primary);
 }
 
 .select-option:hover {
@@ -499,12 +499,12 @@
 }
 
 .select-option.selected {
-    background: rgba(13, 110, 253, 0.1);
+    background: rgba(var(--primary-color-rgba), 0.1);
     color: var(--primary-color);
 }
 
 .select-option.highlighted {
-    background-color: rgba(13, 110, 253, 0.1);
+    background-color: rgba(var(--primary-color-rgba), 0.1);
     border-left: 4px solid var(--primary-color);
 }
 
@@ -528,7 +528,7 @@
     width: 30px;
     height: 30px;
     border-radius: 50%;
-    background: rgba(255, 193, 7, 0.1); /* giữ nguyên vì là màu vàng nổi bật */
+    background: rgba(255, 193, 7, 0.1); /* vẫn giữ vàng đặc trưng */
     display: flex;
     align-items: center;
     justify-content: center;
