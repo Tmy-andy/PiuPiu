@@ -187,6 +187,9 @@
     color: var(--text-primary);
 }
 
+[data-theme] .form-text {
+    color: var(--text-muted);
+}
 
 /* Utility */
 .text-theme-primary {
