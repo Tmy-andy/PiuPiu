@@ -144,3 +144,14 @@
 .text-theme-primary {
     color: var(--primary-color) !important;
 }
+
+.text-theme-secondary {
+    color: var(--text-secondary) !important;
+}
+
+.sidebar-header:hover {
+    background-color: unset !important;
+    color: inherit !important;
+    cursor: default !important;
+}
+
