@@ -1,25 +1,69 @@
 [data-theme="forest"] {
+    /* Base Color System */
     --primary-color: #16a34a;
     --primary-dark: #15803d;
     --secondary-color: #166534;
     --success-color: #22c55e;
     --warning-color: #eab308;
     --danger-color: #dc2626;
+
+    /* Background */
     --light-bg: #f0fdf4;
-    --card-shadow: 0 4px 6px -1px rgba(22, 163, 74, 0.1);
-    --navbar-bg: linear-gradient(135deg, #2d5016 0%, #3e6b1f 30%, #4a7c23 60%, #5a8f2a 100%);
-    --stats-card-bg: linear-gradient(135deg, #166534 0%, #15803d 100%);
+    --bg-primary: #f0fdf4;
+    --bg-secondary: #ecfdf5;
+
+    /* Text */
     --text-color: #14532d;
     --text-muted: #166534;
+    --text-primary: #14532d;
+    --text-secondary: #166534;
+
+    /* Border + Shadow */
     --border-color: #bbf7d0;
+    --card-shadow: 0 4px 6px -1px rgba(22, 163, 74, 0.1);
+
+    /* Card + Form */
     --card-bg: #ffffff;
     --input-bg: #ffffff;
     --input-border: #86efac;
+
+    /* Gradients */
+    --navbar-bg: linear-gradient(135deg, #2d5016 0%, #3e6b1f 30%, #4a7c23 60%, #5a8f2a 100%);
+    --navbar-gradient-start: #2d5016;
+    --navbar-gradient-end: #5a8f2a;
+    --stats-card-bg: linear-gradient(135deg, #166534 0%, #15803d 100%);
+
+    --success-gradient-start: #15803d;
+    --success-gradient-end: #22c55e;
+    --warning-gradient-start: #ca8a04;
+    --warning-gradient-end: #eab308;
+    --info-gradient-start: #0369a1;
+    --info-gradient-end: #0284c7;
+
+    --scroll-btn-gradient-start: #2d5016;
+    --scroll-btn-gradient-end: #3e6b1f;
+
+    /* Table */
     --table-header-bg: linear-gradient(135deg, #16a34a, #15803d);
+    --table-header-start: #16a34a;
+    --table-header-end: #15803d;
+
+    /* Mobile Navigation */
+    --mobile-nav-bg: var(--bg-primary);
+    --mobile-nav-text: var(--text-primary);
+    --mobile-nav-border: #bbf7d0;
+    --mobile-nav-hover-bg: #e6fce6;
+
+    /* Glass effect */
     --glass-bg: rgba(22, 163, 74, 0.1);
     --glass-border: rgba(134, 239, 172, 0.2);
+
+    /* Optional extensions */
+    --navbar-brand-icon-bg: rgba(255, 255, 255, 0.2);
+    --login-card-bg: rgba(255, 255, 255, 0.95);
 }
 
+/* Rơi lá rừng */
 [data-theme="forest"] .forest-leaf {
     position: fixed;
     width: 8px;
@@ -50,79 +94,4 @@
         transform: translateY(100vh) rotate(360deg) translateX(0);
         opacity: 0;
     }
-}
-[data-theme="forest"] {
-    /* Extra Background Colors */
-    --bg-primary: #f0fdf4;
-    --bg-secondary: #ecfdf5;
-    --bg-tertiary: #dcfce7;
-
-    /* Extra Text Colors */
-    --text-primary: #14532d;
-    --text-secondary: #166534;
-
-    /* Form Colors */
-    --form-control-bg: #ffffff;
-    --form-control-border: #86efac;
-    --form-control-focus-border: #16a34a;
-
-    /* Button hover shadow */
-    --btn-primary-hover-shadow: rgba(22, 163, 74, 0.4);
-
-    /* Gradients (extended) */
-    --gradient-primary: linear-gradient(135deg, #2d5016 0%, #3e6b1f 30%, #4a7c23 60%, #5a8f2a 100%);
-    --gradient-success: linear-gradient(135deg, #15803d 0%, #22c55e 100%);
-    --gradient-warning: linear-gradient(135deg, #ca8a04 0%, #eab308 100%);
-    --gradient-info: linear-gradient(135deg, #0369a1 0%, #0284c7 100%);
-
-    --success-gradient-start: #15803d;
-    --success-gradient-end: #22c55e;
-    --warning-gradient-start: #ca8a04;
-    --warning-gradient-end: #eab308;
-    --info-gradient-start: #0369a1;
-    --info-gradient-end: #0284c7;
-
-    /* Scroll Button */
-    --scroll-btn-gradient-start: #16a34a;
-    --scroll-btn-gradient-end: #15803d;
-
-    /* Navbar Brand */
-    --navbar-brand-icon-bg: rgba(255, 255, 255, 0.2);
-    --navbar-border: rgba(255, 255, 255, 0.1);
-
-    /* Sidebar */
-    --sidebar-bg: #ffffff;
-    --sidebar-link-color: #166534;
-    --sidebar-link-hover-bg: #16a34a;
-    --sidebar-link-hover-color: #ffffff;
-
-    /* Mobile nav */
-    --mobile-nav-bg: linear-gradient(135deg, #2d5016 0%, #3e6b1f 30%, #4a7c23 60%, #5a8f2a 100%);
-    --mobile-nav-text: #ffffff;
-    --mobile-nav-toggle-bg: rgba(255, 255, 255, 0.15);
-    --mobile-nav-toggle-border: rgba(255, 255, 255, 0.3);
-    --mobile-nav-toggle-hover-bg: rgba(255, 255, 255, 0.25);
-    --mobile-nav-toggle-active-bg: rgba(255, 255, 255, 0.3);
-    --mobile-nav-dropdown-bg: #ffffff;
-    --mobile-nav-dropdown-shadow: rgba(22, 163, 74, 0.3);
-    --mobile-nav-dropdown-border: rgba(22, 163, 74, 0.1);
-    --mobile-nav-item-color: #14532d;
-    --mobile-nav-item-border: #dcfce7;
-    --mobile-nav-header-bg: linear-gradient(135deg, #f0fdf4, #dcfce7);
-    --mobile-nav-hover-bg: linear-gradient(135deg, #f0fdf4, #dcfce7);
-    --mobile-nav-danger-hover-bg: linear-gradient(135deg, #fee2e2, #fecaca);
-    --mobile-nav-divider: #bbf7d0;
-    --mobile-nav-overlay-bg: rgba(0, 0, 0, 0.5);
-
-    /* Stats card gradients */
-    --stats-success-gradient: var(--gradient-success);
-    --stats-warning-gradient: var(--gradient-warning);
-    --stats-info-gradient: var(--gradient-info);
-
-    /* Shadows */
-    --card-hover-shadow: rgba(22, 163, 74, 0.15);
-    --form-focus-shadow: rgba(22, 163, 74, 0.25);
-
-    /* Login card */
-    --login-card-bg: rgba(255, 255, 255, 0.95);
 }
