@@ -1,0 +1,40 @@
+[data-theme="ocean"] {
+    --primary-color: #0ea5e9;
+    --primary-dark: #0284c7;
+    --secondary-color: #0369a1;
+    --success-color: #059669;
+    --warning-color: #d97706;
+    --danger-color: #dc2626;
+    --light-bg: #f0f9ff;
+    --card-shadow: 0 4px 6px -1px rgba(14, 165, 233, 0.1);
+    --navbar-bg: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+    --stats-card-bg: linear-gradient(135deg, #1e40af 0%, #1e3a8a 100%);
+    --text-color: #0c4a6e;
+    --text-muted: #0369a1;
+    --border-color: #bae6fd;
+    --card-bg: #ffffff;
+    --input-bg: #ffffff;
+    --input-border: #7dd3fc;
+    --table-header-bg: linear-gradient(135deg, #0ea5e9, #0284c7);
+    --glass-bg: rgba(14, 165, 233, 0.1);
+    --glass-border: rgba(125, 211, 252, 0.2);
+}
+
+/* Ocean wave effect */
+[data-theme="ocean"] body::before {
+    content: '';
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100px;
+    background: linear-gradient(to top, rgba(14,165,233,0.1) 0%, transparent 100%);
+    animation: wave 6s ease-in-out infinite;
+    pointer-events: none;
+    z-index: -1;
+}
+
+@keyframes wave {
+    0%, 100% { transform: translateX(0) scaleY(1); }
+    50% { transform: translateX(10px) scaleY(1.1); }
+}

@@ -1,0 +1,101 @@
+/* ============= THEME GLOBAL EFFECTS ============= */
+
+/* Glassmorphism cho các card */
+.glass-card {
+    background: var(--glass-bg);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--glass-border);
+    border-radius: 15px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+/* Hover effects cho các theme */
+.theme-hover-effect {
+    transition: all 0.3s ease;
+}
+
+.theme-hover-effect:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+}
+
+/* Responsive giảm hiệu ứng trên mobile */
+@media (max-width: 768px) {
+    [data-theme="galaxy"] body::before {
+        animation-duration: 8s;
+    }
+    [data-theme="sakura"] .sakura-petal {
+        animation-duration: 12s;
+    }
+    [data-theme="forest"] .forest-leaf {
+        animation-duration: 15s;
+    }
+    [data-theme="sunset"] body {
+        animation-duration: 20s;
+    }
+}
+
+/* JavaScript helpers */
+.theme-transition {
+    transition: all 0.5s ease;
+}
+
+.fade-in {
+    opacity: 0;
+    animation: fadeIn 0.5s ease forwards;
+}
+
+@keyframes fadeIn {
+    to { opacity: 1; }
+}
+
+.slide-in {
+    transform: translateY(20px);
+    opacity: 0;
+    animation: slideIn 0.5s ease forwards;
+}
+
+@keyframes slideIn {
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* Scrollbar cho dark theme */
+[data-theme="dark"] ::-webkit-scrollbar {
+    width: 8px;
+}
+[data-theme="dark"] ::-webkit-scrollbar-track {
+    background: #1f2937;
+}
+[data-theme="dark"] ::-webkit-scrollbar-thumb {
+    background: #4b5563;
+    border-radius: 4px;
+}
+[data-theme="dark"] ::-webkit-scrollbar-thumb:hover {
+    background: #6b7280;
+}
+
+/* Selection highlight theo theme */
+[data-theme="default"] ::selection {
+    background: rgba(102, 126, 234, 0.3);
+}
+[data-theme="dark"] ::selection {
+    background: rgba(59, 130, 246, 0.3);
+}
+[data-theme="sakura"] ::selection {
+    background: rgba(236, 72, 153, 0.3);
+}
+[data-theme="galaxy"] ::selection {
+    background: rgba(139, 92, 246, 0.3);
+}
+[data-theme="ocean"] ::selection {
+    background: rgba(14, 165, 233, 0.3);
+}
+[data-theme="forest"] ::selection {
+    background: rgba(22, 163, 74, 0.3);
+}
+[data-theme="sunset"] ::selection {
+    background: rgba(249, 115, 22, 0.3);
+}

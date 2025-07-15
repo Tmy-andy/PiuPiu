@@ -117,19 +117,16 @@ def log_activity(action, detail=""):
 @app.context_processor
 def inject_user():
     user_id = session.get('user_id')
-    user = User.query.get(user_id) if user_id else None if user_id else None
+    user = User.query.get(user_id) if user_id else None
 
+    # Tính số lượng cảnh báo vắng chơi
     from datetime import datetime
     warning_count = 0
     now = datetime.utcnow()
 
     users = User.query.all()
     for u in users:
-        # ❌ Nếu chưa có is_active thì bỏ dòng này
-        # if not u.is_active:
-        #     continue
-
-        # Kiểm tra có đang xin nghỉ không
+        # Bỏ qua nếu đang xin nghỉ
         on_leave = PlayerOffRequest.query.filter(
             PlayerOffRequest.user_id == u.id,
             PlayerOffRequest.start_date <= now.date(),
@@ -139,7 +136,7 @@ def inject_user():
         if on_leave:
             continue
 
-        # Lấy lần chơi gần nhất
+        # Kiểm tra lần chơi gần nhất
         last_game = (
             GamePlayer.query
             .filter_by(player_id=u.id)
@@ -152,7 +149,11 @@ def inject_user():
         if not last_play_time or (now - last_play_time).days > 7:
             warning_count += 1
 
-    return dict(user=user, warning_count=warning_count)
+    # Theme hiệu lực
+    effective_theme = get_theme(user)
+
+    return dict(user=user, warning_count=warning_count, effective_theme=effective_theme)
+
 
 from flask_compress import Compress
 Compress(app)
@@ -1289,5 +1290,38 @@ def frequency():
 def activity_log():
     logs = ActivityLog.query.order_by(ActivityLog.timestamp.desc()).all()
     return render_template("activity_log.html", logs=logs)
+
+def get_theme(user):
+    today = datetime.today()
+
+    # Ưu tiên theme theo ngày lễ
+    if today.month == 10 and today.day >= 25:
+        return 'halloween'
+    elif today.month == 12 and today.day >= 24:
+        return 'christmas'
+    elif today.month == 1 and today.day <= 2:
+        return 'newyear'
+
+    # Ưu tiên theme user đã chọn
+    return user.theme if user and user.theme else 'default'
+
+@app.route('/change-theme', methods=['GET', 'POST'])
+def change_theme():
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
+
+    user = User.query.get(session['user_id'])
+    themes = ['default', 'dark', 'halloween', 'newyear']  # Tùy theo class có trong themes.css
+
+    if request.method == 'POST':
+        selected = request.form.get('theme')
+        if selected in themes:
+            user.theme = selected
+            db.session.commit()
+            flash('Đã đổi giao diện thành công!', 'success')
+            return redirect(url_for('dashboard'))
+
+    return render_template('theme.html', user=user, themes=themes)
+
 
 print(f"📌 Flask app = {app}")

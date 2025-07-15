@@ -1,0 +1,21 @@
+[data-theme="dark"] {
+    --primary-color: #3b82f6;
+    --primary-dark: #2563eb;
+    --secondary-color: #9ca3af;
+    --success-color: #10b981;
+    --warning-color: #f59e0b;
+    --danger-color: #ef4444;
+    --light-bg: #111827;
+    --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+    --navbar-bg: linear-gradient(135deg, #1f2937 0%, #374151 100%);
+    --stats-card-bg: linear-gradient(135deg, #1f2937 0%, #374151 100%);
+    --text-color: #f9fafb;
+    --text-muted: #d1d5db;
+    --border-color: #374151;
+    --card-bg: #1f2937;
+    --input-bg: #374151;
+    --input-border: #4b5563;
+    --table-header-bg: linear-gradient(135deg, #1f2937, #111827);
+    --glass-bg: rgba(0, 0, 0, 0.3);
+    --glass-border: rgba(255, 255, 255, 0.1);
+}

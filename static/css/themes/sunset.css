@@ -1,0 +1,39 @@
+[data-theme="sunset"] {
+    --primary-color: #f97316;
+    --primary-dark: #ea580c;
+    --secondary-color: #dc2626;
+    --success-color: #059669;
+    --warning-color: #d97706;
+    --danger-color: #dc2626;
+    --light-bg: #fff7ed;
+    --card-shadow: 0 4px 6px -1px rgba(249, 115, 22, 0.1);
+    --navbar-bg: linear-gradient(135deg, #ff6b6b 0%, #feca57 50%, #ff9ff3 100%);
+    --stats-card-bg: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
+    --text-color: #9a3412;
+    --text-muted: #c2410c;
+    --border-color: #fed7aa;
+    --card-bg: #ffffff;
+    --input-bg: #ffffff;
+    --input-border: #fdba74;
+    --table-header-bg: linear-gradient(135deg, #f97316, #ea580c);
+    --glass-bg: rgba(249, 115, 22, 0.1);
+    --glass-border: rgba(253, 186, 116, 0.2);
+}
+
+[data-theme="sunset"] body {
+    background: linear-gradient(-45deg, #ff6b6b, #feca57, #ff9ff3, #f97316);
+    background-size: 400% 400%;
+    animation: gradientShift 15s ease infinite;
+}
+
+@keyframes gradientShift {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}

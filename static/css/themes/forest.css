@@ -1,0 +1,53 @@
+[data-theme="forest"] {
+    --primary-color: #16a34a;
+    --primary-dark: #15803d;
+    --secondary-color: #166534;
+    --success-color: #22c55e;
+    --warning-color: #eab308;
+    --danger-color: #dc2626;
+    --light-bg: #f0fdf4;
+    --card-shadow: 0 4px 6px -1px rgba(22, 163, 74, 0.1);
+    --navbar-bg: linear-gradient(135deg, #2d5016 0%, #3e6b1f 30%, #4a7c23 60%, #5a8f2a 100%);
+    --stats-card-bg: linear-gradient(135deg, #166534 0%, #15803d 100%);
+    --text-color: #14532d;
+    --text-muted: #166534;
+    --border-color: #bbf7d0;
+    --card-bg: #ffffff;
+    --input-bg: #ffffff;
+    --input-border: #86efac;
+    --table-header-bg: linear-gradient(135deg, #16a34a, #15803d);
+    --glass-bg: rgba(22, 163, 74, 0.1);
+    --glass-border: rgba(134, 239, 172, 0.2);
+}
+
+[data-theme="forest"] .forest-leaf {
+    position: fixed;
+    width: 8px;
+    height: 12px;
+    background: linear-gradient(45deg, #16a34a, #22c55e);
+    border-radius: 0 100% 0 100%;
+    animation: fallLeaf 10s linear infinite;
+    opacity: 0.6;
+    pointer-events: none;
+    z-index: -1;
+}
+
+@keyframes fallLeaf {
+    0% {
+        transform: translateY(-100vh) rotate(0deg) translateX(0);
+        opacity: 0;
+    }
+    10% {
+        opacity: 0.6;
+    }
+    50% {
+        transform: translateY(50vh) rotate(180deg) translateX(20px);
+    }
+    90% {
+        opacity: 0.6;
+    }
+    100% {
+        transform: translateY(100vh) rotate(360deg) translateX(0);
+        opacity: 0;
+    }
+}
