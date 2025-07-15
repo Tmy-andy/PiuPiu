@@ -21,12 +21,12 @@
     --glass-border: rgba(0, 0, 0, 0.05);
 
     /* Sidebar */
---sidebar-bg: #ffffff;
---sidebar-link-color: #de6d9f;
---sidebar-link-hover-bg: #f7a8c3;
---sidebar-link-hover-color: #ffffff;
---sidebar-active-bg: #f37aa5;
---sidebar-active-color: #ffffff;
+    --sidebar-bg: #ffffff;
+    --sidebar-link-color: #1f2937;
+    --sidebar-link-hover-bg: #1f2937;
+    --sidebar-link-hover-color: #ffffff;
+    --sidebar-active-bg: #1f2937;
+    --sidebar-active-color: #ffffff;
 
 }
 
