@@ -80,11 +80,7 @@
   --sidebar-active-color: #ffffff;
 }
 
-/* Sidebar */
-[data-theme="dark"] .sidebar {
-    background-color: var(--sidebar-bg);
-}
-
+/* Sidebar nav link fix */
 [data-theme="dark"] .sidebar .nav-link {
     color: var(--sidebar-link-color);
     transition: all 0.2s ease;
@@ -96,143 +92,59 @@
 }
 
 [data-theme="dark"] .sidebar .nav-link.active {
-    background-color: var(--primary-dark);
-    color: white !important;
+    background-color: var(--sidebar-active-bg);
+    color: var(--sidebar-active-color) !important;
 }
 
 [data-theme="dark"] .sidebar .nav-link.active i {
-    color: white;
+    color: var(--sidebar-active-color);
 }
 
 [data-theme="dark"] .sidebar-header {
-    color: white;
+    color: var(--sidebar-active-color);
     font-weight: 600;
 }
 
 [data-theme="dark"] .sidebar-header i {
-    color: white;
+    color: var(--sidebar-active-color);
 }
 
-/* Cards */
-[data-theme="dark"] .card {
-    background-color: var(--card-bg);
-    color: var(--text-color);
-    border: 1px solid var(--border-color);
-    box-shadow: var(--card-shadow);
+[data-theme="dark"] .sidebar-header:hover {
+    background-color: unset !important;
+    color: inherit !important;
+    cursor: default !important;
 }
 
-[data-theme="dark"] .card-header {
-    background-color: var(--input-bg);
-    color: var(--text-color);
-    border-bottom: 1px solid var(--border-color);
-}
-
-/* Text */
-[data-theme="dark"] .card-title,
-[data-theme="dark"] .form-label {
-    color: var(--text-primary);
-}
-
-[data-theme="dark"] .text-muted {
-    color: var(--text-muted) !important;
-}
-
+/* Text utility */
 [data-theme="dark"] .text-theme-primary {
     color: var(--primary-color) !important;
-}
-
-/* Form */
-[data-theme="dark"] .form-control,
-[data-theme="dark"] .form-select {
-    background-color: var(--input-bg);
-    border: 1px solid var(--input-border);
-    color: var(--text-primary);
-}
-
-[data-theme="dark"] .form-control:focus,
-[data-theme="dark"] .form-select:focus {
-    border-color: var(--primary-color);
-    box-shadow: 0 0 0 0.2rem rgba(var(--primary-color-rgba), 0.25);
-    background-color: var(--input-bg);
-}
-
-/* Table */
-[data-theme="dark"] .table {
-    background-color: var(--card-bg);
-    color: var(--text-color);
-    border-color: var(--border-color);
-}
-
-[data-theme="dark"] .table thead th {
-    background: var(--table-header-bg);
-    color: white;
-    border: none;
-}
-
-[data-theme="dark"] .table tbody tr {
-    background-color: var(--card-bg);
-    color: var(--text-color);
-    border-top: 1px solid var(--border-color);
-}
-
-[data-theme="dark"] .table tbody tr:hover {
-    background-color: var(--glass-bg);
-}
-
-/* Badge */
-[data-theme="dark"] .badge.bg-primary {
-    background-color: var(--primary-color);
-    color: white;
-}
-
-[data-theme="dark"] .badge.bg-success {
-    background-color: var(--success-color);
-    color: white;
-}
-
-[data-theme="dark"] .badge.bg-secondary {
-    background-color: var(--secondary-color);
-    color: white;
-}
-
-/* Utility */
-[data-theme="dark"] .text-theme-primary {
-    color: var(--primary-color) !important;
-}
-
-[data-theme="dark"] .text-theme-secondary {
-    color: var(--text-secondary) !important;
-}
-
-[data-theme="dark"] .form-text {
-    color: var(--text-muted);
 }
 
 /* Modal header */
-[data-theme] .modal-header {
+[data-theme="dark"] .modal-header {
     background-color: var(--primary-color);
     color: white;
     border-bottom: 1px solid var(--border-color);
 }
 
 /* Icon hoặc tiêu đề trong modal header */
-[data-theme] .modal-header .modal-title i {
+[data-theme="dark"] .modal-header .modal-title i {
     color: white;
 }
 
 /* Nút close trắng */
-[data-theme] .btn-close-white {
+[data-theme="dark"] .btn-close-white {
     filter: brightness(0) invert(1);
 }
 
 /* Modal footer */
-[data-theme] .modal-footer {
+[data-theme="dark"] .modal-footer {
     background-color: var(--card-bg);
     border-top: 1px solid var(--border-color);
 }
 
 /* Tabs trong modal */
-[data-theme] .nav-tabs .nav-link {
+[data-theme="dark"] .nav-tabs .nav-link {
     background-color: var(--input-bg);
     color: var(--text-secondary);
     border: 1px solid var(--border-color);
@@ -240,14 +152,14 @@
     border-radius: 0.375rem 0.375rem 0 0;
 }
 
-[data-theme] .nav-tabs .nav-link.active {
+[data-theme="dark"] .nav-tabs .nav-link.active {
     background-color: var(--bg-secondary);
     color: var(--primary-color);
     border-bottom: 2px solid var(--primary-color);
 }
 
 /* Tab content */
-[data-theme] .tab-content {
+[data-theme="dark"] .tab-content {
     background-color: var(--card-bg);
     padding: 1rem;
     border: 1px solid var(--border-color);
@@ -256,47 +168,53 @@
 }
 
 /* Form control trong modal */
-[data-theme] .modal-content .form-control,
-[data-theme] .modal-content .form-select {
+[data-theme="dark"] .modal-content .form-control,
+[data-theme="dark"] .modal-content .form-select {
     background-color: var(--input-bg);
     color: var(--text-primary);
     border: 1px solid var(--input-border);
 }
 
 /* Placeholder & Label */
-[data-theme] .modal-content .form-label {
+[data-theme="dark"] .modal-content .form-label {
     color: var(--text-primary);
 }
 
-[data-theme] .modal-content .form-text {
+[data-theme="dark"] .modal-content .form-text {
     color: var(--text-muted);
 }
 
-/* Button trong modal */
-[data-theme] .modal-content .btn-primary {
+/* Buttons */
+[data-theme="dark"] .modal-content .btn-primary {
     background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
     border: none;
     color: white;
 }
-[data-theme] .modal-content .btn-secondary {
+
+[data-theme="dark"] .modal-content .btn-secondary {
     background-color: var(--secondary-color);
     color: white;
     border: none;
 }
-[data-theme] .modal-content .btn-success {
+
+[data-theme="dark"] .modal-content .btn-success {
     background-color: var(--success-color);
     color: white;
     border: none;
 }
-[data-theme] .modal-content .btn-outline-primary {
+
+[data-theme="dark"] .modal-content .btn-outline-primary {
     border-color: var(--primary-color);
     color: var(--primary-color);
 }
-[data-theme] .modal-content .btn-outline-primary:hover {
+
+[data-theme="dark"] .modal-content .btn-outline-primary:hover {
     background-color: var(--primary-color);
     color: white;
 }
-[data-theme] .tab-pane {
+
+/* Tab pane */
+[data-theme="dark"] .tab-pane {
     background-color: var(--card-bg);
     color: var(--text-color);
     padding: 1rem;
@@ -304,3 +222,4 @@
     border: 1px solid var(--border-color);
     border-top: none;
 }
+
