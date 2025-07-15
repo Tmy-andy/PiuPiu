@@ -74,8 +74,8 @@
   /* Sidebar */
   --sidebar-bg: #1e293b;
   --sidebar-link-color: #cbd5e1;
-  --sidebar-link-hover-bg: var(--primary-color);
-  --sidebar-link-hover-color: #ffffff;
+  --sidebar-link-hover-bg: #1a1f2b;
+  --sidebar-link-hover-color: var(--text-color);
   --sidebar-active-bg: var(--primary-dark);
   --sidebar-active-color: #ffffff;
 }
