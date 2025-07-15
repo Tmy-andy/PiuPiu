@@ -15,7 +15,7 @@
         <div class="card">
             <div class="card-header bg-white d-flex justify-content-between align-items-center">
                 <h5 class="card-title fw-bold mb-0">
-                    <i class="fas fa-users me-2 text-primary"></i>
+                    <i class="fas fa-users me-2 text-theme-primary"></i>
                     Danh sách thành viên
                 </h5>
             </div>
@@ -47,7 +47,7 @@
                                 </td>
                                 <td>
                                     {% if member.admin_name %}
-                                        <i class="fas fa-user-shield me-1 text-primary"></i>
+                                        <i class="fas fa-user-shield me-1 text-theme-primary"></i>
                                         {{ member.admin_name }}
                                     {% else %}
                                         <span class="text-muted">Chưa phân công</span>
@@ -109,7 +109,7 @@
                 <div class="modal-body">
                     <div class="mb-3">
                         <label class="form-label fw-semibold">Thành viên:</label>
-                        <p class="fw-bold text-primary" id="memberName"></p>
+                        <p class="fw-bold text-theme-primary" id="memberName"></p>
                     </div>
                     <div class="mb-3">
                         <label for="points_change" class="form-label fw-semibold">Thay đổi điểm:</label>
@@ -148,7 +148,7 @@
                 <div class="modal-body">
                     <div class="mb-3">
                         <label class="form-label fw-semibold">Thành viên:</label>
-                        <p class="fw-bold text-primary" id="assignMemberName"></p>
+                        <p class="fw-bold text-theme-primary" id="assignMemberName"></p>
                     </div>
                     <div class="mb-3">
                         <label for="admin_id" class="form-label fw-semibold">Phân công cho Admin:</label>
