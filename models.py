@@ -93,3 +93,12 @@ class PlayerOffRequest(db.Model):
 
     user = db.relationship('User', foreign_keys=[user_id], backref='off_requests')
     creator = db.relationship('User', foreign_keys=[created_by])
+
+class ActivityLog(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    action = db.Column(db.String(255), nullable=False)
+    detail = db.Column(db.Text, nullable=True)
+    timestamp = db.Column(db.DateTime, default=datetime.utcnow)
+
+    user = db.relationship('User', backref='activity_logs')
