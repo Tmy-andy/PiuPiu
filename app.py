@@ -1291,10 +1291,65 @@ def activity_log():
     logs = ActivityLog.query.order_by(ActivityLog.timestamp.desc()).all()
     return render_template("activity_log.html", logs=logs)
 
+# Danh sách preset để hiện mô tả cho từng theme
+THEME_PRESETS = {
+    'default': {
+        'name': 'Mặc định',
+        'description': 'Theme cơ bản với màu xanh tím',
+        'effects': False
+    },
+    'dark': {
+        'name': 'Tối',
+        'description': 'Theme tối như cái đầu của bạn',
+        'effects': False
+    },
+    'sakura': {
+        'name': 'Hoa anh đào',
+        'description': 'Theme hồng nhẹ nhàng, hồng mạnh mẽ, hồng nam tính',
+        'effects': True
+    },
+    'galaxy': {
+        'name': 'Thiên hà',
+        'description': 'Theme vũ trụ',
+        'effects': True
+    },
+    'ocean': {
+        'name': 'Đại dương',
+        'description': 'Theme xanh dương như chờ lương mỗi phút',
+        'effects': True
+    },
+    'forest': {
+        'name': 'Rừng xanh',
+        'description': 'Theme xanh nhưng greenflag mà em chê',
+        'effects': True
+    },
+    'sunset': {
+        'name': 'Hoàng hôn',
+        'description': 'Theme cam vàng màu nắng',
+        'effects': True
+    },
+    'halloween': {
+        'name': 'Halloween',
+        'description': 'Theme Halloween 🎃',
+        'effects': True
+    },
+    'christmas': {
+        'name': 'Giáng Sinh',
+        'description': 'Theme tuyết rơi & màu Noel 🎄',
+        'effects': True
+    },
+    'newyear': {
+        'name': 'Năm Mới',
+        'description': 'Theme chúc mừng năm mới 🎉',
+        'effects': True
+    },
+}
+
+# Trả về theme hiệu lực (ưu tiên ngày lễ)
 def get_theme(user):
     today = datetime.today()
 
-    # Ưu tiên theme theo ngày lễ
+    # Ưu tiên theme đặc biệt theo ngày lễ
     if today.month == 10 and today.day >= 25:
         return 'halloween'
     elif today.month == 12 and today.day >= 24:
@@ -1302,7 +1357,7 @@ def get_theme(user):
     elif today.month == 1 and today.day <= 2:
         return 'newyear'
 
-    # Ưu tiên theme user đã chọn
+    # Nếu user có theme cá nhân thì dùng
     return user.theme if user and user.theme else 'default'
 
 @app.route('/change-theme', methods=['GET', 'POST'])
@@ -1311,17 +1366,19 @@ def change_theme():
         return redirect(url_for('login'))
 
     user = User.query.get(session['user_id'])
-    themes = ['default', 'dark', 'halloween', 'newyear']  # Tùy theo class có trong themes.css
+    themes = list(THEME_PRESETS.keys())
 
     if request.method == 'POST':
         selected = request.form.get('theme')
         if selected in themes:
             user.theme = selected
             db.session.commit()
-            flash('Đã đổi giao diện thành công!', 'success')
+            flash(f'Đã đổi giao diện sang theme: {selected}', 'success')
             return redirect(url_for('dashboard'))
+        else:
+            flash('Theme không hợp lệ.', 'danger')
 
-    return render_template('theme.html', user=user, themes=themes)
+    return render_template('change_theme.html', user=user, themes=themes, THEME_PRESETS=THEME_PRESETS)
 
 
 print(f"📌 Flask app = {app}")
