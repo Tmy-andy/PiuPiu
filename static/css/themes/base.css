@@ -198,6 +198,7 @@ body {
     box-shadow: var(--card-shadow);
     border-radius: 12px;
     margin-right: 1rem;
+    color: white;
 }
 
 .sidebar .nav-link {

@@ -19,4 +19,14 @@
     --input-border: #e2e8f0;
     --glass-bg: rgba(255, 255, 255, 0.8);
     --glass-border: rgba(0, 0, 0, 0.05);
+
+    /* Sidebar */
+--sidebar-bg: #ffffff;
+--sidebar-link-color: #de6d9f;
+--sidebar-link-hover-bg: #f7a8c3;
+--sidebar-link-hover-color: #ffffff;
+--sidebar-active-bg: #f37aa5;
+--sidebar-active-color: #ffffff;
+
 }
+
