@@ -131,3 +131,7 @@
     [data-theme="forest"] .sidebar-header i {
         color: #ffffff;
     }
+
+.text-theme-primary {
+  color: var(--primary-color) !important;
+}
