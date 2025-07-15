@@ -1,80 +1,87 @@
 [data-theme="sakura"] {
-    /* Primary Colors */
+    /* Base Color System */
     --primary-color: #ec4899;
     --primary-dark: #db2777;
     --secondary-color: #be185d;
     --success-color: #059669;
     --warning-color: #d97706;
     --danger-color: #dc2626;
+    --primary-color-rgba: 236, 72, 153;
 
-    /* Background Colors */
+    /* Background */
     --light-bg: #fdf2f8;
-    --card-bg: #ffffff;
-    --input-bg: #ffffff;
+    --bg-primary: #fdf2f8;
+    --bg-secondary: #fce7f3;
 
-    /* Text Colors */
+    /* Text */
     --text-color: #831843;
     --text-muted: #be185d;
+    --text-primary: #831843;
+    --text-secondary: #be185d;
 
-    /* Border Colors */
+    /* Border + Shadow */
     --border-color: #fbcfe8;
+    --card-shadow: 0 4px 6px -1px rgba(236, 72, 153, 0.1);
+
+    /* Card + Form */
+    --card-bg: #ffffff;
+    --input-bg: #ffffff;
     --input-border: #f9a8d4;
-    --form-border-color: #f9a8d4;
 
     /* Gradients */
-    --navbar-bg: linear-gradient(135deg, #ff9a9e 0%, #fecfef 50%, #fecfef 100%);
-    --mobile-nav-bg: linear-gradient(135deg, #ff9a9e 0%, #fecfef 50%, #fecfef 100%);
-    --stats-card-gradient: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
-    --stats-success-gradient: linear-gradient(135deg, #be185d 0%, #ec4899 100%);
-    --stats-warning-gradient: linear-gradient(135deg, #d97706 0%, #facc15 100%);
-    --stats-info-gradient: linear-gradient(135deg, #a78bfa 0%, #c084fc 100%);
-    --table-header-gradient: linear-gradient(135deg, #ec4899, #db2777);
-    --scroll-btn-bg: linear-gradient(135deg, #ec4899 0%, #db2777 100%);
+    --navbar-bg: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+    --navbar-gradient-start: #ff9a9e;
+    --navbar-gradient-end: #fecfef;
+    --stats-card-bg: linear-gradient(135deg, #be185d 0%, #ec4899 100%);
 
-    /* Sidebar Colors */
-    --sidebar-bg: #ffffff;
-    --sidebar-link-color: #be185d;
-    --sidebar-link-hover-bg: #ec4899;
-    --sidebar-link-hover-color: #ffffff;
+    --success-gradient-start: #10b981;
+    --success-gradient-end: #34d399;
+    --warning-gradient-start: #d97706;
+    --warning-gradient-end: #facc15;
+    --info-gradient-start: #a78bfa;
+    --info-gradient-end: #c084fc;
+
+    --scroll-btn-gradient-start: #ec4899;
+    --scroll-btn-gradient-end: #db2777;
+
+    /* Table */
+    --table-header-bg: linear-gradient(135deg, #ec4899, #db2777);
+    --table-header-start: #ec4899;
+    --table-header-end: #db2777;
 
     /* Mobile Navigation */
-    --mobile-nav-text: #831843;
-    --mobile-nav-toggle-bg: rgba(255, 255, 255, 0.15);
-    --mobile-nav-toggle-border: rgba(255, 192, 203, 0.3);
-    --mobile-nav-toggle-hover-bg: rgba(255, 255, 255, 0.25);
-    --mobile-nav-toggle-active-bg: rgba(255, 255, 255, 0.3);
+    --mobile-nav-bg: var(--bg-primary);
+    --mobile-nav-text: var(--text-primary);
+    --mobile-nav-border: #fbcfe8;
+    --mobile-nav-hover-bg: linear-gradient(135deg, #fdf2f8, #fce7f3);
     --mobile-nav-dropdown-bg: #ffffff;
     --mobile-nav-dropdown-shadow: rgba(236, 72, 153, 0.2);
     --mobile-nav-dropdown-border: rgba(236, 72, 153, 0.1);
     --mobile-nav-item-color: #831843;
     --mobile-nav-item-border: #fbcfe8;
     --mobile-nav-header-bg: linear-gradient(135deg, #fdf2f8, #fce7f3);
-    --mobile-nav-hover-bg: linear-gradient(135deg, #fdf2f8, #fce7f3);
     --mobile-nav-danger-hover-bg: linear-gradient(135deg, #fee2e2, #fecaca);
     --mobile-nav-divider: #fbcfe8;
     --mobile-nav-overlay-bg: rgba(0, 0, 0, 0.5);
 
-    /* Shadows */
-    --card-shadow: 0 4px 6px -1px rgba(236, 72, 153, 0.1);
-    --card-hover-shadow: rgba(236, 72, 153, 0.15);
-    --btn-primary-hover-shadow: rgba(236, 72, 153, 0.4);
-
-    /* Form Colors */
-    --form-focus-shadow: rgba(236, 72, 153, 0.25);
-
-    /* Glass Effect */
+    /* Glass effect */
     --glass-bg: rgba(255, 192, 203, 0.1);
     --glass-border: rgba(236, 72, 153, 0.2);
 
-    /* Login Card */
-    --login-card-bg: rgba(255, 255, 255, 0.95);
+    /* Sidebar */
+    --sidebar-bg: #ffffff;
+    --sidebar-link-color: #be185d;
+    --sidebar-link-hover-bg: #ec4899;
+    --sidebar-link-hover-color: #ffffff;
+    --sidebar-active-bg: #db2777;
+    --sidebar-active-color: #ffffff;
 
-    /* Navbar */
+    /* Login */
+    --login-card-bg: rgba(255, 255, 255, 0.95);
     --navbar-brand-icon-bg: rgba(255, 255, 255, 0.2);
-    --navbar-border: rgba(255, 255, 255, 0.1);
 }
 
-/* Sakura animation */
+/* Sakura petal animation */
 [data-theme="sakura"] .sakura-petal {
     position: fixed;
     width: 10px;
@@ -102,4 +109,38 @@
         transform: translateY(100vh) rotate(360deg);
         opacity: 0;
     }
+}
+
+/* Sidebar nav link fix */
+[data-theme="sakura"] .sidebar .nav-link {
+    color: var(--sidebar-link-color);
+    transition: all 0.2s ease;
+}
+
+[data-theme="sakura"] .sidebar .nav-link:hover {
+    background-color: var(--sidebar-link-hover-bg);
+    color: var(--sidebar-link-hover-color);
+}
+
+[data-theme="sakura"] .sidebar .nav-link.active {
+    background-color: var(--sidebar-active-bg);
+    color: var(--sidebar-active-color) !important;
+}
+
+[data-theme="sakura"] .sidebar .nav-link.active i {
+    color: var(--sidebar-active-color);
+}
+
+[data-theme="sakura"] .sidebar-header {
+    color: var(--sidebar-active-color);
+    font-weight: 600;
+}
+
+[data-theme="sakura"] .sidebar-header i {
+    color: var(--sidebar-active-color);
+}
+
+/* Utility */
+.text-theme-primary {
+    color: var(--primary-color) !important;
 }
