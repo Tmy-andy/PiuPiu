@@ -1,25 +1,25 @@
 [data-theme="forest"] {
     /* Primary Colors - Darker tones */
-    --primary-color: #2d5016;
-    --primary-dark: #1a3009;
-    --secondary-color: #3e6b1f;
-    --success-color: #4a7c23;
-    --warning-color: #b8860b;
-    --danger-color: #8b0000;
+    --primary-color: #4a7c23;
+    --primary-dark: #3e6b1f;
+    --secondary-color: #5a8f2a;
+    --success-color: #6ba032;
+    --warning-color: #d4a015;
+    --danger-color: #c53030;
     
     /* Background Colors - Darker theme */
-    --bg-primary: #1a1f16;
-    --bg-secondary: #202520;
-    --bg-tertiary: #2a3226;
+    --bg-primary: #0f1b0a;
+    --bg-secondary: #1a2814;
+    --bg-tertiary: #243018;
     
     /* Text Colors - Adjusted for dark theme */
     --text-primary: #e8f5e8;
     --text-secondary: #c4e4c4;
-    --text-muted: #9ca89c;
+    --text-muted: #8fa88f;
     
     /* Border Colors - Darker tones */
-    --border-color: #3e6b1f;
-    --border-dark: #2d5016;
+    --border-color: #2d5016;
+    --border-dark: #1a3009;
     --border-focus: #4a7c23;
     
     /* Gradients - Enhanced dark forest gradients */
@@ -52,26 +52,26 @@
     --card-shadow: 0 4px 6px -1px rgba(45, 80, 22, 0.2);
     
     /* Sidebar - Dark theme */
-    --sidebar-bg: #1a1f16;
+    --sidebar-bg: #0f1b0a;
     --sidebar-link-color: #c4e4c4;
     --sidebar-link-hover-bg: #2d5016;
     --sidebar-link-hover-color: #e8f5e8;
     
     /* Mobile Navigation - Dark theme */
-    --mobile-nav-bg: #1a1f16;
+    --mobile-nav-bg: #0f1b0a;
     --mobile-nav-text: #e8f5e8;
-    --mobile-nav-border: #3e6b1f;
-    --mobile-nav-hover-bg: #202520;
-    --mobile-nav-dropdown-bg: #1a1f16;
+    --mobile-nav-border: #2d5016;
+    --mobile-nav-hover-bg: #1a2814;
+    --mobile-nav-dropdown-bg: #0f1b0a;
     --mobile-nav-dropdown-shadow: rgba(45, 80, 22, 0.5);
     --mobile-nav-item-color: #e8f5e8;
-    --mobile-nav-item-border: #3e6b1f;
+    --mobile-nav-item-border: #2d5016;
     --mobile-nav-danger-hover-bg: linear-gradient(135deg, #4a1a1a, #5a2020);
-    --mobile-nav-divider: #3e6b1f;
+    --mobile-nav-divider: #2d5016;
     
     /* Form Colors - Dark theme */
-    --form-control-bg: #202520;
-    --form-control-border: #3e6b1f;
+    --form-control-bg: #1a2814;
+    --form-control-border: #2d5016;
     --form-control-focus-border: #4a7c23;
     
     /* Glass Effect - Dark forest */
@@ -79,7 +79,7 @@
     --glass-border: rgba(62, 107, 31, 0.3);
     
     /* Login Card - Dark theme */
-    --login-card-bg: rgba(26, 31, 22, 0.95);
+    --login-card-bg: rgba(15, 27, 10, 0.95);
     
     /* Navbar Brand - Dark theme */
     --navbar-brand-icon-bg: rgba(232, 245, 232, 0.2);
@@ -121,8 +121,15 @@
 
 /* Enhanced dark forest body background */
 [data-theme="forest"] body {
-    background: linear-gradient(135deg, #1a1f16 0%, #202520 50%, #1a1f16 100%);
-    color: var(--text-primary);
+    background: #0f1b0a !important;
+    color: var(--text-primary) !important;
+}
+
+/* Force dark background for main container */
+[data-theme="forest"] main.container-fluid,
+[data-theme="forest"] .container,
+[data-theme="forest"] .container-fluid {
+    background: #0f1b0a !important;
 }
 
 /* Dark theme form overrides */
@@ -206,6 +213,11 @@
 [data-theme="forest"] .mobile-nav-header {
     background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary));
     border-bottom: 1px solid var(--border-color);
+    color: var(--text-primary);
+}
+
+[data-theme="forest"] .mobile-nav-header strong {
+    color: var(--success-color);
 }
 
 [data-theme="forest"] .mobile-nav-item {
@@ -296,4 +308,23 @@
 
 [data-theme="forest"] .scroll-to-top:hover {
     box-shadow: 0 8px 25px rgba(45, 80, 22, 0.4);
+}
+
+/* Override any remaining light backgrounds */
+[data-theme="forest"] * {
+    scrollbar-color: var(--primary-color) var(--bg-secondary);
+}
+
+[data-theme="forest"] ::-webkit-scrollbar {
+    width: 8px;
+    background: var(--bg-secondary);
+}
+
+[data-theme="forest"] ::-webkit-scrollbar-thumb {
+    background: var(--primary-color);
+    border-radius: 4px;
+}
+
+[data-theme="forest"] ::-webkit-scrollbar-thumb:hover {
+    background: var(--success-color);
 }
