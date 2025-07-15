@@ -30,3 +30,9 @@
 
 }
 
+.sidebar-header:hover {
+    background-color: unset !important;
+    color: inherit !important;
+    cursor: default !important;
+}
+
