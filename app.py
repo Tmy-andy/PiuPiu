@@ -1287,8 +1287,6 @@ def frequency():
 @app.route('/activity_log')
 @admin_required
 def activity_log():
-    if current_user.member_id != 'ADMIN-001':
-        return render_template("activity_log.html", logs=[])
     logs = ActivityLog.query.order_by(ActivityLog.timestamp.desc()).all()
     return render_template("activity_log.html", logs=logs)
 
