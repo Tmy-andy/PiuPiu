@@ -124,6 +124,10 @@
     color: var(--text-secondary) !important;
 }
 
+[data-theme="dark"] .card-title {
+    color: var(--text-primary) !important;
+}
+
 /* Modal header */
 [data-theme="dark"] .modal-header {
     background-color: var(--primary-color);
