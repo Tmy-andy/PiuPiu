@@ -142,3 +142,91 @@
     cursor: default !important;
 }
 
+/* Modal header */
+[data-theme] .modal-header {
+    background-color: var(--primary-color);
+    color: white;
+    border-bottom: 1px solid var(--border-color);
+}
+
+/* Icon hoặc tiêu đề trong modal header */
+[data-theme] .modal-header .modal-title i {
+    color: white;
+}
+
+/* Nút close trắng */
+[data-theme] .btn-close-white {
+    filter: brightness(0) invert(1);
+}
+
+/* Modal footer */
+[data-theme] .modal-footer {
+    background-color: var(--card-bg);
+    border-top: 1px solid var(--border-color);
+}
+
+/* Tabs trong modal */
+[data-theme] .nav-tabs .nav-link {
+    background-color: var(--input-bg);
+    color: var(--text-secondary);
+    border: 1px solid var(--border-color);
+    margin-right: 0.5rem;
+    border-radius: 0.375rem 0.375rem 0 0;
+}
+
+[data-theme] .nav-tabs .nav-link.active {
+    background-color: var(--bg-secondary);
+    color: var(--primary-color);
+    border-bottom: 2px solid var(--primary-color);
+}
+
+/* Tab content */
+[data-theme] .tab-content {
+    background-color: var(--card-bg);
+    padding: 1rem;
+    border: 1px solid var(--border-color);
+    border-top: none;
+    border-radius: 0 0 0.375rem 0.375rem;
+}
+
+/* Form control trong modal */
+[data-theme] .modal-content .form-control,
+[data-theme] .modal-content .form-select {
+    background-color: var(--input-bg);
+    color: var(--text-primary);
+    border: 1px solid var(--input-border);
+}
+
+/* Placeholder & Label */
+[data-theme] .modal-content .form-label {
+    color: var(--text-primary);
+}
+
+[data-theme] .modal-content .form-text {
+    color: var(--text-muted);
+}
+
+/* Button trong modal */
+[data-theme] .modal-content .btn-primary {
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+    border: none;
+    color: white;
+}
+[data-theme] .modal-content .btn-secondary {
+    background-color: var(--secondary-color);
+    color: white;
+    border: none;
+}
+[data-theme] .modal-content .btn-success {
+    background-color: var(--success-color);
+    color: white;
+    border: none;
+}
+[data-theme] .modal-content .btn-outline-primary {
+    border-color: var(--primary-color);
+    color: var(--primary-color);
+}
+[data-theme] .modal-content .btn-outline-primary:hover {
+    background-color: var(--primary-color);
+    color: white;
+}
