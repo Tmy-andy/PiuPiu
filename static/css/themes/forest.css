@@ -61,6 +61,13 @@
     /* Optional extensions */
     --navbar-brand-icon-bg: rgba(255, 255, 255, 0.2);
     --login-card-bg: rgba(255, 255, 255, 0.95);
+
+    /* Sidebar customizations */
+    --sidebar-link-color: var(--text-secondary);
+    --sidebar-link-hover-bg: var(--primary-color);
+    --sidebar-link-hover-color: #ffffff;
+    --sidebar-active-bg: var(--primary-dark);
+    --sidebar-active-color: #ffffff;
 }
 
 /* Rơi lá rừng */
@@ -94,4 +101,24 @@
         transform: translateY(100vh) rotate(360deg) translateX(0);
         opacity: 0;
     }
+}
+
+/* Sidebar nav link fix */
+[data-theme="forest"] .sidebar .nav-link {
+    color: var(--sidebar-link-color);
+    transition: all 0.2s ease;
+}
+
+[data-theme="forest"] .sidebar .nav-link:hover {
+    background-color: var(--sidebar-link-hover-bg);
+    color: var(--sidebar-link-hover-color);
+}
+
+[data-theme="forest"] .sidebar .nav-link.active {
+    background-color: var(--sidebar-active-bg);
+    color: var(--sidebar-active-color) !important;
+}
+
+[data-theme="forest"] .sidebar .nav-link.active i {
+    color: var(--sidebar-active-color);
 }
