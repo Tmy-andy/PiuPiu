@@ -193,24 +193,24 @@
 }
 
 [data-theme="galaxy"] .table {
-    background-color: var(--card-bg);
-    color: var(--text-color);
-    border-color: var(--border-color);
+    background-color: var(--card-bg) !important;
+    color: var(--text-color) !important;
+    border-color: var(--border-color) !important;
 }
 
 [data-theme="galaxy"] .table thead th {
-    background: var(--table-header-bg);
-    color: white;
-    border: none;
+    background: var(--table-header-bg) !important;
+    color: white !important;
+    border: none !important;
 }
 
 [data-theme="galaxy"] .table tbody tr {
-    background-color: var(--card-bg);
-    color: var(--text-color);
+    background-color: var(--card-bg) !important;
+    color: var(--text-color) !important;
 }
 
 [data-theme="galaxy"] .table tbody tr:hover {
-    background-color: rgba(var(--primary-color-rgb, 14,165,233), 0.05);
+    background-color: rgba(14, 165, 233, 0.05) !important;
 }
 
 [data-theme="galaxy"] .badge.bg-primary {
