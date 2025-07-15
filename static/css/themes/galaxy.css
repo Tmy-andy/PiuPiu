@@ -179,7 +179,15 @@
     color: var(--sidebar-active-color);
 }
 
+[data-theme="galaxy"] .card-title {
+    color: var(--text-primary) !important;
+}
+
 /* Utility */
 .text-theme-primary {
     color: var(--primary-color) !important;
+}
+
+.text-theme-secondary {
+    color: var(--text-secondary) !important;
 }
