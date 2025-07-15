@@ -183,6 +183,11 @@
     color: var(--text-primary) !important;
 }
 
+[data-theme="galaxy"] .form-label {
+    color: var(--text-primary);
+}
+
+
 /* Utility */
 .text-theme-primary {
     color: var(--primary-color) !important;
