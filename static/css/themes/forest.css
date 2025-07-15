@@ -119,17 +119,15 @@
     }
 }
 
-/* Enhanced dark forest body background */
 [data-theme="forest"] body {
-    background: #0f1b0a !important;
+    background: var(--bg-primary) !important;
     color: var(--text-primary) !important;
 }
 
-/* Force dark background for main container */
 [data-theme="forest"] main.container-fluid,
 [data-theme="forest"] .container,
 [data-theme="forest"] .container-fluid {
-    background: #0f1b0a !important;
+    background: var(--bg-primary) !important;
 }
 
 /* Dark theme form overrides */
