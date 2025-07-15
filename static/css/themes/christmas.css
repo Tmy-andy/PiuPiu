@@ -1,0 +1,90 @@
+[data-theme="christmas"] {
+    --primary-color: #22c55e;
+    --primary-dark: #15803d;
+    --primary-color-rgba: 34, 197, 94;
+    --secondary-color: #dc2626;
+    --success-color: #16a34a;
+    --warning-color: #facc15;
+    --danger-color: #b91c1c;
+
+    --light-bg: #f0fdf4;
+    --bg-primary: #e6fffa;
+    --bg-secondary: #f0fdf4;
+
+    --text-color: #14532d;
+    --text-muted: #166534;
+    --text-primary: #14532d;
+    --text-secondary: #166534;
+
+    --border-color: #bbf7d0;
+    --card-shadow: 0 4px 6px -1px rgba(34, 197, 94, 0.15);
+
+    --card-bg: #ffffff;
+    --input-bg: #ffffff;
+    --input-border: #86efac;
+
+    --navbar-bg: linear-gradient(135deg, #22c55e 0%, #b91c1c 100%);
+    --navbar-gradient-start: #22c55e;
+    --navbar-gradient-end: #b91c1c;
+    --stats-card-bg: linear-gradient(135deg, #15803d, #dc2626);
+
+    --success-gradient-start: #15803d;
+    --success-gradient-end: #22c55e;
+    --warning-gradient-start: #facc15;
+    --warning-gradient-end: #eab308;
+    --info-gradient-start: #0284c7;
+    --info-gradient-end: #0ea5e9;
+
+    --scroll-btn-gradient-start: #15803d;
+    --scroll-btn-gradient-end: #b91c1c;
+
+    --table-header-bg: linear-gradient(135deg, #22c55e, #15803d);
+    --table-header-start: #22c55e;
+    --table-header-end: #15803d;
+
+    --mobile-nav-bg: var(--bg-primary);
+    --mobile-nav-text: var(--text-primary);
+    --mobile-nav-border: #86efac;
+    --mobile-nav-hover-bg: #ecfdf5;
+
+    --glass-bg: rgba(22, 163, 74, 0.1);
+    --glass-border: rgba(134, 239, 172, 0.2);
+
+    --sidebar-bg: #ffffff;
+    --sidebar-link-color: #14532d;
+    --sidebar-link-hover-bg: #22c55e;
+    --sidebar-link-hover-color: #ffffff;
+    --sidebar-active-bg: #15803d;
+    --sidebar-active-color: #ffffff;
+
+    --login-card-bg: rgba(255, 255, 255, 0.95);
+    --navbar-brand-icon-bg: rgba(255, 255, 255, 0.2);
+}
+
+/* Christmas effect: falling snow */
+[data-theme="christmas"] .snowflake {
+    position: fixed;
+    top: -10px;
+    width: 10px;
+    height: 10px;
+    background: white;
+    border-radius: 50%;
+    opacity: 0.8;
+    animation: snowFall 10s linear infinite;
+    pointer-events: none;
+    z-index: -1;
+}
+
+@keyframes snowFall {
+    0% {
+        transform: translateY(-100px);
+        opacity: 0;
+    }
+    10% {
+        opacity: 0.8;
+    }
+    100% {
+        transform: translateY(100vh);
+        opacity: 0;
+    }
+}

@@ -1,0 +1,85 @@
+[data-theme="halloween"] {
+    --primary-color: #f97316;
+    --primary-dark: #c2410c;
+    --primary-color-rgba: 249, 115, 22;
+    --secondary-color: #78350f;
+    --success-color: #22c55e;
+    --warning-color: #eab308;
+    --danger-color: #dc2626;
+
+    --light-bg: #1c1917;
+    --bg-primary: #1c1917;
+    --bg-secondary: #292524;
+
+    --text-color: #fef3c7;
+    --text-muted: #fcd34d;
+    --text-primary: #fef3c7;
+    --text-secondary: #fde68a;
+
+    --border-color: #92400e;
+    --card-shadow: 0 4px 6px -1px rgba(251, 146, 60, 0.15);
+
+    --card-bg: #2c1a10;
+    --input-bg: #3b2f2f;
+    --input-border: #f59e0b;
+
+    --navbar-bg: linear-gradient(135deg, #3b2f2f 0%, #5a1f1f 100%);
+    --navbar-gradient-start: #3b2f2f;
+    --navbar-gradient-end: #5a1f1f;
+    --stats-card-bg: linear-gradient(135deg, #78350f, #f97316);
+
+    --success-gradient-start: #15803d;
+    --success-gradient-end: #22c55e;
+    --warning-gradient-start: #ca8a04;
+    --warning-gradient-end: #facc15;
+    --info-gradient-start: #4b5563;
+    --info-gradient-end: #6b7280;
+
+    --scroll-btn-gradient-start: #78350f;
+    --scroll-btn-gradient-end: #f97316;
+
+    --table-header-bg: linear-gradient(135deg, #f97316, #c2410c);
+    --table-header-start: #f97316;
+    --table-header-end: #c2410c;
+
+    --mobile-nav-bg: var(--bg-primary);
+    --mobile-nav-text: var(--text-primary);
+    --mobile-nav-border: #78350f;
+    --mobile-nav-hover-bg: #3b2f2f;
+    --mobile-nav-dropdown-bg: #2c1a10;
+
+    --glass-bg: rgba(251, 146, 60, 0.05);
+    --glass-border: rgba(251, 146, 60, 0.2);
+
+    --sidebar-bg: #2c1a10;
+    --sidebar-link-color: #facc15;
+    --sidebar-link-hover-bg: #f97316;
+    --sidebar-link-hover-color: #ffffff;
+    --sidebar-active-bg: #c2410c;
+    --sidebar-active-color: #ffffff;
+
+    --login-card-bg: rgba(44, 26, 16, 0.95);
+    --navbar-brand-icon-bg: rgba(255, 255, 255, 0.15);
+}
+
+/* Halloween effect: falling bats */
+[data-theme="halloween"] .bat {
+    position: fixed;
+    width: 16px;
+    height: 16px;
+    background: url('/static/img/bat.svg') no-repeat center;
+    background-size: contain;
+    animation: flyBat 10s linear infinite;
+    pointer-events: none;
+    z-index: -1;
+    opacity: 0.6;
+}
+
+@keyframes flyBat {
+    0% {
+        transform: translateY(-100vh) rotate(0deg);
+    }
+    100% {
+        transform: translateY(100vh) rotate(360deg);
+    }
+}
