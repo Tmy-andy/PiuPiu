@@ -8,59 +8,51 @@
     --danger-color: #dc2626;
     
     /* Background Colors */
-    --light-bg: #f0fdf4;
-    --card-bg: #ffffff;
-    --input-bg: #ffffff;
+    --bg-primary: #ffffff;
+    --bg-secondary: #f0fdf4;
+    --bg-tertiary: #dcfce7;
     
     /* Text Colors */
-    --text-color: #14532d;
-    --text-muted: #166534;
+    --text-primary: #14532d;
+    --text-secondary: #166534;
+    --text-muted: #4ade80;
     
     /* Border Colors */
     --border-color: #bbf7d0;
-    --input-border: #86efac;
-    --form-border-color: #86efac;
+    --border-dark: #86efac;
+    --border-focus: #16a34a;
     
     /* Gradients */
-    --navbar-bg: linear-gradient(135deg, #2d5016 0%, #3e6b1f 30%, #4a7c23 60%, #5a8f2a 100%);
-    --mobile-nav-bg: linear-gradient(135deg, #2d5016 0%, #3e6b1f 30%, #4a7c23 60%, #5a8f2a 100%);
-    --stats-card-gradient: linear-gradient(135deg, #166534 0%, #15803d 100%);
-    --stats-success-gradient: linear-gradient(135deg, #15803d 0%, #22c55e 100%);
-    --stats-warning-gradient: linear-gradient(135deg, #ca8a04 0%, #eab308 100%);
-    --stats-info-gradient: linear-gradient(135deg, #0369a1 0%, #0284c7 100%);
-    --table-header-gradient: linear-gradient(135deg, #16a34a, #15803d);
-    --scroll-btn-bg: linear-gradient(135deg, #16a34a 0%, #15803d 100%);
+    --gradient-primary: linear-gradient(135deg, #2d5016 0%, #3e6b1f 30%, #4a7c23 60%, #5a8f2a 100%);
+    --gradient-secondary: linear-gradient(135deg, #f0fdf4, #dcfce7);
+    --gradient-success: linear-gradient(135deg, #15803d 0%, #22c55e 100%);
+    --gradient-warning: linear-gradient(135deg, #ca8a04 0%, #eab308 100%);
+    --gradient-info: linear-gradient(135deg, #0369a1 0%, #0284c7 100%);
     
-    /* Sidebar Colors */
+    /* Shadows */
+    --shadow-md: 0 4px 6px -1px rgba(22, 163, 74, 0.1);
+    --shadow-hover: 0 8px 25px -5px rgba(22, 163, 74, 0.15);
+    --shadow-focus: 0 0 0 0.2rem rgba(22, 163, 74, 0.25);
+    
+    /* Sidebar */
     --sidebar-bg: #ffffff;
     --sidebar-link-color: #166534;
     --sidebar-link-hover-bg: #16a34a;
     --sidebar-link-hover-color: #ffffff;
     
     /* Mobile Navigation */
-    --mobile-nav-text: #ffffff;
-    --mobile-nav-toggle-bg: rgba(255, 255, 255, 0.15);
-    --mobile-nav-toggle-border: rgba(255, 255, 255, 0.3);
-    --mobile-nav-toggle-hover-bg: rgba(255, 255, 255, 0.25);
-    --mobile-nav-toggle-active-bg: rgba(255, 255, 255, 0.3);
     --mobile-nav-dropdown-bg: #ffffff;
     --mobile-nav-dropdown-shadow: rgba(22, 163, 74, 0.3);
-    --mobile-nav-dropdown-border: rgba(22, 163, 74, 0.1);
     --mobile-nav-item-color: #14532d;
     --mobile-nav-item-border: #dcfce7;
-    --mobile-nav-header-bg: linear-gradient(135deg, #f0fdf4, #dcfce7);
     --mobile-nav-hover-bg: linear-gradient(135deg, #f0fdf4, #dcfce7);
     --mobile-nav-danger-hover-bg: linear-gradient(135deg, #fee2e2, #fecaca);
     --mobile-nav-divider: #bbf7d0;
-    --mobile-nav-overlay-bg: rgba(0, 0, 0, 0.5);
-    
-    /* Shadows */
-    --card-shadow: 0 4px 6px -1px rgba(22, 163, 74, 0.1);
-    --card-hover-shadow: rgba(22, 163, 74, 0.15);
-    --btn-primary-hover-shadow: rgba(22, 163, 74, 0.4);
     
     /* Form Colors */
-    --form-focus-shadow: rgba(22, 163, 74, 0.25);
+    --form-control-bg: #ffffff;
+    --form-control-border: #86efac;
+    --form-control-focus-border: #16a34a;
     
     /* Glass Effect */
     --glass-bg: rgba(22, 163, 74, 0.1);
@@ -69,12 +61,11 @@
     /* Login Card */
     --login-card-bg: rgba(255, 255, 255, 0.95);
     
-    /* Navbar */
+    /* Navbar Brand */
     --navbar-brand-icon-bg: rgba(255, 255, 255, 0.2);
-    --navbar-border: rgba(255, 255, 255, 0.1);
 }
 
-/* Forest theme specific enhancements */
+/* Forest theme specific effects */
 [data-theme="forest"] .forest-leaf {
     position: fixed;
     width: 8px;
@@ -92,17 +83,36 @@
         transform: translateY(-100vh) rotate(0deg) translateX(0);
         opacity: 0;
     }
-    10% {
+    10%, 90% {
         opacity: 0.6;
     }
     50% {
         transform: translateY(50vh) rotate(180deg) translateX(20px);
     }
-    90% {
-        opacity: 0.6;
-    }
     100% {
         transform: translateY(100vh) rotate(360deg) translateX(0);
         opacity: 0;
     }
+}
+
+/* Forest theme form overrides */
+[data-theme="forest"] .form-control,
+[data-theme="forest"] .form-select {
+    background-color: var(--form-control-bg);
+    border-color: var(--form-control-border);
+}
+
+[data-theme="forest"] .form-control:focus,
+[data-theme="forest"] .form-select:focus {
+    border-color: var(--form-control-focus-border);
+    box-shadow: 0 0 0 0.2rem rgba(22, 163, 74, 0.25);
+}
+
+/* Forest theme mobile navigation enhancements */
+[data-theme="forest"] .mobile-nav-dropdown {
+    box-shadow: 0 20px 25px -5px var(--mobile-nav-dropdown-shadow);
+}
+
+[data-theme="forest"] .mobile-nav-item.danger:hover {
+    background: var(--mobile-nav-danger-hover-bg);
 }
