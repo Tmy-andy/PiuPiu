@@ -192,40 +192,66 @@
     color: var(--text-muted);
 }
 
+[data-theme="galaxy"] .card {
+    background-color: var(--card-bg);
+    color: var(--text-color);
+    border: 1px solid var(--border-color);
+    box-shadow: var(--card-shadow);
+}
+
+[data-theme="galaxy"] .card-header {
+    background-color: var(--input-bg); /* hoặc var(--card-bg) nếu muốn cùng màu toàn card */
+    color: var(--text-color);
+    border-bottom: 1px solid var(--border-color);
+}
+
+[data-theme="galaxy"] .card-title {
+    color: var(--text-color);
+}
+
 [data-theme="galaxy"] .table {
-    background-color: var(--card-bg) !important;
-    color: var(--text-color) !important;
-    border-color: var(--border-color) !important;
+    background-color: var(--card-bg);
+    color: var(--text-color);
+    border-color: var(--border-color);
 }
 
 [data-theme="galaxy"] .table thead th {
-    background: var(--table-header-bg) !important;
-    color: white !important;
-    border: none !important;
+    background: var(--table-header-bg);
+    color: white;
+    border: none;
 }
 
 [data-theme="galaxy"] .table tbody tr {
-    background-color: var(--card-bg) !important;
-    color: var(--text-color) !important;
+    background-color: var(--card-bg);
+    color: var(--text-color);
+    border-top: 1px solid var(--border-color);
 }
 
 [data-theme="galaxy"] .table tbody tr:hover {
-    background-color: rgba(14, 165, 233, 0.05) !important;
+    background-color: var(--glass-bg);
 }
 
 [data-theme="galaxy"] .badge.bg-primary {
-    background-color: var(--primary-color) !important;
-    color: white !important;
+    background-color: var(--primary-color);
+    color: white;
 }
 
-[data-theme="galaxy"] .btn-outline-primary {
+[data-theme="galaxy"] .badge.bg-success {
+    background-color: var(--success-color);
+    color: white;
+}
+
+[data-theme="galaxy"] .badge.bg-secondary {
+    background-color: var(--secondary-color);
+    color: white;
+}
+
+[data-theme="galaxy"] .text-theme-primary {
     color: var(--primary-color) !important;
-    border-color: var(--primary-color) !important;
 }
 
-[data-theme="galaxy"] .btn-outline-primary:hover {
-    background-color: var(--primary-color) !important;
-    color: white !important;
+[data-theme="galaxy"] .text-muted {
+    color: var(--text-muted) !important;
 }
 
 /* Utility */
