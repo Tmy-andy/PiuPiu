@@ -1,28 +1,93 @@
 [data-theme="galaxy"] {
+    /* Base Colors */
     --primary-color: #0ea5e9;
     --primary-dark: #0369a1;
+    --primary-color-rgba: 14, 165, 233;
+
     --secondary-color: #1e293b;
     --success-color: #10b981;
     --warning-color: #fbbf24;
     --danger-color: #ef4444;
+
+    /* Background */
     --light-bg: #0a0e1a;
-    --card-shadow: 0 4px 6px -1px rgba(14, 165, 233, 0.15);
-    --navbar-bg: linear-gradient(135deg, #0b0c1a 0%, #0d1a2b 40%, #072c47 100%);
-    --stats-card-bg: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+    --bg-primary: #0a0e1a;
+    --bg-secondary: #0f172a;
+
+    /* Text */
     --text-color: #e0f2fe;
     --text-muted: #94a3b8;
+    --text-primary: #e0f2fe;
+    --text-secondary: #94a3b8;
+
+    /* Borders + Shadows */
     --border-color: #334155;
+    --card-shadow: 0 4px 6px -1px rgba(14, 165, 233, 0.15);
+
+    /* Cards & Form */
     --card-bg: #0f172a;
     --input-bg: #1e293b;
     --input-border: #334155;
+
+    /* Gradients */
+    --navbar-bg: linear-gradient(135deg, #0b0c1a 0%, #0d1a2b 40%, #072c47 100%);
+    --navbar-gradient-start: #0b0c1a;
+    --navbar-gradient-end: #072c47;
+    --stats-card-bg: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+
+    --success-gradient-start: #0f766e;
+    --success-gradient-end: #22d3ee;
+    --warning-gradient-start: #facc15;
+    --warning-gradient-end: #fbbf24;
+    --info-gradient-start: #0284c7;
+    --info-gradient-end: #0ea5e9;
+
+    --scroll-btn-gradient-start: #0369a1;
+    --scroll-btn-gradient-end: #0ea5e9;
+
+    /* Tables */
     --table-header-bg: linear-gradient(135deg, #0369a1, #0ea5e9);
+    --table-header-start: #0369a1;
+    --table-header-end: #0ea5e9;
+
+    /* Mobile Navigation */
+    --mobile-nav-bg: var(--bg-primary);
+    --mobile-nav-text: var(--text-primary);
+    --mobile-nav-border: #334155;
+    --mobile-nav-hover-bg: #1e293b;
+    --mobile-nav-dropdown-bg: #0f172a;
+    --mobile-nav-dropdown-shadow: rgba(14, 165, 233, 0.2);
+    --mobile-nav-dropdown-border: rgba(14, 165, 233, 0.1);
+    --mobile-nav-item-color: var(--text-primary);
+    --mobile-nav-item-border: #334155;
+    --mobile-nav-header-bg: linear-gradient(135deg, #1e293b, #0f172a);
+    --mobile-nav-danger-hover-bg: linear-gradient(135deg, #4b1e1e, #5c2a2a);
+    --mobile-nav-divider: #334155;
+    --mobile-nav-overlay-bg: rgba(0, 0, 0, 0.5);
+
+    /* Glass */
     --glass-bg: rgba(14, 165, 233, 0.05);
     --glass-border: rgba(14, 165, 233, 0.2);
+
+    /* Sidebar */
+    --sidebar-bg: #0f172a;
+    --sidebar-link-color: #94a3b8;
+    --sidebar-link-hover-bg: #0ea5e9;
+    --sidebar-link-hover-color: #ffffff;
+    --sidebar-active-bg: #0369a1;
+    --sidebar-active-color: #ffffff;
+
+    /* Login Card & Icon BG */
+    --login-card-bg: rgba(15, 23, 42, 0.95);
+    --navbar-brand-icon-bg: rgba(255, 255, 255, 0.15);
 }
 
+/* Background star field */
 [data-theme="galaxy"] body {
     position: relative;
     overflow-x: hidden;
+    background: var(--bg-primary);
+    color: var(--text-primary);
 }
 
 [data-theme="galaxy"] body::before {
@@ -43,6 +108,7 @@
     50% { opacity: 0.3; }
 }
 
+/* Cursor effect */
 [data-theme="galaxy"] .galaxy-cursor {
     position: fixed;
     width: 20px;
@@ -56,6 +122,7 @@
     box-shadow: 0 0 20px rgba(14,165,233,0.6);
 }
 
+/* Shooting star */
 [data-theme="galaxy"] .shooting-star {
     position: fixed;
     width: 2px;
@@ -81,4 +148,38 @@
         opacity: 0;
         transform: translateX(100vw) translateY(100vh);
     }
+}
+
+/* Sidebar link highlight */
+[data-theme="galaxy"] .sidebar .nav-link {
+    color: var(--sidebar-link-color);
+    transition: all 0.2s ease;
+}
+
+[data-theme="galaxy"] .sidebar .nav-link:hover {
+    background-color: var(--sidebar-link-hover-bg);
+    color: var(--sidebar-link-hover-color);
+}
+
+[data-theme="galaxy"] .sidebar .nav-link.active {
+    background-color: var(--sidebar-active-bg);
+    color: var(--sidebar-active-color) !important;
+}
+
+[data-theme="galaxy"] .sidebar .nav-link.active i {
+    color: var(--sidebar-active-color);
+}
+
+[data-theme="galaxy"] .sidebar-header {
+    color: var(--sidebar-active-color);
+    font-weight: 600;
+}
+
+[data-theme="galaxy"] .sidebar-header i {
+    color: var(--sidebar-active-color);
+}
+
+/* Utility */
+.text-theme-primary {
+    color: var(--primary-color) !important;
 }
