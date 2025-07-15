@@ -57,7 +57,7 @@
 
         {% if user.role == 'admin' %}
         <a class="nav-link {% if request.endpoint == 'frequency' %}active{% endif %}" href="{{ url_for('frequency') }}">
-            <i class="bi bi-clock-history"></i> Tần suất chơi
+            <i class="fas fa-history"></i> Tần suất chơi
             {% if warning_count > 0 %}
             <span class="badge bg-danger ms-2">{{ warning_count }}</span>
             {% endif %}
