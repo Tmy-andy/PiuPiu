@@ -1,8 +1,8 @@
 [data-theme="sakura"] {
     /* Base Color System */
-    --primary-color: #ec4899;
-    --primary-dark: #db2777;
-    --secondary-color: #be185d;
+    --primary-color: #f7a8c3;
+    --primary-dark: #f37aa5;
+    --secondary-color: #de6d9f;
     --success-color: #059669;
     --warning-color: #d97706;
     --danger-color: #dc2626;
@@ -14,25 +14,25 @@
     --bg-secondary: #fce7f3;
 
     /* Text */
-    --text-color: #831843;
-    --text-muted: #be185d;
-    --text-primary: #831843;
-    --text-secondary: #be185d;
+    --text-color: #824c6a;
+    --text-muted: #de6d9f;
+    --text-primary: #824c6a;
+    --text-secondary: #de6d9f;
 
     /* Border + Shadow */
-    --border-color: #fbcfe8;
+    --border-color: #fad8e9;
     --card-shadow: 0 4px 6px -1px rgba(236, 72, 153, 0.1);
 
     /* Card + Form */
     --card-bg: #ffffff;
     --input-bg: #ffffff;
-    --input-border: #f9a8d4;
+    --input-border: #fcd5e6;
 
     /* Gradients */
     --navbar-bg: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
     --navbar-gradient-start: #ff9a9e;
     --navbar-gradient-end: #fecfef;
-    --stats-card-bg: linear-gradient(135deg, #be185d 0%, #ec4899 100%);
+    --stats-card-bg: linear-gradient(135deg, #de6d9f 0%, #f7a8c3 100%);
 
     --success-gradient-start: #10b981;
     --success-gradient-end: #34d399;
@@ -41,39 +41,39 @@
     --info-gradient-start: #a78bfa;
     --info-gradient-end: #c084fc;
 
-    --scroll-btn-gradient-start: #ec4899;
-    --scroll-btn-gradient-end: #db2777;
+    --scroll-btn-gradient-start: #f7a8c3;
+    --scroll-btn-gradient-end: #f37aa5;
 
     /* Table */
-    --table-header-bg: linear-gradient(135deg, #ec4899, #db2777);
-    --table-header-start: #ec4899;
-    --table-header-end: #db2777;
+    --table-header-bg: linear-gradient(135deg, #f7a8c3, #f37aa5);
+    --table-header-start: #f7a8c3;
+    --table-header-end: #f37aa5;
 
     /* Mobile Navigation */
     --mobile-nav-bg: var(--bg-primary);
     --mobile-nav-text: var(--text-primary);
-    --mobile-nav-border: #fbcfe8;
+    --mobile-nav-border: #fad8e9;
     --mobile-nav-hover-bg: linear-gradient(135deg, #fdf2f8, #fce7f3);
     --mobile-nav-dropdown-bg: #ffffff;
     --mobile-nav-dropdown-shadow: rgba(236, 72, 153, 0.2);
     --mobile-nav-dropdown-border: rgba(236, 72, 153, 0.1);
-    --mobile-nav-item-color: #831843;
-    --mobile-nav-item-border: #fbcfe8;
+    --mobile-nav-item-color: #824c6a;
+    --mobile-nav-item-border: #fad8e9;
     --mobile-nav-header-bg: linear-gradient(135deg, #fdf2f8, #fce7f3);
     --mobile-nav-danger-hover-bg: linear-gradient(135deg, #fee2e2, #fecaca);
-    --mobile-nav-divider: #fbcfe8;
+    --mobile-nav-divider: #fad8e9;
     --mobile-nav-overlay-bg: rgba(0, 0, 0, 0.5);
 
     /* Glass effect */
-    --glass-bg: rgba(255, 192, 203, 0.1);
+    --glass-bg: rgba(250,200,210,0.15);
     --glass-border: rgba(236, 72, 153, 0.2);
 
     /* Sidebar */
     --sidebar-bg: #ffffff;
-    --sidebar-link-color: #be185d;
-    --sidebar-link-hover-bg: #ec4899;
+    --sidebar-link-color: #de6d9f;
+    --sidebar-link-hover-bg: #f7a8c3;
     --sidebar-link-hover-color: #ffffff;
-    --sidebar-active-bg: #db2777;
+    --sidebar-active-bg: #f37aa5;
     --sidebar-active-color: #ffffff;
 
     /* Login */
