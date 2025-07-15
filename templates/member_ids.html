@@ -125,10 +125,10 @@
                                         <i class="fas fa-user me-1 text-theme-primary"></i>
                                         {{ mid.used_by_name }}
                                     {% else %}
-                                        <span class="text-muted">--</span>
+                                        <span class="text-theme-primary">--</span>
                                     {% endif %}
                                 </td>
-                                <td class="text-muted">
+                                <td class="text-theme-primary">
                                     {{ mid.created_at.strftime('%Y-%m-%d') if mid.created_at else '' }} 
                                 </td>
                             </tr>
@@ -138,9 +138,9 @@
                 </div>
                 {% else %}
                 <div class="text-center py-5">
-                    <i class="fas fa-id-card fa-3x text-muted mb-3"></i>
-                    <h5 class="text-muted">Chưa có mã thành viên nào</h5>
-                    <p class="text-muted">Hãy thêm mã thành viên để bắt đầu</p>
+                    <i class="fas fa-id-card fa-3x text-theme-primary mb-3"></i>
+                    <h5 class="text-theme-primary">Chưa có mã thành viên nào</h5>
+                    <p class="text-theme-primary">Hãy thêm mã thành viên để bắt đầu</p>
                 </div>
                 {% endif %}
             </div>

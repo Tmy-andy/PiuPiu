@@ -17,7 +17,7 @@
                     <i class="bi bi-clock-history me-2 text-warning"></i>
                     Tần suất tham gia trò chơi
                 </h1>
-                <p class="card-text text-muted">Theo dõi tình trạng tham gia của các thành viên</p>
+                <p class="card-text text-theme-primary">Theo dõi tình trạng tham gia của các thành viên</p>
             </div>
         </div>
 
@@ -87,12 +87,12 @@
                                 </td>
                                 <td>
                                     {% if entry.last_play %}
-                                        <span class="text-muted">
+                                        <span class="text-theme-primary">
                                             <i class="fas fa-calendar-alt me-1"></i>
                                             {{ entry.last_play.strftime("%d/%m/%Y") }}
                                         </span>
                                     {% else %}
-                                        <span class="text-muted fst-italic">
+                                        <span class="text-theme-primary fst-italic">
                                             <i class="fas fa-question-circle me-1"></i>
                                             Chưa từng chơi
                                         </span>
@@ -113,7 +113,7 @@
                 <div class="text-center py-5">
                     <i class="fas fa-smile-beam fa-4x text-success mb-3"></i>
                     <h4 class="text-success fw-bold">Tuyệt vời!</h4>
-                    <p class="text-muted mb-4">Không có thành viên nào bị cảnh báo</p>
+                    <p class="text-theme-primary mb-4">Không có thành viên nào bị cảnh báo</p>
                     <div class="d-flex justify-content-center">
                         <div class="badge bg-success fs-6 px-3 py-2">
                             <i class="fas fa-check-circle me-2"></i>

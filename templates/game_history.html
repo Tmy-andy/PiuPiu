@@ -18,7 +18,7 @@
                             <i class="fas fa-history me-2 text-theme-primary"></i>
                             Lịch sử các ván chơi
                         </h1>
-                        <p class="card-text text-muted mb-0">Quản lý và theo dõi các ván game đã diễn ra</p>
+                        <p class="card-text text-theme-primary mb-0">Quản lý và theo dõi các ván game đã diễn ra</p>
                     </div>
                     {% if session.user_role == 'admin' %}
                     <button class="btn btn-primary btn-lg" data-bs-toggle="modal" data-bs-target="#newGameModal">
@@ -91,10 +91,10 @@
                             <tr class="game-row" style="cursor: pointer;">
                                 <td>
                                     <div class="d-flex align-items-center">
-                                        <i class="fas fa-calendar-alt text-muted me-2"></i>
+                                        <i class="fas fa-calendar-alt text-theme-primary me-2"></i>
                                         <div>
                                             <span class="fw-semibold">{{ game.created_at.strftime('%d/%m/%Y') }}</span>
-                                            <div class="small text-muted d-none d-md-block">{{ game.created_at.strftime('%H:%M') }}</div>
+                                            <div class="small text-theme-primary d-none d-md-block">{{ game.created_at.strftime('%H:%M') }}</div>
                                         </div>
                                     </div>
                                 </td>
@@ -122,7 +122,7 @@
                                                     <span class="badge bg-secondary me-1">
                                                     {{ p.player.member_id[-3:] if p.player else "None" }}
                                                 </span>
-                                                    <span class="text-muted"> : </span>
+                                                    <span class="text-theme-primary"> : </span>
                                                     <span class="badge ms-1 {{ color_class }}">
                                                         <i class="fas {{ icon }} me-1"></i>{{ p.char.name }}
                                                     </span>
@@ -145,7 +145,7 @@
                                                     <span class="badge bg-secondary me-1">{{ tag }}</span>
                                                 {% endfor %}
                                             {% else %}
-                                                <span class="text-muted">Chưa có</span>
+                                                <span class="text-theme-primary">Chưa có</span>
                                             {% endif %}
                                         </p>
                                         <!-- Ghi chú -->
@@ -190,9 +190,9 @@
                 </div>
                 {% else %}
                 <div class="text-center py-5">
-                    <i class="fas fa-gamepad fa-4x text-muted mb-3"></i>
-                    <h4 class="text-muted">Chưa có ván nào</h4>
-                    <p class="text-muted mb-4">Hãy tạo ván đầu tiên để bắt đầu</p>
+                    <i class="fas fa-gamepad fa-4x text-theme-primary mb-3"></i>
+                    <h4 class="text-theme-primary">Chưa có ván nào</h4>
+                    <p class="text-theme-primary mb-4">Hãy tạo ván đầu tiên để bắt đầu</p>
                     {% if session.user_role == 'admin' %}
                     <button class="btn btn-primary btn-lg" data-bs-toggle="modal" data-bs-target="#newGameModal">
                         <i class="fas fa-plus me-2"></i>Tạo ván mới
@@ -449,7 +449,7 @@
 }
 
 .select-placeholder {
-    color: var(--text-muted);
+    color: var(--text-theme-primary);
     flex: 1;
 }
 

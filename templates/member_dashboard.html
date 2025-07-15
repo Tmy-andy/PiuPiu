@@ -18,7 +18,7 @@
                     <i class="fas fa-user-circle me-2 text-theme-primary"></i>
                     Chào mừng, {{ user.display_name }}!
                 </h1>
-                <p class="card-text text-muted">Mã thành viên: <span class="badge bg-primary">{{ user.member_id }}</span></p>
+                <p class="card-text text-theme-primary">Mã thành viên: <span class="badge bg-primary">{{ user.member_id }}</span></p>
             </div>
         </div>
 
@@ -82,7 +82,7 @@
                                 <span class="text-danger">Chưa có kim bài</span>
                             {% endif %}
                         </h6>
-                        <p class="mb-0 text-muted">
+                        <p class="mb-0 text-theme-primary">
                             Bạn đã "chết" <strong>{{ user.death_count }}</strong> lần.
                             {% if not user.has_kim_bai %}
                                 Hãy liên hệ admin để được cấp kim bài nếu đủ điều kiện.
@@ -117,7 +117,7 @@
                         <tbody>
                             {% for log in point_logs %}
                             <tr>
-                                <td class="text-muted">
+                                <td class="text-theme-primary">
                                     <i class="fas fa-calendar me-1"></i>
                                     {{ log.created_at[:16] }}
                                 </td>
@@ -138,9 +138,9 @@
                 </div>
                 {% else %}
                 <div class="text-center py-5">
-                    <i class="fas fa-history fa-3x text-muted mb-3"></i>
-                    <h5 class="text-muted">Chưa có lịch sử điểm</h5>
-                    <p class="text-muted">Lịch sử thay đổi điểm sẽ hiển thị tại đây</p>
+                    <i class="fas fa-history fa-3x text-theme-primary mb-3"></i>
+                    <h5 class="text-theme-primary">Chưa có lịch sử điểm</h5>
+                    <p class="text-theme-primary">Lịch sử thay đổi điểm sẽ hiển thị tại đây</p>
                 </div>
                 {% endif %}
             </div>

@@ -555,3 +555,11 @@ html {
         padding: 0.6rem;
     }
 }
+
+.text-theme-primary {
+    color: var(--primary-color) !important;
+}
+
+.text-theme-secondary {
+    color: var(--text-secondary) !important;
+}

@@ -17,7 +17,7 @@
                     <i class="fas fa-calendar-times me-2 text-theme-primary"></i>
                     Xin off
                 </h1>
-                <p class="card-text text-muted">Theo dõi các yêu cầu xin off</p>
+                <p class="card-text text-theme-primary">Theo dõi các yêu cầu xin off</p>
             </div>
         </div>
 
@@ -123,15 +123,15 @@
                                 </td>
                                 <td class="fw-semibold">{{ o.start_date.strftime('%d/%m/%Y') }}</td>
                                 <td class="fw-semibold">{{ o.end_date.strftime('%d/%m/%Y') }}</td>
-                                <td class="text-muted">{{ o.reason or "Không có lý do" }}</td>
+                                <td class="text-theme-primary">{{ o.reason or "Không có lý do" }}</td>
                                 <td>
                                     {% if o.creator %}
                                         <span class="badge bg-secondary">{{ o.creator.display_name }}</span>
                                     {% else %}
-                                        <span class="text-muted">-</span>
+                                        <span class="text-theme-primary">-</span>
                                     {% endif %}
                                 </td>
-                                <td class="text-muted">{{ o.created_at.strftime('%d/%m/%Y %H:%M') }}</td>
+                                <td class="text-theme-primary">{{ o.created_at.strftime('%d/%m/%Y %H:%M') }}</td>
                                 {% if current_user.role == 'admin' %}
                                 <td>
                                     <form method="POST" action="{{ url_for('delete_off', off_id=o.id) }}" onsubmit="return confirm('Bạn có chắc muốn xóa yêu cầu này?');">
@@ -148,8 +148,8 @@
                 </div>
                 {% else %}
                 <div class="text-center py-4">
-                    <i class="fas fa-calendar-times fa-3x text-muted mb-3"></i>
-                    <h5 class="text-muted">Chưa có ai xin off</h5>
+                    <i class="fas fa-calendar-times fa-3x text-theme-primary mb-3"></i>
+                    <h5 class="text-theme-primary">Chưa có ai xin off</h5>
                 </div>
                 {% endif %}
             </div>
