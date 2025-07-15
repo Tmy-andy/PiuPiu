@@ -1,75 +1,83 @@
 [data-theme="dark"] {
-    /* Base Colors */
-    --primary-color: #3b82f6;
-    --primary-dark: #2563eb;
-    --primary-color-rgba: 59, 130, 246;
+  /* Base Colors */
+  --primary-color: #3b82f6;
+  --primary-dark: #2563eb;
+  --primary-color-rgba: 59, 130, 246;
 
-    --secondary-color: #9ca3af;
-    --success-color: #10b981;
-    --warning-color: #f59e0b;
-    --danger-color: #ef4444;
+  --secondary-color: #9ca3af;
+  --success-color: #10b981;
+  --warning-color: #f59e0b;
+  --danger-color: #ef4444;
 
-    /* Background */
-    --light-bg: #111827;
-    --bg-primary: #111827;
-    --bg-secondary: #1f2937;
+  /* Background */
+  --light-bg: #0f172a;
+  --bg-primary: #0f172a;
+  --bg-secondary: #1e293b;
 
-    /* Text */
-    --text-color: #f9fafb;
-    --text-muted: #d1d5db;
-    --text-primary: #f9fafb;
-    --text-secondary: #d1d5db;
+  /* Text */
+  --text-color: #f8fafc;
+  --text-muted: #cbd5e1;
+  --text-primary: #f8fafc;
+  --text-secondary: #d1d5db;
 
-    /* Borders + Shadows */
-    --border-color: #374151;
-    --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+  /* Borders + Shadows */
+  --border-color: #334155;
+  --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
 
-    /* Card & Form */
-    --card-bg: #1f2937;
-    --input-bg: #374151;
-    --input-border: #4b5563;
+  /* Card & Form */
+  --card-bg: #1e293b;
+  --input-bg: #334155;
+  --input-border: #475569;
 
-    /* Gradients */
-    --navbar-bg: linear-gradient(135deg, #1f2937 0%, #374151 100%);
-    --navbar-gradient-start: #1f2937;
-    --navbar-gradient-end: #374151;
-    --stats-card-bg: linear-gradient(135deg, #1f2937 0%, #374151 100%);
+  /* Gradients */
+  --navbar-bg: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+  --navbar-gradient-start: #1e293b;
+  --navbar-gradient-end: #334155;
+  --stats-card-bg: linear-gradient(135deg, #1e293b 0%, #334155 100%);
 
-    --success-gradient-start: #065f46;
-    --success-gradient-end: #10b981;
-    --warning-gradient-start: #b45309;
-    --warning-gradient-end: #f59e0b;
-    --info-gradient-start: #0284c7;
-    --info-gradient-end: #0ea5e9;
+  --success-gradient-start: #065f46;
+  --success-gradient-end: #10b981;
+  --warning-gradient-start: #b45309;
+  --warning-gradient-end: #f59e0b;
+  --info-gradient-start: #0284c7;
+  --info-gradient-end: #0ea5e9;
 
-    --scroll-btn-gradient-start: #3b82f6;
-    --scroll-btn-gradient-end: #2563eb;
+  --scroll-btn-gradient-start: #3b82f6;
+  --scroll-btn-gradient-end: #2563eb;
 
-    /* Table */
-    --table-header-bg: linear-gradient(135deg, #1f2937, #111827);
-    --table-header-start: #1f2937;
-    --table-header-end: #111827;
+  /* Table */
+  --table-header-bg: linear-gradient(135deg, #334155, #1e293b);
+  --table-header-start: #334155;
+  --table-header-end: #1e293b;
 
-    /* Mobile Nav */
-    --mobile-nav-bg: var(--bg-primary);
-    --mobile-nav-text: var(--text-primary);
-    --mobile-nav-border: #374151;
-    --mobile-nav-hover-bg: linear-gradient(135deg, #1f2937, #374151);
-    --mobile-nav-dropdown-bg: #1f2937;
-    --mobile-nav-dropdown-shadow: rgba(59, 130, 246, 0.2);
-    --mobile-nav-dropdown-border: rgba(59, 130, 246, 0.1);
-    --mobile-nav-item-color: var(--text-primary);
-    --mobile-nav-item-border: #374151;
-    --mobile-nav-header-bg: linear-gradient(135deg, #111827, #1f2937);
-    --mobile-nav-danger-hover-bg: linear-gradient(135deg, #7f1d1d, #b91c1c);
-    --mobile-nav-divider: #374151;
-    --mobile-nav-overlay-bg: rgba(0, 0, 0, 0.6);
+  /* Mobile Nav */
+  --mobile-nav-bg: var(--bg-primary);
+  --mobile-nav-text: var(--text-primary);
+  --mobile-nav-border: #475569;
+  --mobile-nav-hover-bg: linear-gradient(135deg, #1e293b, #334155);
+  --mobile-nav-dropdown-bg: #1e293b;
+  --mobile-nav-dropdown-shadow: rgba(59, 130, 246, 0.2);
+  --mobile-nav-dropdown-border: rgba(59, 130, 246, 0.1);
+  --mobile-nav-item-color: var(--text-primary);
+  --mobile-nav-item-border: #334155;
+  --mobile-nav-header-bg: linear-gradient(135deg, #0f172a, #1e293b);
+  --mobile-nav-danger-hover-bg: linear-gradient(135deg, #7f1d1d, #b91c1c);
+  --mobile-nav-divider: #334155;
+  --mobile-nav-overlay-bg: rgba(0, 0, 0, 0.6);
 
-    /* Effects */
-    --glass-bg: rgba(0, 0, 0, 0.3);
-    --glass-border: rgba(255, 255, 255, 0.1);
-    --login-card-bg: rgba(31, 41, 55, 0.95);
-    --navbar-brand-icon-bg: rgba(255, 255, 255, 0.1);
+  /* Effects */
+  --glass-bg: rgba(255, 255, 255, 0.03);
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --login-card-bg: rgba(30, 41, 59, 0.95);
+  --navbar-brand-icon-bg: rgba(255, 255, 255, 0.08);
+
+  /* Sidebar */
+  --sidebar-bg: #1e293b;
+  --sidebar-link-color: #cbd5e1;
+  --sidebar-link-hover-bg: var(--primary-color);
+  --sidebar-link-hover-color: #ffffff;
+  --sidebar-active-bg: var(--primary-dark);
+  --sidebar-active-color: #ffffff;
 }
 
 /* Sidebar */
