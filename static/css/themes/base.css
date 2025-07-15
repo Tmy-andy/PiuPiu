@@ -201,6 +201,12 @@ body {
     color: white;
 }
 
+.sidebar-header:hover {
+    background-color: unset !important;
+    color: inherit !important;
+    cursor: default !important;
+}
+
 .sidebar .nav-link {
     color: var(--text-secondary);
     font-weight: 500;

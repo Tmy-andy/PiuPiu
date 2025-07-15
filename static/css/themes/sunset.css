@@ -1,39 +1,218 @@
 [data-theme="sunset"] {
+    /* Base Colors */
     --primary-color: #f97316;
     --primary-dark: #ea580c;
+    --primary-color-rgba: 249, 115, 22;
+
     --secondary-color: #dc2626;
     --success-color: #059669;
     --warning-color: #d97706;
     --danger-color: #dc2626;
+
+    /* Background */
     --light-bg: #fff7ed;
-    --card-shadow: 0 4px 6px -1px rgba(249, 115, 22, 0.1);
-    --navbar-bg: linear-gradient(135deg, #ff6b6b 0%, #feca57 50%, #ff9ff3 100%);
-    --stats-card-bg: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
+    --bg-primary: #fff7ed;
+    --bg-secondary: #fff0e0;
+
+    /* Text */
     --text-color: #9a3412;
     --text-muted: #c2410c;
+    --text-primary: #9a3412;
+    --text-secondary: #c2410c;
+
+    /* Border + Shadow */
     --border-color: #fed7aa;
+    --card-shadow: 0 4px 6px -1px rgba(249, 115, 22, 0.1);
+
+    /* Card + Form */
     --card-bg: #ffffff;
     --input-bg: #ffffff;
     --input-border: #fdba74;
+
+    /* Gradients */
+    --navbar-bg: linear-gradient(135deg, #ff6b6b 0%, #feca57 50%, #ff9ff3 100%);
+    --navbar-gradient-start: #ff6b6b;
+    --navbar-gradient-end: #ff9ff3;
+    --stats-card-bg: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
+
+    --success-gradient-start: #10b981;
+    --success-gradient-end: #34d399;
+    --warning-gradient-start: #facc15;
+    --warning-gradient-end: #f59e0b;
+    --info-gradient-start: #38bdf8;
+    --info-gradient-end: #0ea5e9;
+
+    --scroll-btn-gradient-start: #f97316;
+    --scroll-btn-gradient-end: #ea580c;
+
+    /* Table */
     --table-header-bg: linear-gradient(135deg, #f97316, #ea580c);
+    --table-header-start: #f97316;
+    --table-header-end: #ea580c;
+
+    /* Mobile Nav */
+    --mobile-nav-bg: var(--bg-primary);
+    --mobile-nav-text: var(--text-primary);
+    --mobile-nav-border: #fdba74;
+    --mobile-nav-hover-bg: #fff0e0;
+    --mobile-nav-dropdown-bg: #ffffff;
+    --mobile-nav-dropdown-shadow: rgba(249, 115, 22, 0.2);
+    --mobile-nav-dropdown-border: rgba(249, 115, 22, 0.1);
+    --mobile-nav-item-color: var(--text-primary);
+    --mobile-nav-item-border: #fed7aa;
+    --mobile-nav-header-bg: linear-gradient(135deg, #fff7ed, #fff0e0);
+    --mobile-nav-danger-hover-bg: linear-gradient(135deg, #fee2e2, #fecaca);
+    --mobile-nav-divider: #fdba74;
+    --mobile-nav-overlay-bg: rgba(0, 0, 0, 0.5);
+
+    /* Effects */
     --glass-bg: rgba(249, 115, 22, 0.1);
     --glass-border: rgba(253, 186, 116, 0.2);
+    --login-card-bg: rgba(255, 255, 255, 0.95);
+    --navbar-brand-icon-bg: rgba(255, 255, 255, 0.2);
+
+    /* Sidebar */
+    --sidebar-bg: #ffffff;
+    --sidebar-link-color: #c2410c;
+    --sidebar-link-hover-bg: #f97316;
+    --sidebar-link-hover-color: #ffffff;
+    --sidebar-active-bg: #ea580c;
+    --sidebar-active-color: #ffffff;
 }
 
+/* Background gradient shift */
 [data-theme="sunset"] body {
     background: linear-gradient(-45deg, #ff6b6b, #feca57, #ff9ff3, #f97316);
     background-size: 400% 400%;
     animation: gradientShift 15s ease infinite;
+    color: var(--text-primary);
 }
 
 @keyframes gradientShift {
-    0% {
-        background-position: 0% 50%;
-    }
-    50% {
-        background-position: 100% 50%;
-    }
-    100% {
-        background-position: 0% 50%;
-    }
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* Sidebar */
+[data-theme="sunset"] .sidebar {
+    background-color: var(--sidebar-bg);
+}
+
+[data-theme="sunset"] .sidebar .nav-link {
+    color: var(--sidebar-link-color);
+    transition: all 0.2s ease;
+}
+
+[data-theme="sunset"] .sidebar .nav-link:hover {
+    background-color: var(--sidebar-link-hover-bg);
+    color: var(--sidebar-link-hover-color);
+}
+
+[data-theme="sunset"] .sidebar .nav-link.active {
+    background-color: var(--sidebar-active-bg);
+    color: var(--sidebar-active-color) !important;
+}
+
+[data-theme="sunset"] .sidebar .nav-link.active i {
+    color: var(--sidebar-active-color);
+}
+
+[data-theme="sunset"] .sidebar-header {
+    color: var(--sidebar-active-color);
+    font-weight: 600;
+}
+
+[data-theme="sunset"] .sidebar-header i {
+    color: var(--sidebar-active-color);
+}
+
+/* Cards */
+[data-theme="sunset"] .card {
+    background-color: var(--card-bg);
+    color: var(--text-color);
+    border: 1px solid var(--border-color);
+    box-shadow: var(--card-shadow);
+}
+
+[data-theme="sunset"] .card-header {
+    background-color: var(--input-bg);
+    color: var(--text-color);
+    border-bottom: 1px solid var(--border-color);
+}
+
+/* Form */
+[data-theme="sunset"] .form-control,
+[data-theme="sunset"] .form-select {
+    background-color: var(--input-bg);
+    border: 1px solid var(--input-border);
+    color: var(--text-primary);
+}
+
+[data-theme="sunset"] .form-control:focus,
+[data-theme="sunset"] .form-select:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.2rem rgba(var(--primary-color-rgba), 0.25);
+    background-color: var(--input-bg);
+}
+
+/* Table */
+[data-theme="sunset"] .table {
+    background-color: var(--card-bg);
+    color: var(--text-color);
+    border-color: var(--border-color);
+}
+
+[data-theme="sunset"] .table thead th {
+    background: var(--table-header-bg);
+    color: white;
+    border: none;
+}
+
+[data-theme="sunset"] .table tbody tr {
+    background-color: var(--card-bg);
+    color: var(--text-color);
+    border-top: 1px solid var(--border-color);
+}
+
+[data-theme="sunset"] .table tbody tr:hover {
+    background-color: var(--glass-bg);
+}
+
+/* Badge */
+[data-theme="sunset"] .badge.bg-primary {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+[data-theme="sunset"] .badge.bg-success {
+    background-color: var(--success-color);
+    color: white;
+}
+
+[data-theme="sunset"] .badge.bg-secondary {
+    background-color: var(--secondary-color);
+    color: white;
+}
+
+/* Text */
+[data-theme="sunset"] .text-theme-primary {
+    color: var(--primary-color) !important;
+}
+
+[data-theme="sunset"] .text-theme-secondary {
+    color: var(--text-secondary) !important;
+}
+
+[data-theme="sunset"] .text-muted {
+    color: var(--text-muted) !important;
+}
+
+[data-theme="sunset"] .form-label,
+[data-theme="sunset"] .card-title {
+    color: var(--text-primary);
+}
+
+[data-theme="sunset"] .form-text {
+    color: var(--text-muted);
 }
