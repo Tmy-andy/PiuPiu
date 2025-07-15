@@ -118,10 +118,10 @@ document.addEventListener('DOMContentLoaded', function() {
 <style>
 /* Sidebar đơn giản đồng nhất với navbar */
 .sidebar {
-    background: white;
+    background: var(--sidebar-bg);
     border-radius: 12px;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-    border: 1px solid #e2e8f0;
+    box-shadow: var(--card-shadow);
+    border: 1px solid var(--form-border-color);
     margin-right: 1rem;
     position: sticky;
     top: 90px;
@@ -132,17 +132,17 @@ document.addEventListener('DOMContentLoaded', function() {
 }
 
 .sidebar:hover {
-    box-shadow: 0 8px 25px -5px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 8px 25px -5px var(--card-hover-shadow);
 }
 
 /* Header sidebar đồng nhất với navbar */
 .sidebar-header {
-    color: white;
+    color: var(--mobile-nav-text);
     font-size: 1.1rem;
     font-weight: 600;
     margin-bottom: 1rem;
     padding: 0.75rem 1rem;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: var(--navbar-bg);
     border-radius: 8px;
     display: flex;
     align-items: center;
@@ -150,7 +150,7 @@ document.addEventListener('DOMContentLoaded', function() {
 }
 
 .sidebar-header:hover {
-    background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%);
+    background: var(--stats-card-gradient);
 }
 
 .sidebar-header i:first-child {
@@ -166,7 +166,7 @@ document.addEventListener('DOMContentLoaded', function() {
 }
 
 .sidebar .nav-link {
-    color: #374151;
+    color: var(--sidebar-link-color);
     font-weight: 500;
     padding: 0.75rem 1rem;
     border-radius: 8px;
@@ -178,14 +178,14 @@ document.addEventListener('DOMContentLoaded', function() {
 }
 
 .sidebar .nav-link:hover {
-    background-color: #f8fafc;
-    color: #2563eb;
+    background-color: var(--light-bg);
+    color: var(--primary-color);
     transform: translateX(4px);
 }
 
 .sidebar .nav-link.active {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
+    background: var(--navbar-bg);
+    color: var(--sidebar-link-hover-color);
     transform: translateX(2px);
 }
 
@@ -229,7 +229,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     .sidebar-header.mobile-header:hover {
-        background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%);
+        background: var(--stats-card-gradient);
     }
     
     .sidebar-toggle-icon {
@@ -258,7 +258,7 @@ document.addEventListener('DOMContentLoaded', function() {
     /* Mobile nav links */
     .sidebar .nav-link {
         padding: 0.875rem 1rem;
-        border-bottom: 1px solid #f3f4f6;
+        border-bottom: 1px solid var(--mobile-nav-item-border);
     }
     
     .sidebar .nav-link:last-child {
@@ -267,7 +267,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     .sidebar .nav-link:hover {
         transform: translateX(0);
-        background-color: #f8fafc;
+        background-color: var(--mobile-nav-hover-bg);
     }
 }
 
@@ -303,17 +303,17 @@ document.addEventListener('DOMContentLoaded', function() {
 }
 
 .sidebar::-webkit-scrollbar-track {
-    background: #f1f5f9;
+    background: var(--light-bg);
     border-radius: 10px;
 }
 
 .sidebar::-webkit-scrollbar-thumb {
-    background: #cbd5e1;
+    background: var(--form-border-color);
     border-radius: 10px;
 }
 
 .sidebar::-webkit-scrollbar-thumb:hover {
-    background: #94a3b8;
+    background: var(--secondary-color);
 }
 
 /* Smooth animation */
@@ -323,12 +323,23 @@ document.addEventListener('DOMContentLoaded', function() {
 
 /* Focus states */
 .sidebar .nav-link:focus {
-    outline: 2px solid #667eea;
+    outline: 2px solid var(--primary-color);
     outline-offset: 2px;
 }
 
 .sidebar-header:focus {
-    outline: 2px solid #667eea;
+    outline: 2px solid var(--primary-color);
     outline-offset: 2px;
 }
+
+/* Thêm các biến mới vào :root nếu cần */
+:root {
+    /* Nếu bạn muốn thêm các biến mới chỉ dành cho sidebar */
+    --sidebar-header-hover-bg: var(--stats-card-gradient);
+    --sidebar-nav-hover-bg: var(--light-bg);
+    --sidebar-scrollbar-track: var(--light-bg);
+    --sidebar-scrollbar-thumb: var(--form-border-color);
+    --sidebar-scrollbar-thumb-hover: var(--secondary-color);
+}
+
 </style>
