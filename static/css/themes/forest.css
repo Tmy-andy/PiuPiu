@@ -122,3 +122,12 @@
 [data-theme="forest"] .sidebar .nav-link.active i {
     color: var(--sidebar-active-color);
 }
+
+[data-theme="forest"] .sidebar-header {
+    color: #ffffff;
+    font-weight: 600;
+}
+
+    [data-theme="forest"] .sidebar-header i {
+        color: #ffffff;
+    }
