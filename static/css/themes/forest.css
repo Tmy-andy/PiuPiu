@@ -1,25 +1,80 @@
 [data-theme="forest"] {
+    /* Primary Colors */
     --primary-color: #16a34a;
     --primary-dark: #15803d;
     --secondary-color: #166534;
     --success-color: #22c55e;
     --warning-color: #eab308;
     --danger-color: #dc2626;
+    
+    /* Background Colors */
     --light-bg: #f0fdf4;
-    --card-shadow: 0 4px 6px -1px rgba(22, 163, 74, 0.1);
-    --navbar-bg: linear-gradient(135deg, #2d5016 0%, #3e6b1f 30%, #4a7c23 60%, #5a8f2a 100%);
-    --stats-card-bg: linear-gradient(135deg, #166534 0%, #15803d 100%);
-    --text-color: #14532d;
-    --text-muted: #166534;
-    --border-color: #bbf7d0;
     --card-bg: #ffffff;
     --input-bg: #ffffff;
+    
+    /* Text Colors */
+    --text-color: #14532d;
+    --text-muted: #166534;
+    
+    /* Border Colors */
+    --border-color: #bbf7d0;
     --input-border: #86efac;
-    --table-header-bg: linear-gradient(135deg, #16a34a, #15803d);
+    --form-border-color: #86efac;
+    
+    /* Gradients */
+    --navbar-bg: linear-gradient(135deg, #2d5016 0%, #3e6b1f 30%, #4a7c23 60%, #5a8f2a 100%);
+    --mobile-nav-bg: linear-gradient(135deg, #2d5016 0%, #3e6b1f 30%, #4a7c23 60%, #5a8f2a 100%);
+    --stats-card-gradient: linear-gradient(135deg, #166534 0%, #15803d 100%);
+    --stats-success-gradient: linear-gradient(135deg, #15803d 0%, #22c55e 100%);
+    --stats-warning-gradient: linear-gradient(135deg, #ca8a04 0%, #eab308 100%);
+    --stats-info-gradient: linear-gradient(135deg, #0369a1 0%, #0284c7 100%);
+    --table-header-gradient: linear-gradient(135deg, #16a34a, #15803d);
+    --scroll-btn-bg: linear-gradient(135deg, #16a34a 0%, #15803d 100%);
+    
+    /* Sidebar Colors */
+    --sidebar-bg: #ffffff;
+    --sidebar-link-color: #166534;
+    --sidebar-link-hover-bg: #16a34a;
+    --sidebar-link-hover-color: #ffffff;
+    
+    /* Mobile Navigation */
+    --mobile-nav-text: #ffffff;
+    --mobile-nav-toggle-bg: rgba(255, 255, 255, 0.15);
+    --mobile-nav-toggle-border: rgba(255, 255, 255, 0.3);
+    --mobile-nav-toggle-hover-bg: rgba(255, 255, 255, 0.25);
+    --mobile-nav-toggle-active-bg: rgba(255, 255, 255, 0.3);
+    --mobile-nav-dropdown-bg: #ffffff;
+    --mobile-nav-dropdown-shadow: rgba(22, 163, 74, 0.3);
+    --mobile-nav-dropdown-border: rgba(22, 163, 74, 0.1);
+    --mobile-nav-item-color: #14532d;
+    --mobile-nav-item-border: #dcfce7;
+    --mobile-nav-header-bg: linear-gradient(135deg, #f0fdf4, #dcfce7);
+    --mobile-nav-hover-bg: linear-gradient(135deg, #f0fdf4, #dcfce7);
+    --mobile-nav-danger-hover-bg: linear-gradient(135deg, #fee2e2, #fecaca);
+    --mobile-nav-divider: #bbf7d0;
+    --mobile-nav-overlay-bg: rgba(0, 0, 0, 0.5);
+    
+    /* Shadows */
+    --card-shadow: 0 4px 6px -1px rgba(22, 163, 74, 0.1);
+    --card-hover-shadow: rgba(22, 163, 74, 0.15);
+    --btn-primary-hover-shadow: rgba(22, 163, 74, 0.4);
+    
+    /* Form Colors */
+    --form-focus-shadow: rgba(22, 163, 74, 0.25);
+    
+    /* Glass Effect */
     --glass-bg: rgba(22, 163, 74, 0.1);
     --glass-border: rgba(134, 239, 172, 0.2);
+    
+    /* Login Card */
+    --login-card-bg: rgba(255, 255, 255, 0.95);
+    
+    /* Navbar */
+    --navbar-brand-icon-bg: rgba(255, 255, 255, 0.2);
+    --navbar-border: rgba(255, 255, 255, 0.1);
 }
 
+/* Forest theme specific enhancements */
 [data-theme="forest"] .forest-leaf {
     position: fixed;
     width: 8px;
