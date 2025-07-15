@@ -117,7 +117,11 @@
 
 /* Text utility */
 [data-theme="dark"] .text-theme-primary {
-    color: var(--primary-color) !important;
+    color: var(--text-primary) !important;
+}
+
+.text-theme-secondary {
+    color: var(--text-secondary) !important;
 }
 
 /* Modal header */
