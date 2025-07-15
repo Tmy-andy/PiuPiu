@@ -8,14 +8,15 @@
     --danger-color: #c53030;
     
     /* Background Colors - Darker theme */
-    --bg-primary: #0f1b0a;
-    --bg-secondary: #1a2814;
-    --bg-tertiary: #243018;
+    --bg-primary: #eefae8;
+    --bg-secondary: #e6f5dd;
+    --bg-tertiary: #d9eccd;
+
     
     /* Text Colors - Adjusted for dark theme */
-    --text-primary: #e8f5e8;
-    --text-secondary: #c4e4c4;
-    --text-muted: #8fa88f;
+    --text-primary: #1f3b1f;
+    --text-secondary: #3e6b1f;
+    --text-muted: #658b65;
     
     /* Border Colors - Darker tones */
     --border-color: #2d5016;
@@ -70,8 +71,8 @@
     --mobile-nav-divider: #2d5016;
     
     /* Form Colors - Dark theme */
-    --form-control-bg: #1a2814;
-    --form-control-border: #2d5016;
+    --form-control-bg: #ffffff;
+    --form-control-border: #cceac2;
     --form-control-focus-border: #4a7c23;
     
     /* Glass Effect - Dark forest */
