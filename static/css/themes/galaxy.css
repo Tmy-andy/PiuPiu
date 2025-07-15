@@ -3,6 +3,7 @@
     --primary-color: #0ea5e9;
     --primary-dark: #0369a1;
     --primary-color-rgba: 14, 165, 233;
+    --primary-color-rgb: 14, 165, 233;
 
     --secondary-color: #1e293b;
     --success-color: #10b981;
@@ -189,6 +190,36 @@
 
 [data-theme] .form-text {
     color: var(--text-muted);
+}
+
+[data-theme="galaxy"] .table {
+    background-color: var(--card-bg);
+    color: var(--text-color);
+    border-color: var(--border-color);
+}
+
+[data-theme="galaxy"] .table thead th {
+    background: var(--table-header-bg);
+    color: white;
+    border: none;
+}
+
+[data-theme="galaxy"] .table tbody tr {
+    background-color: var(--card-bg);
+    color: var(--text-color);
+}
+
+[data-theme="galaxy"] .table tbody tr:hover {
+    background-color: rgba(var(--primary-color-rgb, 14,165,233), 0.05);
+}
+
+[data-theme="galaxy"] .badge.bg-primary {
+    background-color: var(--primary-color) !important;
+    color: #fff;
+}
+[data-theme="galaxy"] .badge.bg-secondary {
+    background-color: var(--input-border);
+    color: #fff;
 }
 
 /* Utility */
