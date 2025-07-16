@@ -276,22 +276,41 @@ def dashboard():
 def members():
     Admin = aliased(User)
 
+    # ⚙️ Cấu hình phân trang
+    per_page = 20
+    page = int(request.args.get('page', 1))
+    offset = (page - 1) * per_page
+
+    # 🔎 Tổng số thành viên
+    total = User.query.filter_by(role='member').count()
+    total_pages = ceil(total / per_page)
+
+    # ⚡ Truy vấn có phân trang + join admin
     results = db.session.query(
         User,
         Admin.display_name.label("admin_name")
     ).outerjoin(Admin, User.assigned_admin_id == Admin.id) \
      .filter(User.role == 'member') \
-     .order_by(User.member_id.asc()).all()
+     .order_by(User.member_id.asc()) \
+     .offset(offset).limit(per_page).all()
 
+    # ✅ Gắn admin_name vào user
     members = []
     for user, admin_name in results:
         user.admin_name = admin_name
         members.append(user)
 
-    # ✅ Lấy tất cả admin để hiện trong modal chọn
+    # ✅ Lấy danh sách admin
     all_admins = User.query.filter_by(role='admin').order_by(User.display_name).all()
 
-    return render_template('members.html', members=members, all_admins=all_admins)
+    return render_template(
+        'members.html',
+        members=members,
+        all_admins=all_admins,
+        total=total,
+        page=page,
+        total_pages=total_pages
+    )
 
 @app.route('/assign_member/<int:user_id>', methods=['POST'])
 @admin_required
@@ -329,45 +348,33 @@ def assign_member(user_id):
         flash('Đã xảy ra lỗi nội bộ.', 'danger')
         return redirect(url_for('members'))
 
-@app.route('/members')
+@app.route('/member_ids')
 @admin_required
-def members():
-    Admin = aliased(User)
+def member_ids():
+    UsedBy = aliased(User)
 
-    # ⚙️ Cấu hình phân trang
-    per_page = 20
+    # ⚙️ Phân trang
+    per_page = 30
     page = int(request.args.get('page', 1))
     offset = (page - 1) * per_page
 
-    # 🔎 Tổng số thành viên
-    total = User.query.filter_by(role='member').count()
+    # 🔢 Tổng số mã
+    total = MemberID.query.count()
     total_pages = ceil(total / per_page)
 
-    # ⚡ Truy vấn có phân trang + join admin
-    results = db.session.query(
-        User,
-        Admin.display_name.label("admin_name")
-    ).outerjoin(Admin, User.assigned_admin_id == Admin.id) \
-     .filter(User.role == 'member') \
-     .order_by(User.member_id.asc()) \
-     .offset(offset).limit(per_page).all()
-
-    # ✅ Gắn admin_name vào user
-    members = []
-    for user, admin_name in results:
-        user.admin_name = admin_name
-        members.append(user)
-
-    # ✅ Lấy danh sách admin
-    all_admins = User.query.filter_by(role='admin').order_by(User.display_name).all()
+    # ⬇️ Truy vấn phân trang + join người dùng
+    member_ids = db.session.query(MemberID, UsedBy.display_name.label("used_by_name")) \
+        .outerjoin(UsedBy, MemberID.used_by == UsedBy.id) \
+        .order_by(MemberID.member_id.asc()) \
+        .offset(offset).limit(per_page) \
+        .all()
 
     return render_template(
-        'members.html',
-        members=members,
-        all_admins=all_admins,
-        total=total,
+        'member_ids.html',
+        member_ids=member_ids,
         page=page,
-        total_pages=total_pages
+        total_pages=total_pages,
+        total=total
     )
 
 
