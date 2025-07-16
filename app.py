@@ -52,6 +52,9 @@ migrate = Migrate(app, db)
 with app.app_context():
     db.create_all()
 
+from flask_compress import Compress
+Compress(app)
+
 # def login_required(f):
 #     @wraps(f)
 #     def decorated_function(*args, **kwargs):
@@ -137,10 +140,6 @@ def inject_user():
     effective_theme = get_theme(user)
 
     return dict(user=user, warning_count=warning_count, effective_theme=effective_theme)
-
-
-from flask_compress import Compress
-Compress(app)
 
 # Cache
 from flask_caching import Cache
