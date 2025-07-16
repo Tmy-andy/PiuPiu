@@ -275,6 +275,8 @@ import time
 @app.route('/members')
 @admin_required
 def members():
+    start = time.time()
+
     Admin = aliased(User)
 
     # ⚙️ Cấu hình phân trang
