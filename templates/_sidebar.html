@@ -117,9 +117,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
 <style>
 /* Sidebar đơn giản đồng nhất với navbar */
+<style>
+/* Sử dụng các biến CSS động từ theme.css */
+
+/* Sidebar container với styling mới */
 .sidebar {
     background: var(--sidebar-bg);
-    border-radius: 12px;
+    border-radius: var(--border-radius);
     box-shadow: var(--card-shadow);
     border: 1px solid var(--form-border-color);
     margin-right: 1rem;
@@ -128,7 +132,7 @@ document.addEventListener('DOMContentLoaded', function() {
     height: fit-content;
     max-height: calc(100vh - 110px);
     overflow-y: auto;
-    transition: box-shadow 0.2s ease;
+    transition: var(--transition);
     color: var(--sidebar-active-color);
 }
 
@@ -136,30 +140,48 @@ document.addEventListener('DOMContentLoaded', function() {
     box-shadow: 0 8px 25px -5px var(--card-hover-shadow);
 }
 
-/* Header sidebar đồng nhất với navbar */
+/* Header sidebar - đẹp hơn và không có hover */
 .sidebar-header {
-    color: var(--mobile-nav-text);
+    color: var(--text-color);
     font-size: 1.1rem;
     font-weight: 600;
     margin-bottom: 1rem;
-    padding: 0.75rem 1rem;
+    padding: 1rem 1.25rem;
     background: var(--navbar-bg);
-    border-radius: 8px;
+    border-radius: var(--border-radius);
+    border: 1px solid var(--form-border-color);
+    box-shadow: var(--card-shadow);
     display: flex;
     align-items: center;
-    transition: all 0.2s ease;
+    position: relative;
+    overflow: hidden;
+    transition: var(--transition);
 }
 
-.sidebar-header:hover {
-    background: var(--stats-card-gradient);
+/* Thêm hiệu ứng gradient overlay */
+.sidebar-header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+    transition: left 0.6s ease;
+}
+
+.sidebar-header:hover::before {
+    left: 100%;
 }
 
 .sidebar-header i:first-child {
-    font-size: 1rem;
-    margin-right: 0.5rem;
+    font-size: 1.1rem;
+    margin-right: 0.75rem;
+    color: var(--primary-color);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
-/* Navigation đơn giản */
+/* Navigation links */
 .sidebar-nav {
     display: flex;
     flex-direction: column;
@@ -170,40 +192,78 @@ document.addEventListener('DOMContentLoaded', function() {
     color: var(--sidebar-link-color);
     font-weight: 500;
     padding: 0.75rem 1rem;
-    border-radius: 8px;
-    transition: all 0.2s ease;
+    border-radius: var(--border-radius);
+    transition: var(--transition);
     display: flex;
     align-items: center;
     text-decoration: none;
     position: relative;
+    border: 1px solid transparent;
+}
+
+.sidebar .nav-link::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    background: var(--primary-color);
+    border-radius: 0 3px 3px 0;
+    transform: scaleY(0);
+    transition: transform 0.3s ease;
 }
 
 .sidebar .nav-link:hover {
     background-color: var(--light-bg);
     color: var(--primary-color);
     transform: translateX(4px);
+    border-color: var(--primary-color);
+    box-shadow: var(--card-shadow);
+}
+
+.sidebar .nav-link:hover::before {
+    transform: scaleY(1);
 }
 
 .sidebar .nav-link.active {
     background: var(--navbar-bg);
     color: var(--sidebar-link-hover-color);
     transform: translateX(2px);
+    border-color: var(--primary-color);
+    box-shadow: var(--card-shadow);
+}
+
+.sidebar .nav-link.active::before {
+    transform: scaleY(1);
 }
 
 .sidebar .nav-link i {
     width: 20px;
     text-align: center;
     margin-right: 0.75rem;
-    font-size: 0.9rem;
+    font-size: 0.95rem;
+    transition: var(--transition);
 }
 
-/* Badge đơn giản */
+.sidebar .nav-link:hover i {
+    transform: scale(1.1);
+}
+
+/* Badge styling */
 .sidebar .badge {
     font-size: 0.7rem;
     font-weight: 600;
     padding: 0.3rem 0.5rem;
-    border-radius: 4px;
+    border-radius: var(--border-radius);
     margin-left: auto;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
 }
 
 /* Toggle icon */
@@ -212,6 +272,7 @@ document.addEventListener('DOMContentLoaded', function() {
     font-size: 0.9rem;
     transition: transform 0.3s ease;
     margin-left: auto;
+    color: var(--primary-color);
 }
 
 /* Mobile styles */
@@ -227,17 +288,18 @@ document.addEventListener('DOMContentLoaded', function() {
         cursor: pointer;
         user-select: none;
         margin-bottom: 0;
+        background: var(--navbar-bg);
     }
     
     .sidebar-header.mobile-header:hover {
         background: var(--stats-card-gradient);
+        transform: scale(1.02);
     }
     
     .sidebar-toggle-icon {
         display: inline-block !important;
     }
     
-    /* Collapsed state */
     .sidebar-nav.collapsed {
         height: 0;
         overflow: hidden;
@@ -245,7 +307,6 @@ document.addEventListener('DOMContentLoaded', function() {
         transition: height 0.3s ease-out, margin-top 0.3s ease-out;
     }
     
-    /* Expanded state */
     .sidebar-nav:not(.collapsed) {
         height: auto;
         margin-top: 1rem;
@@ -256,7 +317,6 @@ document.addEventListener('DOMContentLoaded', function() {
         margin-bottom: 0;
     }
     
-    /* Mobile nav links */
     .sidebar .nav-link {
         padding: 0.875rem 1rem;
         border-bottom: 1px solid var(--mobile-nav-item-border);
@@ -296,9 +356,16 @@ document.addEventListener('DOMContentLoaded', function() {
         cursor: default !important;
         margin-bottom: 1rem !important;
     }
+    
+    /* Loại bỏ hoàn toàn hover effect trên desktop */
+    .sidebar-header:hover {
+        background: var(--navbar-bg) !important;
+        transform: none !important;
+        box-shadow: var(--card-shadow) !important;
+    }
 }
 
-/* Scrollbar đơn giản */
+/* Scrollbar styling */
 .sidebar::-webkit-scrollbar {
     width: 6px;
 }
@@ -309,15 +376,15 @@ document.addEventListener('DOMContentLoaded', function() {
 }
 
 .sidebar::-webkit-scrollbar-thumb {
-    background: var(--form-border-color);
+    background: linear-gradient(180deg, var(--primary-color), var(--secondary-color));
     border-radius: 10px;
 }
 
 .sidebar::-webkit-scrollbar-thumb:hover {
-    background: var(--secondary-color);
+    background: linear-gradient(180deg, var(--secondary-color), var(--primary-color));
 }
 
-/* Smooth animation */
+/* Smooth animations */
 .sidebar * {
     box-sizing: border-box;
 }
@@ -326,21 +393,36 @@ document.addEventListener('DOMContentLoaded', function() {
 .sidebar .nav-link:focus {
     outline: 2px solid var(--primary-color);
     outline-offset: 2px;
+    box-shadow: 0 0 0 4px rgba(var(--primary-color), 0.1);
 }
 
 .sidebar-header:focus {
-    outline: 2px solid var(--primary-color);
+    outline: 2px solid var(--sidebar-header-text);
     outline-offset: 2px;
 }
 
-/* Thêm các biến mới vào :root nếu cần */
-:root {
-    /* Nếu bạn muốn thêm các biến mới chỉ dành cho sidebar */
-    --sidebar-header-hover-bg: var(--stats-card-gradient);
-    --sidebar-nav-hover-bg: var(--light-bg);
-    --sidebar-scrollbar-track: var(--light-bg);
-    --sidebar-scrollbar-thumb: var(--form-border-color);
-    --sidebar-scrollbar-thumb-hover: var(--secondary-color);
+/* Responsive font sizes */
+@media (max-width: 768px) {
+    .sidebar-header {
+        font-size: 1rem;
+        padding: 0.875rem 1rem;
+    }
+    
+    .sidebar .nav-link {
+        font-size: 0.9rem;
+        padding: 0.75rem 0.875rem;
+    }
 }
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --sidebar-header-bg: linear-gradient(135deg, #4c51bf 0%, #553c9a 100%);
+        --sidebar-header-shadow: 0 4px 15px rgba(76, 81, 191, 0.4);
+        --sidebar-header-mobile-bg: linear-gradient(135deg, #4c51bf 0%, #553c9a 100%);
+        --sidebar-header-mobile-hover: linear-gradient(135deg, #434190 0%, #4c3788 100%);
+    }
+}
+</style>
 
 </style>
