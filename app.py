@@ -163,11 +163,6 @@ app.config['CACHE_TYPE'] = 'SimpleCache'
 app.config['CACHE_DEFAULT_TIMEOUT'] = 300  # 5 phút
 cache = Cache(app)
 
-@cache.cached()
-@app.route('/public_rules')
-def public_rules():
-    return render_template('public_rules.html')
-
 # Error handlers
 @app.errorhandler(403)
 def forbidden(e):
@@ -648,6 +643,7 @@ def rules():
     return render_template('rules.html', rule=rule)
 
 # Public view trên trang login
+@cache.cached()
 @app.route('/public_rules')
 def public_rules():
     rule = Rule.query.first()
