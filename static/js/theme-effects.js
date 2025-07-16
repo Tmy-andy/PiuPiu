@@ -251,37 +251,33 @@ class ThemeEffects {
 
     // ============= OCEAN EFFECTS =============
     initOceanEffects() {
-        this.initOceanCursorBubbles();
+        this.initOceanMouseBubbles();
         this.initOceanHoverRipple();
         this.initOceanClickRipple();
     }
 
-    initOceanCursorBubbles() {
-        if (this.currentTheme !== 'ocean') return;
-
-        let bubbleInterval;
-        const moveHandler = (e) => {
-            if (!this.effectsEnabled || this.currentTheme !== 'ocean') return;
-
+    initOceanMouseBubbles() {
+        const createMouseBubble = (x, y) => {
             const bubble = document.createElement('div');
-            bubble.className = 'cursor-bubble';
-            bubble.style.left = `${e.clientX}px`;
-            bubble.style.top = `${e.clientY}px`;
+            bubble.className = 'mouse-bubble';
+            bubble.style.left = `${x}px`;
+            bubble.style.top = `${y}px`;
             document.body.appendChild(bubble);
+            setTimeout(() => bubble.remove(), 2000);
+        };
 
-            setTimeout(() => {
-                bubble.remove();
-            }, 2000);
+        const moveHandler = (e) => {
+            if (this.currentTheme !== 'ocean' || !this.effectsEnabled) return;
+            if (Math.random() < 0.3) { // giảm tần suất tạo bóng
+                const offsetX = (Math.random() - 0.5) * 30;
+                const offsetY = (Math.random() - 0.5) * 30;
+                createMouseBubble(e.clientX + offsetX, e.clientY + offsetY);
+            }
         };
 
         document.addEventListener('mousemove', moveHandler);
-
-        // Cleanup khi chuyển theme
-        this.onClearCursorBubbles = () => {
-            document.removeEventListener('mousemove', moveHandler);
-        };
+        this._removeMouseBubbleHandler = () => document.removeEventListener('mousemove', moveHandler);
     }
-
 
     initOceanHoverRipple() {
     // Áp dụng class ripple-hover vào tất cả các thẻ cần hiệu ứng hover
@@ -431,6 +427,7 @@ class ThemeEffects {
         document.removeEventListener('mousemove', this.onMouseMove);
         document.removeEventListener('mouseleave', this.onMouseLeave);
         document.removeEventListener('click', this.onClickEffect);
+        this._removeMouseBubbleHandler?.();
     }
 
     toggleEffects() {
