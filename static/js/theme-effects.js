@@ -251,72 +251,37 @@ class ThemeEffects {
 
     // ============= OCEAN EFFECTS =============
     initOceanEffects() {
-        this.createOceanBubbles();
+        this.initOceanCursorBubbles();
         this.initOceanHoverRipple();
         this.initOceanClickRipple();
     }
 
-    createOceanBubbles() {
-        const createBubble = () => {
+    initOceanCursorBubbles() {
+        if (this.currentTheme !== 'ocean') return;
+
+        let bubbleInterval;
+        const moveHandler = (e) => {
             if (!this.effectsEnabled || this.currentTheme !== 'ocean') return;
-            
+
             const bubble = document.createElement('div');
-            bubble.style.cssText = `
-                position: fixed;
-                width: ${4 + Math.random() * 8}px;
-                height: ${4 + Math.random() * 8}px;
-                background: rgba(14, 165, 233, 0.3);
-                border-radius: 50%;
-                bottom:-10px;
-                left: ${Math.random() * 100}vw;
-                pointer-events: none;
-                z-index: -1;
-                animation: bubbleRise ${8 + Math.random() * 4}s linear infinite;
-                opacity: 0.6;
-            `;
+            bubble.className = 'cursor-bubble';
+            bubble.style.left = `${e.clientX}px`;
+            bubble.style.top = `${e.clientY}px`;
             document.body.appendChild(bubble);
 
             setTimeout(() => {
-                if (bubble.parentNode) {
-                    bubble.remove();
-                }
-            }, 12000);
+                bubble.remove();
+            }, 2000);
         };
 
-        // Thêm CSS animation cho bubble
-        if (!document.getElementById('ocean-bubble-style')) {
-            const style = document.createElement('style');
-            style.id = 'ocean-bubble-style';
-            style.textContent = `
-                @keyframes bubbleRise {
-                    0% {
-                        transform: translateY(100vh) scale(0);
-                        opacity: 0;
-                    }
-                    10% {
-                        opacity: 0.6;
-                        transform: translateY(90vh) scale(1);
-                    }
-                    90% {
-                        opacity: 0.6;
-                    }
-                    100% {
-                        transform: translateY(-100px) scale(0);
-                        opacity: 0;
-                    }
-                }
-            `;
-            document.head.appendChild(style);
-        }
+        document.addEventListener('mousemove', moveHandler);
 
-        const bubbleInterval = setInterval(() => {
-            if (this.currentTheme === 'ocean' && this.effectsEnabled) {
-                createBubble();
-            } else if (this.currentTheme !== 'ocean') {
-                clearInterval(bubbleInterval);
-            }
-        }, this.isMobile ? 4000 : 3000);
+        // Cleanup khi chuyển theme
+        this.onClearCursorBubbles = () => {
+            document.removeEventListener('mousemove', moveHandler);
+        };
     }
+
 
     initOceanHoverRipple() {
     // Áp dụng class ripple-hover vào tất cả các thẻ cần hiệu ứng hover

@@ -83,25 +83,6 @@
     --navbar-brand-icon-bg: rgba(255, 255, 255, 0.2);
 }
 
-/* Ocean wave effect */
-[data-theme="ocean"] body::before {
-    content: '';
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 100px;
-    background: linear-gradient(to top, rgba(14,165,233,0.1) 0%, transparent 100%);
-    animation: wave 6s ease-in-out infinite;
-    pointer-events: none;
-    z-index: -1;
-}
-
-@keyframes wave {
-    0%, 100% { transform: translateX(0) scaleY(1); }
-    50% { transform: translateX(10px) scaleY(1.1); }
-}
-
 /* General UI styles */
 [data-theme="ocean"] body {
     background-color: var(--bg-primary);
@@ -673,6 +654,29 @@
 @keyframes rippleClickEffect {
     to {
         transform: scale(4);
+        opacity: 0;
+    }
+}
+
+.cursor-bubble {
+    position: fixed;
+    width: 8px;
+    height: 8px;
+    background: rgba(14, 165, 233, 0.4);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%, -50%);
+    animation: cursorBubbleUp 1.5s ease-out forwards;
+}
+
+@keyframes cursorBubbleUp {
+    0% {
+        transform: translate(-50%, -50%) scale(0.6);
+        opacity: 0.7;
+    }
+    100% {
+        transform: translate(-50%, -100px) scale(1.2);
         opacity: 0;
     }
 }
