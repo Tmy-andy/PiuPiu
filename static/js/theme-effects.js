@@ -646,3 +646,20 @@ const THEME_PRESETS = {
 
 // Make presets globally available
 window.THEME_PRESETS = THEME_PRESETS;
+
+document.addEventListener('DOMContentLoaded', () => {
+    window.themeEffects = new ThemeEffects();
+
+    const currentTheme = document.body.getAttribute('data-theme');
+    if (currentTheme) {
+        window.themeEffects.applyTheme(currentTheme);
+    }
+
+    window.changeTheme = (theme) => {
+        window.themeEffects.applyTheme(theme);
+    };
+
+    setInterval(() => {
+        window.themeEffects.monitorPerformance();
+    }, 30000);
+});
