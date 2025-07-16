@@ -303,6 +303,7 @@ def members():
     # ✅ Lấy danh sách admin
     all_admins = User.query.filter_by(role='admin').order_by(User.display_name).all()
 
+    print(f"[⏱️ Route /kim_bai] Load time: {time.time() - start:.2f}s")
     return render_template(
         'members.html',
         members=members,
