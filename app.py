@@ -655,6 +655,7 @@ def export_rules():
 # Character abilities
 FACTIONS = ["Phe Dân", "Phe Sói", "Phe Ba", "Đổi Phe"]
 
+@cache.cached()
 @app.route('/abilities')
 @login_required
 def abilities():
@@ -847,6 +848,7 @@ def top_tier():
 
 
 # Blacklist management
+@cache.cached()
 @app.route('/blacklist', methods=['GET', 'POST'])
 @login_required
 def blacklist():
@@ -1183,6 +1185,7 @@ from sqlalchemy import func
 from flask import render_template
 
 from sqlalchemy import func, union_all, select
+@cache.cached()
 @app.route("/frequency")
 @login_required
 def frequency():
