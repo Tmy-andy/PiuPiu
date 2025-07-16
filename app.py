@@ -183,13 +183,13 @@ def get_theme_with_cache(user_id):
     return theme
 
 # Cache
-from redis import Redis
 from flask_caching import Cache
+
 cache = Cache(config={
-    "CACHE_TYPE": "RedisCache",
-    "CACHE_REDIS_URL": os.getenv("REDIS_URL")
+    'CACHE_TYPE': 'SimpleCache',
+    'CACHE_DEFAULT_TIMEOUT': 300
 })
-cache = Cache(app)
+cache.init_app(app)
 
 # Error handlers
 @app.errorhandler(403)
