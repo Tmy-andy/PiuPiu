@@ -118,39 +118,36 @@ def inject_user():
     user_id = session.get('user_id')
     user = User.query.get(user_id) if user_id else None
 
-    # Tính số lượng cảnh báo vắng chơi
-    from datetime import datetime
-    warning_count = 0
-    now = datetime.utcnow()
+    # ⚠️ Chỉ cache warning_count — vẫn giữ theme per-user
+    warning_count = cache.get("warning_count")
+    if warning_count is None:
+        warning_count = 0
+        now = datetime.utcnow()
+        users = User.query.all()
 
-    users = User.query.all()
-    for u in users:
-        # Bỏ qua nếu đang xin nghỉ
-        on_leave = PlayerOffRequest.query.filter(
-            PlayerOffRequest.user_id == u.id,
-            PlayerOffRequest.start_date <= now.date(),
-            PlayerOffRequest.end_date >= now.date()
-        ).first()
+        for u in users:
+            on_leave = PlayerOffRequest.query.filter(
+                PlayerOffRequest.user_id == u.id,
+                PlayerOffRequest.start_date <= now.date(),
+                PlayerOffRequest.end_date >= now.date()
+            ).first()
+            if on_leave:
+                continue
 
-        if on_leave:
-            continue
+            last_game = (
+                GamePlayer.query
+                .filter_by(player_id=u.id)
+                .join(GameHistory)
+                .order_by(GameHistory.created_at.desc())
+                .first()
+            )
+            last_play_time = last_game.game.created_at if last_game else None
+            if not last_play_time or (now - last_play_time).days > 7:
+                warning_count += 1
 
-        # Kiểm tra lần chơi gần nhất
-        last_game = (
-            GamePlayer.query
-            .filter_by(player_id=u.id)
-            .join(GameHistory)
-            .order_by(GameHistory.created_at.desc())
-            .first()
-        )
-        last_play_time = last_game.game.created_at if last_game else None
+        cache.set("warning_count", warning_count, timeout=300)  # cache 5 phút
 
-        if not last_play_time or (now - last_play_time).days > 7:
-            warning_count += 1
-
-    # Dùng Redis cache thay vì query theme
     effective_theme = get_theme_with_cache(user_id) if user_id else 'default'
-
     return dict(user=user, warning_count=warning_count, effective_theme=effective_theme)
 
 def get_theme_with_cache(user_id):
@@ -587,14 +584,25 @@ def profile():
 @login_required
 @admin_required
 def admins():
-    admins = User.query.filter_by(role='admin').order_by(User.created_at.desc()).all()
+    per_page = 30
+    page = int(request.args.get('page', 1))
+    offset = (page - 1) * per_page
+
+    total_admins = User.query.filter_by(role='admin').count()
+    total_pages = ceil(total_admins / per_page)
+
+    admins = User.query.filter_by(role='admin') \
+        .order_by(User.created_at.desc()) \
+        .offset(offset).limit(per_page).all()
+
     members = User.query.filter_by(role='member').all()
 
     can_create = current_user.role == 'admin'
     can_edit = current_user.member_id == 'ADMIN-001'
 
     return render_template('admins.html', admins=admins, members=members,
-                           can_create=can_create, can_edit=can_edit)
+                       can_create=can_create, can_edit=can_edit,
+                       page=page, total_pages=total_pages, total=total_admins)
 
 
 @app.route('/delete_admin/<int:user_id>', methods=['POST'])
@@ -842,21 +850,31 @@ def delete_ability(ability_id):
 
 # Kim Bài Miễn Tử
 from math import ceil
+from sqlalchemy import func, case
+
 @app.route('/kim_bai')
 @login_required
 def kim_bai():
     per_page = 20
     page = int(request.args.get('page', 1))
 
-    has_kim_bai_count = User.query.filter_by(has_kim_bai=True).count()
-    no_kim_bai_count = User.query.filter_by(has_kim_bai=False).count()
-    total = has_kim_bai_count + no_kim_bai_count
+    # 🔁 Gộp các count lại 1 truy vấn duy nhất
+    counts = db.session.query(
+        func.count(User.id).label('total'),
+        func.sum(case((User.has_kim_bai == True, 1), else_=0)).label('has_kim_bai_count'),
+        func.sum(case((User.has_kim_bai == False, 1), else_=0)).label('no_kim_bai_count')
+    ).first()
 
-    members = User.query.order_by(User.display_name)\
-        .offset((page - 1) * per_page)\
-        .limit(per_page).all()
+    total = counts.total or 0
+    has_kim_bai_count = counts.has_kim_bai_count or 0
+    no_kim_bai_count = counts.no_kim_bai_count or 0
 
-    total_pages = ceil(total / per_page)
+    # 📄 Truy vấn danh sách người dùng (có phân trang)
+    per_page = 30
+    page = int(request.args.get('page', 1))
+    members = User.query.order_by(User.display_name) \
+        .offset((page - 1) * per_page).limit(per_page).all()
+
 
     return render_template(
         'kim_bai.html',
@@ -882,6 +900,7 @@ def increase_death(user_id):
         log = KimBaiLog(user_id=user.id, timestamp=datetime.utcnow())
         db.session.add(log)
         db.session.commit()
+        cache.delete_memoized(top_tier)
         log_activity("Tăng lượt chết", f"{current_user.username} tăng lượt chết cho {user.display_name} (ID {user.id}). Tổng: {user.death_count}.")
         flash('Đã tăng lượt chết.', 'success')
     return redirect(url_for('kim_bai'))
@@ -921,6 +940,7 @@ def decrease_death(user_id):
             user.has_kim_bai = False
 
         db.session.commit()
+        cache.delete_memoized(top_tier)
         log_activity("Giảm lượt chết", f"{current_user.username} giảm lượt chết cho {user.display_name} (ID {user.id}). Còn {user.death_count} lượt chết.")
         flash('Đã giảm lượt chết.', 'success')
     else:
@@ -968,7 +988,13 @@ def blacklist():
 
     if user_filter_id:
         query = query.filter(BlacklistEntry.created_by_id == int(user_filter_id))
+    
+    per_page = 30
+    page = int(request.args.get('page', 1))
+    offset = (page - 1) * per_page
 
+    total = query.count()
+    total_pages = ceil(total / per_page)
     entries = query.order_by(BlacklistEntry.id.desc()).all()
 
     # Danh sách người đã từng tạo entry
@@ -986,8 +1012,12 @@ def blacklist():
         all_users=creators,
         role_filter=role_filter,
         user_filter_id=user_filter_id,
-        user=current_user
+        user=current_user,
+        page=page,
+        total_pages=total_pages,
+        total=total
     )
+
 
 @app.route('/add_blacklist', methods=['POST'])
 @login_required
@@ -1288,16 +1318,18 @@ from sqlalchemy import func
 from flask import render_template
 
 from sqlalchemy import func, union_all, select
-@cache.cached()
+from sqlalchemy.orm import lazyload, joinedload
+
 @app.route("/frequency")
 @login_required
 def frequency():
     today = datetime.utcnow().date()
 
-    # Lấy tất cả user
-    User.query.options(lazyload("*")).all()
+    # 🔎 Tải tất cả user và map theo ID để tra nhanh
+    users = User.query.options(lazyload("*")).filter_by(role='member').all()
+    user_map = {u.id: u for u in users}
 
-    # Lấy danh sách nghỉ (vẫn còn hiệu lực)
+    # 📌 Lấy danh sách nghỉ (vẫn còn hiệu lực)
     current_offs = db.session.query(
         PlayerOffRequest.user_id,
         func.max(PlayerOffRequest.end_date).label("latest_end")
@@ -1308,7 +1340,7 @@ def frequency():
 
     off_dict = {user_id: latest_end for user_id, latest_end in current_offs}
 
-    # Tạo subquery union giữa player_id (GamePlayer) và host_id (GameHistory)
+    # 📌 Union subquery giữa người chơi và host
     gp_sub = db.session.query(
         GamePlayer.player_id.label("user_id"),
         GameHistory.created_at.label("played_at")
@@ -1321,7 +1353,7 @@ def frequency():
 
     union_q = gp_sub.union_all(host_sub).subquery()
 
-    # Tính số lượt chơi và lần cuối chơi (gộp cả host)
+    # 📌 Tính số lượt chơi và lần chơi gần nhất
     stats = db.session.query(
         union_q.c.user_id,
         func.count().label("play_count"),
@@ -1332,11 +1364,10 @@ def frequency():
     handled_ids = set()
 
     for user_id, play_count, last_play in stats:
-        user = User.query.get(user_id) if user_id else None
+        user = user_map.get(user_id)
         if not user:
             continue
 
-        # Nếu người này đang nghỉ
         if user_id in off_dict:
             adjusted_last_play = max(last_play.date(), off_dict[user_id])
         else:
@@ -1353,7 +1384,7 @@ def frequency():
         })
         handled_ids.add(user_id)
 
-    # Người chưa từng chơi
+    # 📌 Những người chưa từng chơi
     for u in users:
         if u.id in handled_ids:
             continue
@@ -1377,7 +1408,15 @@ def frequency():
                 "on_leave": False
             })
 
-    return render_template("frequency.html", data=data)
+    per_page = 30
+    page = int(request.args.get('page', 1))
+    offset = (page - 1) * per_page
+    total = len(data)
+    total_pages = ceil(total / per_page)
+
+    data = data[offset:offset + per_page]
+
+    return render_template("frequency.html", data=data, page=page, total=total, total_pages=total_pages)
 
 @app.route('/activity_log')
 @admin_required
