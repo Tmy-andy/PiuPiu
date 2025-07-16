@@ -611,6 +611,8 @@ def update_admin_points(user_id):
 
     return redirect(url_for('admins'))
 
+from sqlalchemy.inspection import inspect
+
 @app.route('/download_db')
 @admin_required
 def download_db():
@@ -631,29 +633,28 @@ def download_db():
         buffer.close()
 
     with ZipFile(zip_path, 'w') as zipf:
-        for class_name, model_class in db.Model._decl_class_registry.items():
-            if hasattr(model_class, '__tablename__'):
-                table_name = model_class.__tablename__ + '.csv'
-                instances = model_class.query.all()
-                if not instances:
-                    continue
+        for mapper in db.Model.registry.mappers:
+            model_class = mapper.class_
+            if not hasattr(model_class, '__tablename__'):
+                continue
 
-                # Lấy tên cột
-                columns = [column.key for column in inspect(model_class).columns]
+            table_name = model_class.__tablename__ + '.csv'
+            instances = model_class.query.all()
+            if not instances:
+                continue
 
-                # Lấy dữ liệu từng dòng
-                rows = []
-                for instance in instances:
-                    row = []
-                    for col in columns:
-                        val = getattr(instance, col)
-                        if isinstance(val, datetime):
-                            val = val.strftime('%Y-%m-%d %H:%M:%S')
-                        row.append(val)
-                    rows.append(row)
+            columns = [column.key for column in inspect(model_class).columns]
+            rows = []
+            for instance in instances:
+                row = []
+                for col in columns:
+                    val = getattr(instance, col)
+                    if isinstance(val, datetime):
+                        val = val.strftime('%Y-%m-%d %H:%M:%S')
+                    row.append(val)
+                rows.append(row)
 
-                # Ghi vào ZIP
-                add_csv_to_zip(zipf, table_name, columns, rows)
+            add_csv_to_zip(zipf, table_name, columns, rows)
 
     return send_file(zip_path, as_attachment=True, download_name="full_database_export.zip")
 
