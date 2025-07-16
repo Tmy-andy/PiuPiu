@@ -1,0 +1,23 @@
+body {
+    background-color: var(--card-bg, white) !important;
+    color: var(--text-color, black) !important;
+    font-family: inherit;
+}
+
+p, h1, h2, h3, h4, h5, h6, ul, ol {
+    color: inherit !important;
+}
+
+a {
+    color: var(--primary-color, #007bff) !important;
+}
+
+table {
+    background-color: transparent;
+    border-collapse: collapse;
+}
+
+td, th {
+    border: 1px solid var(--border-color, #ccc);
+    padding: 6px;
+}
