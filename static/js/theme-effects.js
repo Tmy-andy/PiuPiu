@@ -294,19 +294,19 @@ class ThemeEffects {
 
     initOceanClickRipple() {
         document.addEventListener('click', (e) => {
-            if (this.currentTheme !== 'ocean') return;
+            if (this.currentTheme !== 'ocean' || !this.effectsEnabled) return;
 
-            const ripple = document.createElement('span');
-            ripple.className = 'ripple-circle';
-            const size = 100;
-            ripple.style.width = ripple.style.height = `${size}px`;
+            const ripple = document.createElement('div');
+            ripple.className = 'realistic-ripple';
+            document.body.appendChild(ripple);
+
+            const size = 300; // kích thước sóng
             ripple.style.left = `${e.clientX - size / 2}px`;
             ripple.style.top = `${e.clientY - size / 2}px`;
-            document.body.appendChild(ripple);
 
             setTimeout(() => {
                 ripple.remove();
-            }, 600);
+            }, 1000);
         });
     }
 
