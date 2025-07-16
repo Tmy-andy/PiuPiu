@@ -281,7 +281,7 @@ def members():
         Admin.display_name.label("admin_name")
     ).outerjoin(Admin, User.assigned_admin_id == Admin.id) \
      .filter(User.role == 'member') \
-     .order_by(User.created_at.desc()).all()
+     .order_by(User.member_id.asc()).all()
 
     members = []
     for user, admin_name in results:
@@ -329,16 +329,46 @@ def assign_member(user_id):
         flash('Đã xảy ra lỗi nội bộ.', 'danger')
         return redirect(url_for('members'))
 
-@app.route('/member_ids')
+@app.route('/members')
 @admin_required
-def member_ids():
-    UsedBy = aliased(User)
+def members():
+    Admin = aliased(User)
 
-    member_ids = db.session.query(MemberID, UsedBy.display_name.label("used_by_name")) \
-        .outerjoin(UsedBy, MemberID.used_by == UsedBy.id) \
-        .order_by(MemberID.member_id).all()
+    # ⚙️ Cấu hình phân trang
+    per_page = 20
+    page = int(request.args.get('page', 1))
+    offset = (page - 1) * per_page
 
-    return render_template('member_ids.html', member_ids=member_ids)
+    # 🔎 Tổng số thành viên
+    total = User.query.filter_by(role='member').count()
+    total_pages = ceil(total / per_page)
+
+    # ⚡ Truy vấn có phân trang + join admin
+    results = db.session.query(
+        User,
+        Admin.display_name.label("admin_name")
+    ).outerjoin(Admin, User.assigned_admin_id == Admin.id) \
+     .filter(User.role == 'member') \
+     .order_by(User.member_id.asc()) \
+     .offset(offset).limit(per_page).all()
+
+    # ✅ Gắn admin_name vào user
+    members = []
+    for user, admin_name in results:
+        user.admin_name = admin_name
+        members.append(user)
+
+    # ✅ Lấy danh sách admin
+    all_admins = User.query.filter_by(role='admin').order_by(User.display_name).all()
+
+    return render_template(
+        'members.html',
+        members=members,
+        all_admins=all_admins,
+        total=total,
+        page=page,
+        total_pages=total_pages
+    )
 
 
 @app.route('/add_member_ids', methods=['POST'])
@@ -758,11 +788,32 @@ def delete_ability(ability_id):
     return redirect(url_for('abilities'))
 
 # Kim Bài Miễn Tử
+from math import ceil
 @app.route('/kim_bai')
 @login_required
 def kim_bai():
-    members = User.query.order_by(User.display_name).all()
-    return render_template('kim_bai.html', members=members)
+    per_page = 20
+    page = int(request.args.get('page', 1))
+
+    has_kim_bai_count = User.query.filter_by(has_kim_bai=True).count()
+    no_kim_bai_count = User.query.filter_by(has_kim_bai=False).count()
+    total = has_kim_bai_count + no_kim_bai_count
+
+    members = User.query.order_by(User.display_name)\
+        .offset((page - 1) * per_page)\
+        .limit(per_page).all()
+
+    total_pages = ceil(total / per_page)
+
+    return render_template(
+        'kim_bai.html',
+        members=members,
+        total=total,
+        page=page,
+        total_pages=total_pages,
+        has_kim_bai_count=has_kim_bai_count,
+        no_kim_bai_count=no_kim_bai_count
+    )
 
 @app.route('/increase_death/<int:user_id>', methods=['POST'])
 @admin_required
