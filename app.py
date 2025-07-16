@@ -144,8 +144,8 @@ Compress(app)
 
 # Cache
 from flask_caching import Cache
-app.config['CACHE_TYPE'] = 'SimpleCache'
-app.config['CACHE_DEFAULT_TIMEOUT'] = 300  # 5 phút
+app.config['CACHE_TYPE'] = 'RedisCache'
+app.config['CACHE_REDIS_URL'] = os.getenv("REDIS_URL")
 cache = Cache(app)
 
 # Error handlers
@@ -1189,7 +1189,7 @@ def frequency():
     today = datetime.utcnow().date()
 
     # Lấy tất cả user
-    users = User.query.all()
+    User.query.options(lazyload("*")).all()
 
     # Lấy danh sách nghỉ (vẫn còn hiệu lực)
     current_offs = db.session.query(
