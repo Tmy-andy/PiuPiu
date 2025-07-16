@@ -829,11 +829,11 @@ def edit_ability(ability_id):
         ability.name = request.form['name']
         ability.description = request.form['description']
         db.session.commit()
+        cache.delete_memoized(abilities)
         log_activity("Sửa chức năng", f"{current_user.username} đã cập nhật chức năng '{ability.name}' (ID {ability.id}).")
         flash('Đã cập nhật.', 'success')
     else:
         flash('Không tìm thấy chức năng.', 'danger')
-    cache.delete_memoized(abilities)
     return redirect(url_for('abilities'))
 
 
@@ -844,6 +844,7 @@ def delete_ability(ability_id):
     if ability:
         db.session.delete(ability)
         db.session.commit()
+        cache.delete_memoized(abilities)
         log_activity("Xóa chức năng", f"{current_user.username} đã xóa chức năng '{ability.name}' (ID {ability.id}).")
         flash('Đã xóa chức năng.', 'success')
     else:
@@ -1038,6 +1039,7 @@ def add_blacklist():
     )
     db.session.add(new_entry)
     db.session.commit()
+    cache.delete_memoized(blacklist)
     log_activity("Thêm blacklist", f"{current_user.username} thêm '{new_entry.name}' vào blacklist.")
     flash('Đã thêm vào blacklist.', 'success')
     return redirect(url_for('blacklist'))
@@ -1051,11 +1053,11 @@ def delete_blacklist(entry_id):
     if entry and (entry.created_by_id == current_user.id or current_user.member_id == 'ADMIN-001'):
         db.session.delete(entry)
         db.session.commit()
+        cache.delete_memoized(blacklist)
         log_activity("Xóa blacklist", f"{current_user.username} đã xóa blacklist entry ID {entry.id}.")
         flash('Đã xoá mục khỏi blacklist.', 'success')
     else:
         flash('Bạn không có quyền xoá mục này.', 'danger')
-
     return redirect(url_for('blacklist'))
 
 @app.route('/edit_blacklist_author/<int:entry_id>', methods=['POST'])
@@ -1073,11 +1075,11 @@ def edit_blacklist_author(entry_id):
     if entry and user_target:
         entry.created_by_id = user_target.id
         db.session.commit()
+        cache.delete_memoized(blacklist)
         log_activity("Cập nhật người nhập blacklist", f"{current_user.username} sửa created_by_id của entry ID {entry.id} thành user ID {user_target.id}.")
         flash('Đã cập nhật người nhập.', 'success')
     else:
         flash('Không tìm thấy người dùng hoặc mục!', 'danger')
-
     return redirect(url_for('blacklist'))
 
 @app.route("/game_history")
