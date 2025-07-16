@@ -859,7 +859,7 @@ from sqlalchemy import func, case
 @app.route('/kim_bai')
 @login_required
 def kim_bai():
-    per_page = 20
+    per_page = 30
     page = int(request.args.get('page', 1))
 
     # 🔁 Gộp các count lại 1 truy vấn duy nhất
@@ -874,11 +874,10 @@ def kim_bai():
     no_kim_bai_count = counts.no_kim_bai_count or 0
 
     # 📄 Truy vấn danh sách người dùng (có phân trang)
-    per_page = 30
-    page = int(request.args.get('page', 1))
     members = User.query.order_by(User.display_name) \
         .offset((page - 1) * per_page).limit(per_page).all()
 
+    total_pages = ceil(total / per_page)
 
     return render_template(
         'kim_bai.html',
