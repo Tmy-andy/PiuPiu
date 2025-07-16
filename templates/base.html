@@ -263,8 +263,8 @@
         });
     </script>
 
-    {% block scripts %}
-    {% endblock %}
+    {% block scripts %}{% endblock %}
+    {% block extra_scripts %}{% endblock %}
     <!-- Theme Effect -->
     <script src="{{ url_for('static', filename='js/theme-effects.js') }}" defer></script>
 </body>
