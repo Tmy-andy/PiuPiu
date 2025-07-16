@@ -160,18 +160,15 @@ Compress(app)
 
 # Cache
 from flask_caching import Cache
-
 app = Flask(__name__)
 app.config['CACHE_TYPE'] = 'SimpleCache'
 app.config['CACHE_DEFAULT_TIMEOUT'] = 300  # 5 phút
-
 cache = Cache(app)
 
 @cache.cached()
 @app.route('/public_rules')
 def public_rules():
     return render_template('public_rules.html')
-
 
 # Error handlers
 @app.errorhandler(403)
