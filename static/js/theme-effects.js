@@ -10,7 +10,6 @@ class ThemeEffects {
 
     init() {
         this.setupEventListeners();
-        this.loadSavedTheme();
     }
 
     setupEventListeners() {
@@ -59,9 +58,6 @@ class ThemeEffects {
             default:
                 break;
         }
-        
-        // Lưu theme đã chọn
-        localStorage.setItem('selectedTheme', theme);
         
         // Trigger custom event
         document.dispatchEvent(new CustomEvent('themeApplied', {
@@ -478,13 +474,6 @@ class ThemeEffects {
         }
     }
 
-    loadSavedTheme() {
-        const savedTheme = localStorage.getItem('selectedTheme');
-        if (savedTheme) {
-            this.applyTheme(savedTheme);
-        }
-    }
-
     // ============= PERFORMANCE MONITORING =============
     monitorPerformance() {
         if (performance.memory) {
@@ -588,16 +577,21 @@ class ThemeEffects {
 // ============= INITIALIZATION =============
 document.addEventListener('DOMContentLoaded', () => {
     window.themeEffects = new ThemeEffects();
-    
-    // Expose methods globally for theme selector
+
+    const currentTheme = document.body.getAttribute('data-theme');
+    if (currentTheme) {
+        window.themeEffects.applyTheme(currentTheme);
+    }
+
+    // Expose changeTheme globally
     window.changeTheme = (theme) => {
         window.themeEffects.applyTheme(theme);
     };
-    
-    // Performance monitoring
+
+    // Performance monitor
     setInterval(() => {
         window.themeEffects.monitorPerformance();
-    }, 30000); // Check every 30 seconds
+    }, 30000);
 });
 
 // ============= EXPORT FOR MODULE SYSTEMS =============
@@ -646,20 +640,3 @@ const THEME_PRESETS = {
 
 // Make presets globally available
 window.THEME_PRESETS = THEME_PRESETS;
-
-document.addEventListener('DOMContentLoaded', () => {
-    window.themeEffects = new ThemeEffects();
-
-    const currentTheme = document.body.getAttribute('data-theme');
-    if (currentTheme) {
-        window.themeEffects.applyTheme(currentTheme);
-    }
-
-    window.changeTheme = (theme) => {
-        window.themeEffects.applyTheme(theme);
-    };
-
-    setInterval(() => {
-        window.themeEffects.monitorPerformance();
-    }, 30000);
-});
