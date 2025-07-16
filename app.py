@@ -148,10 +148,39 @@ def inject_user():
         if not last_play_time or (now - last_play_time).days > 7:
             warning_count += 1
 
-    # Theme hiệu lực
-    effective_theme = session.get('theme', 'default')
+    # Dùng Redis cache thay vì query theme
+    effective_theme = get_theme_with_cache(user_id) if user_id else 'default'
 
     return dict(user=user, warning_count=warning_count, effective_theme=effective_theme)
+
+def get_theme_with_cache(user_id):
+    cache_key = f"user_theme:{user_id}"
+
+    # 1. Check cache
+    theme = cache.get(cache_key)
+    if theme:
+        return theme
+
+    # 2. Nếu chưa có: query DB
+    user = User.query.get(user_id)
+    if not user:
+        return 'default'
+
+    # 3. Ưu tiên ngày lễ
+    today = datetime.today()
+    if today.month == 10 and today.day >= 25:
+        theme = 'halloween'
+    elif today.month == 12 and today.day >= 24:
+        theme = 'christmas'
+    elif today.month == 1 and today.day <= 2:
+        theme = 'newyear'
+    else:
+        theme = user.theme or 'default'
+
+    # 4. Cache lại 1 tiếng
+    cache.set(cache_key, theme, timeout=3600)
+
+    return theme
 
 # Cache
 from flask_caching import Cache
@@ -1437,7 +1466,7 @@ def change_theme():
             db.session.commit()
 
             # ✅ Cập nhật session
-            session['theme'] = get_theme(user)
+            cache.set(f"user_theme:{user.id}", selected, timeout=3600)
 
             flash(f'Đã đổi giao diện sang theme: {selected}', 'success')
             return redirect(url_for('dashboard'))
