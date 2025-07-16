@@ -622,39 +622,38 @@ def download_db():
     temp_dir = tempfile.TemporaryDirectory()
     zip_path = os.path.join(temp_dir.name, "full_database_export.zip")
 
+    def add_csv_to_zip(zipf, filename, headers, rows):
+        buffer = io.StringIO()
+        writer = csv.writer(buffer)
+        writer.writerow(headers)
+        writer.writerows(rows)
+        zipf.writestr(filename, buffer.getvalue())
+        buffer.close()
+
     with ZipFile(zip_path, 'w') as zipf:
-        def add_csv(filename, headers, rows):
-            buffer = io.StringIO()
-            writer = csv.writer(buffer)
-            writer.writerow(headers)
-            writer.writerows(rows)
-            zipf.writestr(filename, buffer.getvalue())
-            buffer.close()
+        for class_name, model_class in db.Model._decl_class_registry.items():
+            if hasattr(model_class, '__tablename__'):
+                table_name = model_class.__tablename__ + '.csv'
+                instances = model_class.query.all()
+                if not instances:
+                    continue
 
-            # Lặp qua toàn bộ model
-            for class_name, model_class in db.Model._decl_class_registry.items():
-                if hasattr(model_class, '__tablename__'):
-                    table_name = model_class.__tablename__ + '.csv'
-                    instances = model_class.query.all()
-                    if not instances:
-                        continue
+                # Lấy tên cột
+                columns = [column.key for column in inspect(model_class).columns]
 
-                    # Lấy tên cột
-                    columns = [column.key for column in inspect(model_class).columns]
+                # Lấy dữ liệu từng dòng
+                rows = []
+                for instance in instances:
+                    row = []
+                    for col in columns:
+                        val = getattr(instance, col)
+                        if isinstance(val, datetime):
+                            val = val.strftime('%Y-%m-%d %H:%M:%S')
+                        row.append(val)
+                    rows.append(row)
 
-                    # Lấy dữ liệu từng dòng
-                    rows = []
-                    for instance in instances:
-                        row = []
-                        for col in columns:
-                            val = getattr(instance, col)
-                            if isinstance(val, datetime):
-                                val = val.strftime('%Y-%m-%d %H:%M:%S')
-                            row.append(val)
-                        rows.append(row)
-
-                    # Ghi vào ZIP
-                    add_csv(table_name, columns, rows)
+                # Ghi vào ZIP
+                add_csv_to_zip(zipf, table_name, columns, rows)
 
     return send_file(zip_path, as_attachment=True, download_name="full_database_export.zip")
 
