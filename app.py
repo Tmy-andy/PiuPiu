@@ -183,6 +183,7 @@ def get_theme_with_cache(user_id):
     return theme
 
 # Cache
+from redis import Redis
 from flask_caching import Cache
 app.config['CACHE_TYPE'] = 'RedisCache'
 app.config['CACHE_REDIS_URL'] = os.getenv('REDIS_URL')
