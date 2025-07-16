@@ -1,9 +1,8 @@
-print("✅ Flask khởi động...")
+# print("✅ Flask khởi động...")
 import os
 import traceback
-print("✅ Flask đang được yêu cầu chạy ở cổng :", os.environ.get("PORT"))
-print("📦 Environment:", dict(os.environ))
-
+# print("✅ Flask đang được yêu cầu chạy ở cổng :", os.environ.get("PORT"))
+# print("📦 Environment:", dict(os.environ))
 from flask import Flask, render_template, request, redirect, url_for, flash, session, send_file, Response, abort
 from docx import Document
 from flask_login import login_required, LoginManager, login_user, current_user
@@ -40,7 +39,7 @@ try:
     with app.app_context():
         db.create_all()
 
-    print("✅ Flask khởi động...")
+    # print("✅ Flask khởi động...")
 
 except Exception as e:
     print("🛑 Lỗi khi khởi tạo Flask app:")
@@ -160,7 +159,6 @@ Compress(app)
 
 # Cache
 from flask_caching import Cache
-app = Flask(__name__)
 app.config['CACHE_TYPE'] = 'SimpleCache'
 app.config['CACHE_DEFAULT_TIMEOUT'] = 300  # 5 phút
 cache = Cache(app)
@@ -725,7 +723,7 @@ def abilities():
 def add_ability():
     faction = request.form['faction']
     order_in_faction = request.form.get('order')
-    
+
     if not order_in_faction or order_in_faction.strip() == '':
         max_order = db.session.query(db.func.max(CharacterAbility.order_in_faction)).filter_by(faction=faction).scalar()
         order_in_faction = (max_order or 0) + 1
@@ -845,6 +843,7 @@ def decrease_death(user_id):
     return redirect(url_for('kim_bai'))
 
 #Top
+@cache.cached(timeout=300)
 @app.route('/top_tier')
 @login_required
 def top_tier():
@@ -912,7 +911,7 @@ def add_blacklist():
     if not name.strip():
         flash('Tên là bắt buộc!', 'danger')
         return redirect(url_for('blacklist'))
-    
+
     new_entry = BlacklistEntry(
         name=name.strip(),
         facebook_link=facebook_link.strip() if facebook_link else None,
@@ -1022,8 +1021,8 @@ def create_game():
         manual_players = request.form.getlist('manual_players[]')
         manual_chars = request.form.getlist('manual_chars[]')
 
-        print("👤 Người chơi:", manual_players)
-        print("🎭 Nhân vật:", manual_chars)
+        # print("👤 Người chơi:", manual_players)
+        # print("🎭 Nhân vật:", manual_chars)
 
         if len(manual_players) != len(manual_chars) or len(manual_players) == 0:
             flash("Số lượng người chơi và nhân vật phải bằng nhau và lớn hơn 0.", "danger")
@@ -1050,7 +1049,7 @@ def create_game():
                     admin_id=session.get("user_id")
                 ))
                 log_activity("Cộng điểm", f"{current_user.username} cộng {user.points - before} điểm cho {user.display_name} (ID {user.id}) trong ván chơi.")
-                print(f"✔️ +{user.points - before} điểm cho {user.display_name} (ID {user.id}): {before} ➜ {user.points}")
+                # print(f"✔️ +{user.points - before} điểm cho {user.display_name} (ID {user.id}): {before} ➜ {user.points}")
         db.session.commit()
         log_activity("Tạo ván chơi", f"{current_user.username} tạo ván chơi (thủ công), game ID {new_game.id}, {len(manual_players)} người chơi.")
         flash("Đã tạo ván chơi phân thủ công!", "success")
@@ -1062,9 +1061,9 @@ def create_game():
         char_ids_str = request.form.get("char_ids", "")
         char_ids = [int(cid) for cid in char_ids_str.split(',') if cid.strip().isdigit()]
 
-        print("🧪 Form raw:", request.form)
-        print("👤 Người chơi:", player_ids)
-        print("🎭 Nhân vật:", char_ids)
+        # print("🧪 Form raw:", request.form)
+        # print("👤 Người chơi:", player_ids)
+        # print("🎭 Nhân vật:", char_ids)
 
         if len(player_ids) != len(char_ids) or len(player_ids) == 0:
             flash("Số lượng người chơi và nhân vật phải bằng nhau và lớn hơn 0.", "danger")
@@ -1091,7 +1090,7 @@ def create_game():
                     admin_id=session.get("user_id")
                 ))
                 log_activity("Cộng điểm", f"{current_user.username} cộng {user.points - before} điểm cho {user.display_name} (ID {user.id}) trong ván chơi.")
-                print(f"✔️ +{user.points - before} điểm cho {user.display_name} (ID {user.id}): {before} ➜ {user.points}")
+                # print(f"✔️ +{user.points - before} điểm cho {user.display_name} (ID {user.id}): {before} ➜ {user.points}")
         db.session.commit()
         log_activity("Tạo ván chơi", f"{current_user.username} tạo ván chơi (ngẫu nhiên), game ID {new_game.id}, {len(player_ids)} người chơi.")
         flash("Tạo ván (phân ngẫu nhiên) thành công!", "success")
@@ -1110,7 +1109,7 @@ def update_game_note(game_id):
     game.notes = request.form.get('note', '')  # sửa lại đúng name
     selected_tags = request.form.getlist('tags')
     game.tags = ",".join(selected_tags)
-    
+
     print("After:", game.notes, game.tags)
 
     db.session.commit()
@@ -1387,6 +1386,3 @@ def change_theme():
             flash('Theme không hợp lệ.', 'danger')
 
     return render_template('change_theme.html', user=user, themes=themes, THEME_PRESETS=THEME_PRESETS)
-
-
-print(f"📌 Flask app = {app}")
