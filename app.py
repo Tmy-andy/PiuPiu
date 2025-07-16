@@ -149,7 +149,7 @@ def inject_user():
             warning_count += 1
 
     # Theme hiệu lực
-    effective_theme = get_theme(user)
+    effective_theme = session.get('theme', 'default')
 
     return dict(user=user, warning_count=warning_count, effective_theme=effective_theme)
 
@@ -201,6 +201,7 @@ def login():
             session['user_id'] = user.id
             session['user_role'] = user.role
             session['display_name'] = user.display_name
+            session['theme'] = get_theme(user)
             flash(f'Chào mừng {user.display_name}!', 'success')
             return redirect(url_for('dashboard'))
         else:
@@ -1434,6 +1435,10 @@ def change_theme():
         if selected in themes:
             user.theme = selected
             db.session.commit()
+
+            # ✅ Cập nhật session
+            session['theme'] = get_theme(user)
+
             flash(f'Đã đổi giao diện sang theme: {selected}', 'success')
             return redirect(url_for('dashboard'))
         else:
