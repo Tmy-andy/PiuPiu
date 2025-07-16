@@ -718,7 +718,7 @@ def rules():
     return render_template('rules.html', rule=rule)
 
 # Public view trên trang login
-@cache.cached()
+@cache.cached(timeout=300)
 @app.route('/public_rules')
 def public_rules():
     rule = Rule.query.first()
@@ -745,7 +745,7 @@ def export_rules():
 # Character abilities
 FACTIONS = ["Phe Dân", "Phe Sói", "Phe Ba", "Đổi Phe"]
 
-@cache.cached()
+@cache.cached(timeout=300)
 @app.route('/abilities')
 @login_required
 def abilities():
@@ -813,6 +813,7 @@ def add_ability():
     )
     db.session.add(new_ability)
     db.session.commit()
+    cache.delete_memoized(abilities)
     log_activity("Thêm chức năng", f"{current_user.username} đã thêm chức năng mới: '{new_ability.name}' (ID {new_ability.id}) vào phe {new_ability.faction}.")
     flash('Đã thêm chức năng.', 'success')
     return redirect(url_for('abilities'))
@@ -832,6 +833,7 @@ def edit_ability(ability_id):
         flash('Đã cập nhật.', 'success')
     else:
         flash('Không tìm thấy chức năng.', 'danger')
+    cache.delete_memoized(abilities)
     return redirect(url_for('abilities'))
 
 
@@ -846,6 +848,7 @@ def delete_ability(ability_id):
         flash('Đã xóa chức năng.', 'success')
     else:
         flash('Không tìm thấy chức năng.', 'danger')
+    cache.delete_memoized(abilities)
     return redirect(url_for('abilities'))
 
 # Kim Bài Miễn Tử
