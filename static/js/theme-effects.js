@@ -293,18 +293,14 @@ class ThemeEffects {
             if (this.currentTheme !== 'ocean' || !this.effectsEnabled) return;
 
             const ripple = document.createElement('div');
-            ripple.className = 'realistic-ripple';
+            ripple.className = 'water-ripple';
+            ripple.style.left = `${e.clientX}px`;
+            ripple.style.top = `${e.clientY}px`;
             document.body.appendChild(ripple);
-
-            const size = 300; // kích thước sóng
-            ripple.style.left = `${e.clientX - size / 2}px`;
-            ripple.style.top = `${e.clientY - size / 2}px`;
-
-            setTimeout(() => {
-                ripple.remove();
-            }, 1000);
+            setTimeout(() => ripple.remove(), 1000);
         });
     }
+
 
     // ============= SUNSET EFFECTS =============
     initSunsetEffects() {
