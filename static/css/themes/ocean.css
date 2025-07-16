@@ -317,3 +317,323 @@
     border: 1px solid var(--border-color);
     border-top: none;
 }
+
+[data-theme="ocean"] {
+    /* Base Colors */
+    --primary-color: #0ea5e9;
+    --primary-dark: #0284c7;
+    --primary-color-rgba: 14, 165, 233;
+    --primary-color-rgb: 14, 165, 233;
+
+    --secondary-color: #0369a1;
+    --success-color: #059669;
+    --warning-color: #d97706;
+    --danger-color: #dc2626;
+
+    /* Background */
+    --light-bg: #f0f9ff;
+    --bg-primary: #f0f9ff;
+    --bg-secondary: #e0f2fe;
+
+    /* Text */
+    --text-color: #0c4a6e;
+    --text-muted: #0369a1;
+    --text-primary: #0c4a6e;
+    --text-secondary: #0369a1;
+
+    /* Borders + Shadows */
+    --border-color: #bae6fd;
+    --card-shadow: 0 4px 6px -1px rgba(14, 165, 233, 0.1);
+
+    /* Cards & Form */
+    --card-bg: #ffffff;
+    --input-bg: #ffffff;
+    --input-border: #7dd3fc;
+
+    /* Gradients */
+    --navbar-bg: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+    --navbar-gradient-start: #1e3c72;
+    --navbar-gradient-end: #2a5298;
+    --stats-card-bg: linear-gradient(135deg, #1e40af 0%, #1e3a8a 100%);
+
+    --success-gradient-start: #0f766e;
+    --success-gradient-end: #34d399;
+    --warning-gradient-start: #facc15;
+    --warning-gradient-end: #fbbf24;
+    --info-gradient-start: #38bdf8;
+    --info-gradient-end: #0ea5e9;
+
+    --scroll-btn-gradient-start: #0284c7;
+    --scroll-btn-gradient-end: #0ea5e9;
+
+    /* Table */
+    --table-header-bg: linear-gradient(135deg, #0ea5e9, #0284c7);
+    --table-header-start: #0ea5e9;
+    --table-header-end: #0284c7;
+
+    /* Mobile Navigation */
+    --mobile-nav-bg: var(--bg-primary);
+    --mobile-nav-text: var(--text-primary);
+    --mobile-nav-border: #bae6fd;
+    --mobile-nav-hover-bg: #e0f7ff;
+    --mobile-nav-dropdown-bg: #ffffff;
+    --mobile-nav-dropdown-shadow: rgba(14, 165, 233, 0.2);
+    --mobile-nav-dropdown-border: rgba(125, 211, 252, 0.1);
+    --mobile-nav-item-color: var(--text-primary);
+    --mobile-nav-item-border: #bae6fd;
+    --mobile-nav-header-bg: linear-gradient(135deg, #e0f2fe, #f0f9ff);
+    --mobile-nav-danger-hover-bg: linear-gradient(135deg, #fee2e2, #fecaca);
+    --mobile-nav-divider: #bae6fd;
+    --mobile-nav-overlay-bg: rgba(0, 0, 0, 0.5);
+
+    /* Glass effect */
+    --glass-bg: rgba(14, 165, 233, 0.05);
+    --glass-border: rgba(14, 165, 233, 0.2);
+
+    /* Sidebar */
+    --sidebar-bg: #ffffff;
+    --sidebar-link-color: #0369a1;
+    --sidebar-link-hover-bg: #0ea5e9;
+    --sidebar-link-hover-color: #ffffff;
+    --sidebar-active-bg: #0284c7;
+    --sidebar-active-color: #ffffff;
+
+    /* Login Card & Icon BG */
+    --login-card-bg: rgba(255, 255, 255, 0.95);
+    --navbar-brand-icon-bg: rgba(255, 255, 255, 0.2);
+}
+
+/* Ocean wave effect */
+[data-theme="ocean"] body::before {
+    content: '';
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100px;
+    background: linear-gradient(to top, rgba(14,165,233,0.1) 0%, transparent 100%);
+    animation: wave 6s ease-in-out infinite;
+    pointer-events: none;
+    z-index: -1;
+}
+
+@keyframes wave {
+    0%, 100% { transform: translateX(0) scaleY(1); }
+    50% { transform: translateX(10px) scaleY(1.1); }
+}
+
+/* General UI styles */
+[data-theme="ocean"] body {
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+}
+
+[data-theme="ocean"] .sidebar .nav-link {
+    color: var(--sidebar-link-color);
+    transition: all 0.2s ease;
+}
+
+[data-theme="ocean"] .sidebar .nav-link:hover {
+    background-color: var(--sidebar-link-hover-bg);
+    color: var(--sidebar-link-hover-color);
+}
+
+[data-theme="ocean"] .sidebar .nav-link.active {
+    background-color: var(--sidebar-active-bg);
+    color: var(--sidebar-active-color) !important;
+}
+
+[data-theme="ocean"] .sidebar .nav-link.active i {
+    color: var(--sidebar-active-color);
+}
+
+[data-theme="ocean"] .sidebar-header {
+    color: var(--sidebar-active-color);
+    font-weight: 600;
+}
+
+[data-theme="ocean"] .sidebar-header i {
+    color: var(--sidebar-active-color);
+}
+
+[data-theme="ocean"] .card {
+    background-color: var(--card-bg);
+    color: var(--text-color);
+    border: 1px solid var(--border-color);
+    box-shadow: var(--card-shadow);
+}
+
+[data-theme="ocean"] .card-header {
+    background-color: var(--input-bg);
+    color: var(--text-color);
+    border-bottom: 1px solid var(--border-color);
+}
+
+[data-theme="ocean"] .card-title {
+    color: var(--text-color);
+}
+
+[data-theme="ocean"] .form-label {
+    color: var(--text-primary);
+}
+
+[data-theme="ocean"] .form-text {
+    color: var(--text-muted);
+}
+
+[data-theme="ocean"] .table {
+    background-color: var(--card-bg);
+    color: var(--text-color);
+    border-color: var(--border-color);
+}
+
+[data-theme="ocean"] .table thead th {
+    background: var(--table-header-bg);
+    color: white;
+    border: none;
+}
+
+[data-theme="ocean"] .table tbody tr {
+    background-color: var(--card-bg);
+    color: var(--text-color);
+    border-top: 1px solid var(--border-color);
+}
+
+[data-theme="ocean"] .table tbody tr:hover {
+    background-color: var(--glass-bg);
+}
+
+[data-theme="ocean"] .badge.bg-primary {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+[data-theme="ocean"] .badge.bg-success {
+    background-color: var(--success-color);
+    color: white;
+}
+
+[data-theme="ocean"] .badge.bg-secondary {
+    background-color: var(--secondary-color);
+    color: white;
+}
+
+[data-theme="ocean"] .text-theme-primary {
+    color: var(--primary-color) !important;
+}
+
+[data-theme="ocean"] .text-muted {
+    color: var(--text-muted) !important;
+}
+
+/* Utility */
+.text-theme-primary {
+    color: var(--primary-color) !important;
+}
+
+.text-theme-secondary {
+    color: var(--text-secondary) !important;
+}
+
+.sidebar-header:hover {
+    background-color: unset !important;
+    color: inherit !important;
+    cursor: default !important;
+}
+
+/* Modal header */
+[data-theme] .modal-header {
+    background-color: var(--primary-color);
+    color: white;
+    border-bottom: 1px solid var(--border-color);
+}
+
+/* Icon hoặc tiêu đề trong modal header */
+[data-theme] .modal-header .modal-title i {
+    color: white;
+}
+
+/* Nút close trắng */
+[data-theme] .btn-close-white {
+    filter: brightness(0) invert(1);
+}
+
+/* Modal footer */
+[data-theme] .modal-footer {
+    background-color: var(--card-bg);
+    border-top: 1px solid var(--border-color);
+}
+
+/* Tabs trong modal */
+[data-theme] .nav-tabs .nav-link {
+    background-color: var(--input-bg);
+    color: var(--text-secondary);
+    border: 1px solid var(--border-color);
+    margin-right: 0.5rem;
+    border-radius: 0.375rem 0.375rem 0 0;
+}
+
+[data-theme] .nav-tabs .nav-link.active {
+    background-color: var(--bg-secondary);
+    color: var(--primary-color);
+    border-bottom: 2px solid var(--primary-color);
+}
+
+/* Tab content */
+[data-theme] .tab-content {
+    background-color: var(--card-bg);
+    padding: 1rem;
+    border: 1px solid var(--border-color);
+    border-top: none;
+    border-radius: 0 0 0.375rem 0.375rem;
+}
+
+/* Form control trong modal */
+[data-theme] .modal-content .form-control,
+[data-theme] .modal-content .form-select {
+    background-color: var(--input-bg);
+    color: var(--text-primary);
+    border: 1px solid var(--input-border);
+}
+
+/* Placeholder & Label */
+[data-theme] .modal-content .form-label {
+    color: var(--text-primary);
+}
+
+[data-theme] .modal-content .form-text {
+    color: var(--text-muted);
+}
+
+/* Button trong modal */
+[data-theme] .modal-content .btn-primary {
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+    border: none;
+    color: white;
+}
+[data-theme] .modal-content .btn-secondary {
+    background-color: var(--secondary-color);
+    color: white;
+    border: none;
+}
+[data-theme] .modal-content .btn-success {
+    background-color: var(--success-color);
+    color: white;
+    border: none;
+}
+[data-theme] .modal-content .btn-outline-primary {
+    border-color: var(--primary-color);
+    color: var(--primary-color);
+}
+[data-theme] .modal-content .btn-outline-primary:hover {
+    background-color: var(--primary-color);
+    color: white;
+}
+[data-theme] .tab-pane {
+    background-color: var(--card-bg);
+    color: var(--text-color);
+    padding: 1rem;
+    border-radius: 0 0 0.375rem 0.375rem;
+    border: 1px solid var(--border-color);
+    border-top: none;
+}
