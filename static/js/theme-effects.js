@@ -252,6 +252,8 @@ class ThemeEffects {
     // ============= OCEAN EFFECTS =============
     initOceanEffects() {
         this.createOceanBubbles();
+        this.initOceanHoverRipple();
+        this.initOceanClickRipple();
     }
 
     createOceanBubbles() {
@@ -314,6 +316,33 @@ class ThemeEffects {
                 clearInterval(bubbleInterval);
             }
         }, this.isMobile ? 4000 : 3000);
+    }
+
+    initOceanHoverRipple() {
+    // Áp dụng class ripple-hover vào tất cả các thẻ cần hiệu ứng hover
+        document.querySelectorAll('button, .card, .nav-link, .list-group-item').forEach(el => {
+            el.classList.add('ripple-hover');
+            el.style.position = 'relative';
+            el.style.overflow = 'hidden';
+        });
+    }
+
+    initOceanClickRipple() {
+        document.addEventListener('click', (e) => {
+            if (this.currentTheme !== 'ocean') return;
+
+            const ripple = document.createElement('span');
+            ripple.className = 'ripple-circle';
+            const size = 100;
+            ripple.style.width = ripple.style.height = `${size}px`;
+            ripple.style.left = `${e.clientX - size / 2}px`;
+            ripple.style.top = `${e.clientY - size / 2}px`;
+            document.body.appendChild(ripple);
+
+            setTimeout(() => {
+                ripple.remove();
+            }, 600);
+        });
     }
 
     // ============= SUNSET EFFECTS =============
