@@ -55,6 +55,18 @@ with app.app_context():
 from flask_compress import Compress
 Compress(app)
 
+@app.after_request
+def add_cache_control(response):
+    # Nếu là file tĩnh: cache lâu hơn
+    if request.path.startswith('/static/'):
+        response.headers['Cache-Control'] = 'public, max-age=31536000'  # 1 năm
+    else:
+        response.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate'
+        response.headers['Pragma'] = 'no-cache'
+        response.headers['Expires'] = '0'
+    return response
+
+
 # def login_required(f):
 #     @wraps(f)
 #     def decorated_function(*args, **kwargs):
@@ -303,7 +315,7 @@ def members():
 
     # ✅ Lấy danh sách admin
     all_admins = User.query.filter_by(role='admin').order_by(User.display_name).all()
-    
+
     return render_template(
         'members.html',
         members=members,
