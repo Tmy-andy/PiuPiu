@@ -299,6 +299,23 @@
     border-top: none;
 }
 
+[data-theme="ocean"] .alert {
+    padding: 0.75rem 1.25rem;
+    border-radius: 0.5rem;
+    font-size: 0.95rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    line-height: 1.5;
+}
+
+[data-theme="ocean"] .alert .btn-close {
+    margin-left: 1rem;
+    padding: 0.5rem;
+    align-self: center;
+}
+
+
 /* Hiệu ứng hover gợn sóng */
 [data-theme="ocean"] .ripple-hover::after {
     content: "";
