@@ -260,15 +260,24 @@ class ThemeEffects {
         const createMouseBubble = (x, y) => {
             const bubble = document.createElement('div');
             bubble.className = 'mouse-bubble';
+
+            // 👇 Tạo kích thước ngẫu nhiên từ 12px đến 20px
+            const size = 12 + Math.random() * 8;
+            bubble.style.width = `${size}px`;
+            bubble.style.height = `${size}px`;
+
             bubble.style.left = `${x}px`;
             bubble.style.top = `${y}px`;
             document.body.appendChild(bubble);
+
             setTimeout(() => bubble.remove(), 2000);
         };
 
         const moveHandler = (e) => {
             if (this.currentTheme !== 'ocean' || !this.effectsEnabled) return;
-            if (Math.random() < 0.3) { // giảm tần suất tạo bóng
+
+            // 👇 Tạo bong bóng ngẫu nhiên để tránh quá nhiều
+            if (Math.random() < 0.3) {
                 const offsetX = (Math.random() - 0.5) * 30;
                 const offsetY = (Math.random() - 0.5) * 30;
                 createMouseBubble(e.clientX + offsetX, e.clientY + offsetY);
