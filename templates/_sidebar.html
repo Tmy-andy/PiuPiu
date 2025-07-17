@@ -72,6 +72,9 @@ document.addEventListener('DOMContentLoaded', function() {
     const sidebarNav = document.getElementById('sidebarNav');
     const toggleIcon = document.querySelector('.sidebar-toggle-icon');
     
+    let lastWidth = window.innerWidth;
+    let resizeTimeout;
+    
     function isMobile() {
         return window.innerWidth <= 991.98;
     }
@@ -109,8 +112,35 @@ document.addEventListener('DOMContentLoaded', function() {
     sidebarHeader.addEventListener('click', toggleSidebar);
     initSidebar();
     
+    // Sửa lại phần xử lý resize để tránh reset sidebar khi scroll trên mobile
     window.addEventListener('resize', function() {
-        initSidebar();
+        // Debounce để tránh xử lý quá nhiều sự kiện resize
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(function() {
+            const currentWidth = window.innerWidth;
+            
+            // Chỉ reset sidebar khi có thay đổi đáng kể về width
+            // (tránh reset khi chỉ có height thay đổi do address bar ẩn/hiện)
+            if (Math.abs(currentWidth - lastWidth) > 50) {
+                // Chỉ reset khi thay đổi từ mobile sang desktop hoặc ngược lại
+                const wasMobile = lastWidth <= 991.98;
+                const isMobileNow = currentWidth <= 991.98;
+                
+                if (wasMobile !== isMobileNow) {
+                    initSidebar();
+                }
+                
+                lastWidth = currentWidth;
+            }
+        }, 150); // Debounce 150ms
+    });
+    
+    // Thêm xử lý cho orientation change (xoay màn hình)
+    window.addEventListener('orientationchange', function() {
+        setTimeout(function() {
+            initSidebar();
+            lastWidth = window.innerWidth;
+        }, 200);
     });
 });
 </script>

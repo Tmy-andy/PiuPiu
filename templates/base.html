@@ -185,82 +185,108 @@
 
     <!-- Mobile Navigation Script -->
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const toggle = document.getElementById('mobileNavToggle');
-            const dropdown = document.getElementById('mobileNavDropdown');
-            const overlay = document.getElementById('mobileNavOverlay');
-            const scrollToTop = document.getElementById('scrollToTop');
+    document.addEventListener('DOMContentLoaded', function() {
+        const toggle = document.getElementById('mobileNavToggle');
+        const dropdown = document.getElementById('mobileNavDropdown');
+        const overlay = document.getElementById('mobileNavOverlay');
+        const scrollToTop = document.getElementById('scrollToTop');
+        
+        let lastWidth = window.innerWidth;
+        let resizeTimeout;
 
-            // Mobile Navigation
-            if (toggle && dropdown && overlay) {
-                toggle.addEventListener('click', function() {
-                    const isOpen = dropdown.classList.contains('show');
-                    
-                    if (isOpen) {
-                        // Đóng menu
-                        dropdown.classList.remove('show');
-                        overlay.classList.remove('show');
-                        toggle.classList.remove('active');
-                        document.body.style.overflow = '';
-                    } else {
-                        // Mở menu
-                        dropdown.classList.add('show');
-                        overlay.classList.add('show');
-                        toggle.classList.add('active');
-                        document.body.style.overflow = 'hidden';
-                    }
-                });
+        // Mobile Navigation
+        if (toggle && dropdown && overlay) {
+            toggle.addEventListener('click', function() {
+                const isOpen = dropdown.classList.contains('show');
+                
+                if (isOpen) {
+                    // Đóng menu
+                    dropdown.classList.remove('show');
+                    overlay.classList.remove('show');
+                    toggle.classList.remove('active');
+                    document.body.style.overflow = '';
+                } else {
+                    // Mở menu
+                    dropdown.classList.add('show');
+                    overlay.classList.add('show');
+                    toggle.classList.add('active');
+                    document.body.style.overflow = 'hidden';
+                }
+            });
 
-                // Đóng menu khi click overlay
-                overlay.addEventListener('click', function() {
+            // Đóng menu khi click overlay
+            overlay.addEventListener('click', function() {
+                dropdown.classList.remove('show');
+                overlay.classList.remove('show');
+                toggle.classList.remove('active');
+                document.body.style.overflow = '';
+            });
+
+            // Đóng menu khi click vào link
+            const navItems = dropdown.querySelectorAll('.mobile-nav-item');
+            navItems.forEach(item => {
+                item.addEventListener('click', function() {
                     dropdown.classList.remove('show');
                     overlay.classList.remove('show');
                     toggle.classList.remove('active');
                     document.body.style.overflow = '';
                 });
+            });
 
-                // Đóng menu khi click vào link
-                const navItems = dropdown.querySelectorAll('.mobile-nav-item');
-                navItems.forEach(item => {
-                    item.addEventListener('click', function() {
-                        dropdown.classList.remove('show');
-                        overlay.classList.remove('show');
-                        toggle.classList.remove('active');
-                        document.body.style.overflow = '';
-                    });
-                });
-
-                // Đóng menu khi resize window
-                window.addEventListener('resize', function() {
-                    if (window.innerWidth > 991.98) {
-                        dropdown.classList.remove('show');
-                        overlay.classList.remove('show');
-                        toggle.classList.remove('active');
-                        document.body.style.overflow = '';
+            // Sửa lại phần xử lý resize để tránh đóng menu khi scroll trên mobile
+            window.addEventListener('resize', function() {
+                // Debounce để tránh xử lý quá nhiều sự kiện resize
+                clearTimeout(resizeTimeout);
+                resizeTimeout = setTimeout(function() {
+                    const currentWidth = window.innerWidth;
+                    
+                    // Chỉ đóng menu khi có thay đổi đáng kể về width
+                    // và chuyển từ mobile sang desktop
+                    if (Math.abs(currentWidth - lastWidth) > 50) {
+                        const wasMobile = lastWidth <= 991.98;
+                        const isMobileNow = currentWidth <= 991.98;
+                        
+                        // Chỉ đóng menu khi chuyển từ mobile sang desktop
+                        if (wasMobile && !isMobileNow) {
+                            dropdown.classList.remove('show');
+                            overlay.classList.remove('show');
+                            toggle.classList.remove('active');
+                            document.body.style.overflow = '';
+                        }
+                        
+                        lastWidth = currentWidth;
                     }
-                });
-            }
+                }, 150); // Debounce 150ms
+            });
+            
+            // Thêm xử lý cho orientation change (xoay màn hình)
+            window.addEventListener('orientationchange', function() {
+                setTimeout(function() {
+                    lastWidth = window.innerWidth;
+                }, 200);
+            });
+        }
 
-            // Scroll to Top functionality
-            if (scrollToTop) {
-                // Hiển thị/ẩn button khi scroll
-                window.addEventListener('scroll', function() {
-                    if (window.pageYOffset > 300) {
-                        scrollToTop.classList.add('show');
-                    } else {
-                        scrollToTop.classList.remove('show');
-                    }
-                });
+        // Scroll to Top functionality
+        if (scrollToTop) {
+            // Hiển thị/ẩn button khi scroll
+            window.addEventListener('scroll', function() {
+                if (window.pageYOffset > 300) {
+                    scrollToTop.classList.add('show');
+                } else {
+                    scrollToTop.classList.remove('show');
+                }
+            });
 
-                // Click để scroll lên đầu trang
-                scrollToTop.addEventListener('click', function() {
-                    window.scrollTo({
-                        top: 0,
-                        behavior: 'smooth'
-                    });
+            // Click để scroll lên đầu trang
+            scrollToTop.addEventListener('click', function() {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
                 });
-            }
-        });
+            });
+        }
+    });
     </script>
 
     {% block scripts %}{% endblock %}
