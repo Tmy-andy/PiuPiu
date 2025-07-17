@@ -133,6 +133,9 @@
 [data-theme="ocean"] .card-title {
     color: var(--bg-secondary);
 }
+    [data-theme="ocean"] .card-title .title-desk {
+        color: var(--text-color);
+    }
 
 [data-theme="ocean"] .form-label {
     color: var(--text-primary);
