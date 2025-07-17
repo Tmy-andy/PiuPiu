@@ -1,7 +1,7 @@
 [data-theme="ocean"] {
     /* Base Colors */
     --primary-color: #0ea5e9;
-    --primary-dark: #0284c7;
+    --primary-ocean: #0284c7;
     --primary-color-rgba: 14, 165, 233;
     --primary-color-rgb: 14, 165, 233;
 
@@ -89,6 +89,7 @@
     color: var(--text-primary);
 }
 
+/* Sidebar nav link fix */
 [data-theme="ocean"] .sidebar .nav-link {
     color: var(--sidebar-link-color);
     transition: all 0.2s ease;
@@ -115,6 +116,12 @@
 
 [data-theme="ocean"] .sidebar-header i {
     color: var(--sidebar-active-color);
+}
+
+[data-theme="ocean"] .sidebar-header:hover {
+    background-color: unset !important;
+    color: inherit !important;
+    cursor: default !important;
 }
 
 [data-theme="ocean"] .card {
@@ -271,7 +278,7 @@
 
 /* Button trong modal */
 [data-theme] .modal-content .btn-primary {
-    background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-ocean));
     border: none;
     color: white;
 }
