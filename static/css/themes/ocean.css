@@ -131,7 +131,7 @@
 }
 
 [data-theme="ocean"] .card-title {
-    color: var(--text-color);
+    color: var(--bg-secondary);
 }
 
 [data-theme="ocean"] .form-label {
