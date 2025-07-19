@@ -406,7 +406,7 @@
 }
 
 [data-theme="ocean"] .card-title {
-    color: var(--bg-secondary);
+    color: var(--secondary-color);
 }
 
 [data-theme="ocean"] .card-title .title-desk {
@@ -461,7 +461,7 @@
 }
 
 [data-theme="ocean"] .text-theme-primary {
-    color: var(--bg-secondary) !important;
+    color: var(--secondary-color) !important;
 }
 
 [data-theme="ocean"] .text-muted {
@@ -687,7 +687,7 @@
 
 /* ============= UTILITIES ============= */
 .text-theme-primary {
-    color: var(--bg-secondary) !important;
+    color: var(--secondary-color) !important;
 }
 
 .text-theme-secondary {
