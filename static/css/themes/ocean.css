@@ -461,7 +461,7 @@
 }
 
 [data-theme="ocean"] .text-theme-primary {
-    color: var(--primary-color) !important;
+    color: var(--bg-secondary) !important;
 }
 
 [data-theme="ocean"] .text-muted {
@@ -687,7 +687,7 @@
 
 /* ============= UTILITIES ============= */
 .text-theme-primary {
-    color: var(--primary-color) !important;
+    color: var(--bg-secondary) !important;
 }
 
 .text-theme-secondary {
