@@ -5,11 +5,14 @@ class ThemeEffects {
         this.currentTheme = 'default';
         this.effectsEnabled = true;
         this.isMobile = window.innerWidth <= 768;
+        this.intervals = new Map(); // Lưu trữ các interval để cleanup
+        this.animationFrames = new Map(); // Lưu trữ animation frames
         this.init();
     }
 
     init() {
         this.setupEventListeners();
+        this.handleAccessibility();
     }
 
     setupEventListeners() {
@@ -76,24 +79,36 @@ class ThemeEffects {
         const cursor = document.createElement('div');
         cursor.className = 'galaxy-cursor';
         cursor.id = 'galaxyCursor';
+        cursor.style.cssText = `
+            position: fixed;
+            width: 20px;
+            height: 20px;
+            background: radial-gradient(circle, rgba(139, 92, 246, 0.8) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            transition: opacity 0.3s ease;
+            opacity: 0;
+        `;
         document.body.appendChild(cursor);
 
         let mouseX = 0, mouseY = 0;
         let cursorX = 0, cursorY = 0;
 
         const updateCursor = () => {
+            if (this.currentTheme !== 'galaxy' || !this.effectsEnabled) return;
+            
             cursorX += (mouseX - cursorX) * 0.1;
             cursorY += (mouseY - cursorY) * 0.1;
             
             cursor.style.left = cursorX - 10 + 'px';
             cursor.style.top = cursorY - 10 + 'px';
             
-            if (this.effectsEnabled) {
-                requestAnimationFrame(updateCursor);
-            }
+            this.animationFrames.set('galaxyCursor', requestAnimationFrame(updateCursor));
         };
 
         const onMouseMove = (e) => {
+            if (this.currentTheme !== 'galaxy') return;
             mouseX = e.clientX;
             mouseY = e.clientY;
             cursor.style.opacity = '1';
@@ -107,18 +122,51 @@ class ThemeEffects {
         document.addEventListener('mouseleave', onMouseLeave);
         
         if (this.effectsEnabled) {
-            requestAnimationFrame(updateCursor);
+            this.animationFrames.set('galaxyCursor', requestAnimationFrame(updateCursor));
         }
     }
 
     createShootingStars() {
+        // Thêm CSS cho shooting stars
+        if (!document.getElementById('shooting-star-style')) {
+            const style = document.createElement('style');
+            style.id = 'shooting-star-style';
+            style.textContent = `
+                .shooting-star {
+                    position: fixed;
+                    width: 3px;
+                    height: 3px;
+                    background: white;
+                    border-radius: 50%;
+                    z-index: -1;
+                    animation: shootingStar 3s linear forwards;
+                    box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+                }
+                @keyframes shootingStar {
+                    0% {
+                        transform: translateX(0) translateY(0) scale(0);
+                        opacity: 1;
+                    }
+                    10% {
+                        transform: translateX(-20px) translateY(20px) scale(1);
+                        opacity: 1;
+                    }
+                    100% {
+                        transform: translateX(-200px) translateY(200px) scale(0);
+                        opacity: 0;
+                    }
+                }
+            `;
+            document.head.appendChild(style);
+        }
+
         const createStar = () => {
             if (!this.effectsEnabled || this.currentTheme !== 'galaxy') return;
             
             const star = document.createElement('div');
             star.className = 'shooting-star';
-            star.style.left = Math.random() * 100 + 'vw';
-            star.style.top = Math.random() * 100 + 'vh';
+            star.style.left = Math.random() * window.innerWidth + 'px';
+            star.style.top = Math.random() * (window.innerHeight * 0.3) + 'px';
             star.style.animationDelay = Math.random() * 3 + 's';
             document.body.appendChild(star);
 
@@ -134,11 +182,27 @@ class ThemeEffects {
                 createStar();
             } else if (this.currentTheme !== 'galaxy') {
                 clearInterval(starInterval);
+                this.intervals.delete('galaxyStars');
             }
         }, this.isMobile ? 3000 : 2000);
+        
+        this.intervals.set('galaxyStars', starInterval);
     }
 
     initGalaxyInteraction() {
+        // Thêm CSS animation cho particle
+        if (!document.getElementById('galaxy-particle-style')) {
+            const style = document.createElement('style');
+            style.id = 'galaxy-particle-style';
+            style.textContent = `
+                @keyframes particleFloat {
+                    0% { transform: scale(0) translateY(0); opacity: 1; }
+                    100% { transform: scale(1) translateY(-50px); opacity: 0; }
+                }
+            `;
+            document.head.appendChild(style);
+        }
+
         const createParticle = (x, y) => {
             const particle = document.createElement('div');
             particle.style.cssText = `
@@ -158,20 +222,7 @@ class ThemeEffects {
             setTimeout(() => particle.remove(), 1000);
         };
 
-        // Thêm CSS animation cho particle
-        if (!document.getElementById('galaxy-particle-style')) {
-            const style = document.createElement('style');
-            style.id = 'galaxy-particle-style';
-            style.textContent = `
-                @keyframes particleFloat {
-                    0% { transform: scale(0) translateY(0); opacity: 1; }
-                    100% { transform: scale(1) translateY(-50px); opacity: 0; }
-                }
-            `;
-            document.head.appendChild(style);
-        }
-
-        document.addEventListener('click', (e) => {
+        const clickHandler = (e) => {
             if (this.currentTheme === 'galaxy' && this.effectsEnabled) {
                 for (let i = 0; i < 5; i++) {
                     setTimeout(() => {
@@ -182,7 +233,9 @@ class ThemeEffects {
                     }, i * 100);
                 }
             }
-        });
+        };
+
+        document.addEventListener('click', clickHandler);
     }
 
     // ============= SAKURA EFFECTS =============
@@ -191,12 +244,46 @@ class ThemeEffects {
     }
 
     createSakuraPetals() {
+        // Thêm CSS cho sakura petals
+        if (!document.getElementById('sakura-petal-style')) {
+            const style = document.createElement('style');
+            style.id = 'sakura-petal-style';
+            style.textContent = `
+                .sakura-petal {
+                    position: fixed;
+                    width: 12px;
+                    height: 12px;
+                    background: linear-gradient(45deg, #ffc0cb, #ffb6c1);
+                    border-radius: 50% 0 50% 0;
+                    z-index: -1;
+                    animation: sakuraPetalFall 6s linear infinite;
+                }
+                @keyframes sakuraPetalFall {
+                    0% {
+                        transform: translateY(-100px) rotate(0deg);
+                        opacity: 0;
+                    }
+                    10% {
+                        opacity: 1;
+                    }
+                    90% {
+                        opacity: 1;
+                    }
+                    100% {
+                        transform: translateY(100vh) rotate(360deg);
+                        opacity: 0;
+                    }
+                }
+            `;
+            document.head.appendChild(style);
+        }
+
         const createPetal = () => {
             if (!this.effectsEnabled || this.currentTheme !== 'sakura') return;
             
             const petal = document.createElement('div');
             petal.className = 'sakura-petal';
-            petal.style.left = Math.random() * 100 + 'vw';
+            petal.style.left = Math.random() * window.innerWidth + 'px';
             petal.style.animationDelay = Math.random() * 2 + 's';
             petal.style.animationDuration = (6 + Math.random() * 4) + 's';
             document.body.appendChild(petal);
@@ -213,8 +300,11 @@ class ThemeEffects {
                 createPetal();
             } else if (this.currentTheme !== 'sakura') {
                 clearInterval(petalInterval);
+                this.intervals.delete('sakuraPetals');
             }
         }, this.isMobile ? 2000 : 1500);
+        
+        this.intervals.set('sakuraPetals', petalInterval);
     }
 
     // ============= FOREST EFFECTS =============
@@ -223,12 +313,49 @@ class ThemeEffects {
     }
 
     createForestLeaves() {
+        // Thêm CSS cho forest leaves
+        if (!document.getElementById('forest-leaf-style')) {
+            const style = document.createElement('style');
+            style.id = 'forest-leaf-style';
+            style.textContent = `
+                .forest-leaf {
+                    position: fixed;
+                    width: 15px;
+                    height: 15px;
+                    background: linear-gradient(45deg, #22c55e, #16a34a);
+                    border-radius: 0 100% 0 100%;
+                    z-index: -1;
+                    animation: forestLeafFall 8s linear infinite;
+                }
+                @keyframes forestLeafFall {
+                    0% {
+                        transform: translateY(-100px) rotate(0deg);
+                        opacity: 0;
+                    }
+                    10% {
+                        opacity: 1;
+                    }
+                    50% {
+                        transform: translateY(50vh) rotate(180deg);
+                    }
+                    90% {
+                        opacity: 1;
+                    }
+                    100% {
+                        transform: translateY(100vh) rotate(360deg);
+                        opacity: 0;
+                    }
+                }
+            `;
+            document.head.appendChild(style);
+        }
+
         const createLeaf = () => {
             if (!this.effectsEnabled || this.currentTheme !== 'forest') return;
             
             const leaf = document.createElement('div');
             leaf.className = 'forest-leaf';
-            leaf.style.left = Math.random() * 100 + 'vw';
+            leaf.style.left = Math.random() * window.innerWidth + 'px';
             leaf.style.animationDelay = Math.random() * 3 + 's';
             leaf.style.animationDuration = (8 + Math.random() * 4) + 's';
             document.body.appendChild(leaf);
@@ -245,15 +372,135 @@ class ThemeEffects {
                 createLeaf();
             } else if (this.currentTheme !== 'forest') {
                 clearInterval(leafInterval);
+                this.intervals.delete('forestLeaves');
             }
         }, this.isMobile ? 3000 : 2500);
+        
+        this.intervals.set('forestLeaves', leafInterval);
     }
 
-    // ============= OCEAN EFFECTS =============
+    // ============= OCEAN EFFECTS - HOÀN TOÀN MỚI =============
     initOceanEffects() {
+        console.log('Initializing Ocean Effects...');
+        this.createOceanFish();
+        this.createOceanBubbles();
         this.initOceanMouseBubbles();
         this.initOceanHoverRipple();
         this.initOceanClickRipple();
+    }
+
+    createOceanFish() {
+        console.log('Creating ocean fish...');
+        
+        const fishTypes = [
+            { class: 'fish-large', count: this.isMobile ? 2 : 3, interval: 25000 },
+            { class: 'fish-small', count: this.isMobile ? 3 : 5, interval: 18000 },
+            { class: 'fish-tropical', count: this.isMobile ? 2 : 3, interval: 22000 }
+        ];
+
+        fishTypes.forEach(fishType => {
+            const createFish = () => {
+                if (!this.effectsEnabled || this.currentTheme !== 'ocean') return;
+
+                for (let i = 0; i < fishType.count; i++) {
+                    setTimeout(() => {
+                        if (this.currentTheme !== 'ocean') return;
+
+                        const fish = document.createElement('div');
+                        fish.className = `ocean-fish`;
+                        
+                        const fishElement = document.createElement('div');
+                        fishElement.className = fishType.class;
+                        fish.appendChild(fishElement);
+
+                        // Vị trí ngẫu nhiên theo chiều dọc
+                        const topPosition = Math.random() * (window.innerHeight - 100) + 50;
+                        fish.style.top = topPosition + 'px';
+
+                        // Random delay để tạo hiệu ứng tự nhiên
+                        const delay = Math.random() * 5;
+                        fish.style.animationDelay = delay + 's';
+
+                        document.body.appendChild(fish);
+
+                        // Xóa cá sau khi animation hoàn thành
+                        const animationDuration = fishType.interval;
+                        setTimeout(() => {
+                            if (fish.parentNode) {
+                                fish.remove();
+                            }
+                        }, animationDuration + (delay * 1000));
+
+                    }, i * 2000); // Delay giữa các con cá cùng loại
+                }
+            };
+
+            // Tạo cá lần đầu
+            if (this.effectsEnabled && this.currentTheme === 'ocean') {
+                createFish();
+            }
+
+            // Lặp lại việc tạo cá
+            const fishInterval = setInterval(() => {
+                if (this.currentTheme === 'ocean' && this.effectsEnabled) {
+                    createFish();
+                } else if (this.currentTheme !== 'ocean') {
+                    clearInterval(fishInterval);
+                    this.intervals.delete(`oceanFish_${fishType.class}`);
+                }
+            }, fishType.interval);
+
+            this.intervals.set(`oceanFish_${fishType.class}`, fishInterval);
+        });
+    }
+
+    createOceanBubbles() {
+        console.log('Creating ocean bubbles...');
+
+        const createBubble = () => {
+            if (!this.effectsEnabled || this.currentTheme !== 'ocean') return;
+
+            const bubble = document.createElement('div');
+            bubble.className = 'ocean-bubble';
+            
+            // Vị trí ngẫu nhiên ở dưới màn hình
+            bubble.style.left = Math.random() * window.innerWidth + 'px';
+            bubble.style.bottom = '-20px';
+            
+            // Kích thước ngẫu nhiên
+            const size = 8 + Math.random() * 12;
+            bubble.style.width = size + 'px';
+            bubble.style.height = size + 'px';
+            
+            // Animation delay ngẫu nhiên
+            bubble.style.animationDelay = Math.random() * 2 + 's';
+            bubble.style.animationDuration = (6 + Math.random() * 4) + 's';
+
+            document.body.appendChild(bubble);
+
+            // Xóa bubble sau khi animation hoàn thành
+            setTimeout(() => {
+                if (bubble.parentNode) {
+                    bubble.remove();
+                }
+            }, 10000);
+        };
+
+        // Tạo bubble định kỳ
+        const bubbleInterval = setInterval(() => {
+            if (this.currentTheme === 'ocean' && this.effectsEnabled) {
+                // Tạo 1-3 bubbles mỗi lần
+                const bubbleCount = 1 + Math.floor(Math.random() * 3);
+                for (let i = 0; i < bubbleCount; i++) {
+                    setTimeout(() => createBubble(), i * 500);
+                }
+            } else if (this.currentTheme !== 'ocean') {
+                clearInterval(bubbleInterval);
+                this.intervals.delete('oceanBubbles');
+            }
+        }, this.isMobile ? 3000 : 2000);
+
+        this.intervals.set('oceanBubbles', bubbleInterval);
     }
 
     initOceanMouseBubbles() {
@@ -261,44 +508,51 @@ class ThemeEffects {
             const bubble = document.createElement('div');
             bubble.className = 'mouse-bubble';
 
-            // 👇 Tạo kích thước ngẫu nhiên từ 12px đến 20px
-            const size = 12 + Math.random() * 8;
+            // Tạo kích thước ngẫu nhiên từ 8px đến 16px
+            const size = 8 + Math.random() * 8;
             bubble.style.width = `${size}px`;
             bubble.style.height = `${size}px`;
-
             bubble.style.left = `${x}px`;
             bubble.style.top = `${y}px`;
+            
             document.body.appendChild(bubble);
-
-            setTimeout(() => bubble.remove(), 2000);
+            setTimeout(() => {
+                if (bubble.parentNode) {
+                    bubble.remove();
+                }
+            }, 2000);
         };
 
         const moveHandler = (e) => {
             if (this.currentTheme !== 'ocean' || !this.effectsEnabled) return;
 
-            // 👇 Tạo bong bóng ngẫu nhiên để tránh quá nhiều
-            if (Math.random() < 0.3) {
-                const offsetX = (Math.random() - 0.5) * 30;
-                const offsetY = (Math.random() - 0.5) * 30;
+            // Tạo bong bóng ngẫu nhiên để tránh quá nhiều (20% chance)
+            if (Math.random() < 0.2) {
+                const offsetX = (Math.random() - 0.5) * 40;
+                const offsetY = (Math.random() - 0.5) * 40;
                 createMouseBubble(e.clientX + offsetX, e.clientY + offsetY);
             }
         };
 
         document.addEventListener('mousemove', moveHandler);
-        this._removeMouseBubbleHandler = () => document.removeEventListener('mousemove', moveHandler);
     }
 
     initOceanHoverRipple() {
-    // Áp dụng class ripple-hover vào tất cả các thẻ cần hiệu ứng hover
-        document.querySelectorAll('button, .card, .nav-link, .list-group-item').forEach(el => {
-            el.classList.add('ripple-hover');
-            el.style.position = 'relative';
-            el.style.overflow = 'hidden';
+        // Áp dụng class ripple-hover vào tất cả các thẻ cần hiệu ứng hover
+        const elements = document.querySelectorAll('button, .card, .nav-link, .list-group-item, .btn');
+        elements.forEach(el => {
+            if (!el.classList.contains('ripple-hover')) {
+                el.classList.add('ripple-hover');
+                if (getComputedStyle(el).position === 'static') {
+                    el.style.position = 'relative';
+                }
+                el.style.overflow = 'hidden';
+            }
         });
     }
 
     initOceanClickRipple() {
-        document.addEventListener('click', (e) => {
+        const clickHandler = (e) => {
             if (this.currentTheme !== 'ocean' || !this.effectsEnabled) return;
 
             const ripple = document.createElement('div');
@@ -306,10 +560,16 @@ class ThemeEffects {
             ripple.style.left = `${e.clientX}px`;
             ripple.style.top = `${e.clientY}px`;
             document.body.appendChild(ripple);
-            setTimeout(() => ripple.remove(), 1000);
-        });
-    }
+            
+            setTimeout(() => {
+                if (ripple.parentNode) {
+                    ripple.remove();
+                }
+            }, 1000);
+        };
 
+        document.addEventListener('click', clickHandler);
+    }
 
     // ============= SUNSET EFFECTS =============
     initSunsetEffects() {
@@ -348,33 +608,6 @@ class ThemeEffects {
     }
 
     createFloatingEmbers() {
-        const createEmber = () => {
-            if (!this.effectsEnabled || this.currentTheme !== 'sunset') return;
-            
-            const ember = document.createElement('div');
-            ember.style.cssText = `
-                position: fixed;
-                width: ${3 + Math.random() * 6}px;
-                height: ${3 + Math.random() * 6}px;
-                background: radial-gradient(circle, #ff6b6b 0%, #f97316 100%);
-                border-radius: 50%;
-                bottom: -10px;
-                left: ${Math.random() * 100}vw;
-                pointer-events: none;
-                z-index: -1;
-                animation: emberFloat ${15 + Math.random() * 10}s linear infinite;
-                opacity: 0.7;
-                box-shadow: 0 0 10px rgba(255, 107, 107, 0.5);
-            `;
-            document.body.appendChild(ember);
-
-            setTimeout(() => {
-                if (ember.parentNode) {
-                    ember.remove();
-                }
-            }, 25000);
-        };
-
         // Thêm CSS animation cho ember
         if (!document.getElementById('sunset-ember-style')) {
             const style = document.createElement('style');
@@ -403,70 +636,128 @@ class ThemeEffects {
             document.head.appendChild(style);
         }
 
+        const createEmber = () => {
+            if (!this.effectsEnabled || this.currentTheme !== 'sunset') return;
+            
+            const ember = document.createElement('div');
+            ember.style.cssText = `
+                position: fixed;
+                width: ${3 + Math.random() * 6}px;
+                height: ${3 + Math.random() * 6}px;
+                background: radial-gradient(circle, #ff6b6b 0%, #f97316 100%);
+                border-radius: 50%;
+                bottom: -10px;
+                left: ${Math.random() * 100}vw;
+                pointer-events: none;
+                z-index: -1;
+                animation: emberFloat ${15 + Math.random() * 10}s linear infinite;
+                opacity: 0.7;
+                box-shadow: 0 0 10px rgba(255, 107, 107, 0.5);
+            `;
+            document.body.appendChild(ember);
+
+            setTimeout(() => {
+                if (ember.parentNode) {
+                    ember.remove();
+                }
+            }, 25000);
+        };
+
         const emberInterval = setInterval(() => {
             if (this.currentTheme === 'sunset' && this.effectsEnabled) {
                 createEmber();
             } else if (this.currentTheme !== 'sunset') {
                 clearInterval(emberInterval);
+                this.intervals.delete('sunsetEmbers');
             }
         }, this.isMobile ? 5000 : 3500);
+
+        this.intervals.set('sunsetEmbers', emberInterval);
     }
 
     // ============= UTILITY METHODS =============
     clearAllEffects() {
-        // Xóa tất cả hiệu ứng cũ
-        const effectElements = [
+        console.log('Clearing all effects...');
+        
+        // Xóa tất cả intervals
+        this.intervals.forEach((interval, key) => {
+            clearInterval(interval);
+        });
+        this.intervals.clear();
+
+        // Xóa tất cả animation frames
+        this.animationFrames.forEach((frame, key) => {
+            cancelAnimationFrame(frame);
+        });
+        this.animationFrames.clear();
+
+        // Xóa tất cả hiệu ứng elements
+        const effectSelectors = [
             '#galaxyCursor',
             '.shooting-star',
             '.sakura-petal',
             '.forest-leaf',
+            '.ocean-fish',
+            '.ocean-bubble',
+            '.mouse-bubble',
+            '.water-ripple',
             '.sunset-glow'
         ];
 
-        effectElements.forEach(selector => {
+        effectSelectors.forEach(selector => {
             const elements = document.querySelectorAll(selector);
-            elements.forEach(el => el.remove());
+            elements.forEach(el => {
+                if (el.parentNode) {
+                    el.remove();
+                }
+            });
         });
 
-        // Xóa event listeners cũ
-        document.removeEventListener('mousemove', this.onMouseMove);
-        document.removeEventListener('mouseleave', this.onMouseLeave);
-        document.removeEventListener('click', this.onClickEffect);
-        this._removeMouseBubbleHandler?.();
+        // Xóa ripple-hover class
+        const rippleElements = document.querySelectorAll('.ripple-hover');
+        rippleElements.forEach(el => {
+            el.classList.remove('ripple-hover');
+        });
     }
 
     toggleEffects() {
         const body = document.body;
         if (this.effectsEnabled) {
             body.classList.remove('effects-paused');
-            this.applyTheme(this.currentTheme);
+            // Khởi động lại effects cho theme hiện tại
+            if (this.currentTheme !== 'default' && this.currentTheme !== 'dark') {
+                this.applyTheme(this.currentTheme);
+            }
         } else {
             body.classList.add('effects-paused');
+            this.clearAllEffects();
+            
             // Tạm dừng tất cả animation
-            const style = document.createElement('style');
-            style.id = 'pause-effects';
-            style.textContent = `
-                .effects-paused * {
-                    animation-play-state: paused !important;
-                }
-            `;
-            document.head.appendChild(style);
+            const pauseStyle = document.getElementById('pause-effects');
+            if (!pauseStyle) {
+                const style = document.createElement('style');
+                style.id = 'pause-effects';
+                style.textContent = `
+                    .effects-paused * {
+                        animation-play-state: paused !important;
+                    }
+                `;
+                document.head.appendChild(style);
+            }
         }
     }
 
     updateEffectsForDevice() {
         // Tối ưu hiệu ứng cho mobile
         if (this.isMobile) {
-            // Giảm số lượng hiệu ứng trên mobile
-            const mobileOptimizations = {
-                galaxy: { starFrequency: 3000, particleCount: 3 },
-                sakura: { petalFrequency: 2500, petalCount: 1 },
-                forest: { leafFrequency: 4000, leafCount: 1 },
-                ocean: { bubbleFrequency: 5000, bubbleCount: 1 },
-                sunset: { emberFrequency: 6000, emberCount: 1 }
-            };
-            
-            this.mobileConfig = mobileOptimizations;
+            console.log('Optimizing effects for mobile device');
+            // Chỉ khởi động lại effects nếu đang ở theme có effects
+            if (this.currentTheme === 'ocean' && this.effectsEnabled) {
+                this.clearAllEffects();
+                setTimeout(() => {
+                    this.initOceanEffects();
+                }, 100);
+            }
         }
     }
 
@@ -484,8 +775,12 @@ class ThemeEffects {
     reduceEffects() {
         // Giảm hiệu ứng khi phát hiện hiệu năng kém
         this.effectsEnabled = false;
+        this.clearAllEffects();
         setTimeout(() => {
             this.effectsEnabled = true;
+            if (this.currentTheme !== 'default' && this.currentTheme !== 'dark') {
+                this.applyTheme(this.currentTheme);
+            }
         }, 5000);
     }
 

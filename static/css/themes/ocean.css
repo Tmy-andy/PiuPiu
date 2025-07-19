@@ -1,103 +1,365 @@
 [data-theme="ocean"] {
-    /* Base Colors */
-    --primary-color: #0ea5e9;
-    --primary-ocean: #0284c7;
-    --primary-color-rgba: 14, 165, 233;
-    --primary-color-rgb: 14, 165, 233;
+    /* Base Colors - Màu nhạt hơn */
+    --primary-color: #38bdf8;
+    --primary-ocean: #0ea5e9;
+    --primary-color-rgba: 56, 189, 248;
+    --primary-color-rgb: 56, 189, 248;
 
-    --secondary-color: #0369a1;
-    --success-color: #059669;
-    --warning-color: #d97706;
-    --danger-color: #dc2626;
+    --secondary-color: #0284c7;
+    --success-color: #10b981;
+    --warning-color: #f59e0b;
+    --danger-color: #ef4444;
 
-    /* Background */
+    /* Background - Nhạt hơn */
     --light-bg: #f0f9ff;
-    --bg-primary: #f0f9ff;
-    --bg-secondary: #e0f2fe;
+    --bg-primary: #f8fafc;
+    --bg-secondary: #f1f5f9;
 
-    /* Text */
-    --text-color: #0c4a6e;
-    --text-muted: #0369a1;
-    --text-primary: #0c4a6e;
-    --text-secondary: #0369a1;
+    /* Text - Nhẹ hơn */
+    --text-color: #334155;
+    --text-muted: #64748b;
+    --text-primary: #475569;
+    --text-secondary: #64748b;
 
-    /* Borders + Shadows */
-    --border-color: #bae6fd;
-    --card-shadow: 0 4px 6px -1px rgba(14, 165, 233, 0.1);
+    /* Borders + Shadows - Nhạt hơn */
+    --border-color: #cbd5e1;
+    --card-shadow: 0 4px 6px -1px rgba(56, 189, 248, 0.08);
 
     /* Cards & Form */
     --card-bg: #ffffff;
     --input-bg: #ffffff;
-    --input-border: #7dd3fc;
+    --input-border: #94a3b8;
 
-    /* Gradients */
-    --navbar-bg: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
-    --navbar-gradient-start: #1e3c72;
-    --navbar-gradient-end: #2a5298;
-    --stats-card-bg: linear-gradient(135deg, #1e40af 0%, #1e3a8a 100%);
+    /* Gradients - Màu dịu hơn */
+    --navbar-bg: linear-gradient(135deg, #0ea5e9 0%, #38bdf8 100%);
+    --navbar-gradient-start: #0ea5e9;
+    --navbar-gradient-end: #38bdf8;
+    --stats-card-bg: linear-gradient(135deg, #0284c7 0%, #0ea5e9 100%);
 
-    --success-gradient-start: #0f766e;
-    --success-gradient-end: #34d399;
-    --warning-gradient-start: #facc15;
+    --success-gradient-start: #059669;
+    --success-gradient-end: #10b981;
+    --warning-gradient-start: #f59e0b;
     --warning-gradient-end: #fbbf24;
-    --info-gradient-start: #38bdf8;
-    --info-gradient-end: #0ea5e9;
+    --info-gradient-start: #0ea5e9;
+    --info-gradient-end: #38bdf8;
 
-    --scroll-btn-gradient-start: #0284c7;
-    --scroll-btn-gradient-end: #0ea5e9;
+    --scroll-btn-gradient-start: #0ea5e9;
+    --scroll-btn-gradient-end: #38bdf8;
 
     /* Table */
-    --table-header-bg: linear-gradient(135deg, #0ea5e9, #0284c7);
-    --table-header-start: #0ea5e9;
-    --table-header-end: #0284c7;
+    --table-header-bg: linear-gradient(135deg, #38bdf8, #0ea5e9);
+    --table-header-start: #38bdf8;
+    --table-header-end: #0ea5e9;
 
     /* Mobile Navigation */
     --mobile-nav-bg: var(--bg-primary);
     --mobile-nav-text: var(--text-primary);
-    --mobile-nav-border: #bae6fd;
-    --mobile-nav-hover-bg: #e0f7ff;
+    --mobile-nav-border: #cbd5e1;
+    --mobile-nav-hover-bg: #e0f2fe;
     --mobile-nav-dropdown-bg: #ffffff;
-    --mobile-nav-dropdown-shadow: rgba(14, 165, 233, 0.2);
-    --mobile-nav-dropdown-border: rgba(125, 211, 252, 0.1);
+    --mobile-nav-dropdown-shadow: rgba(56, 189, 248, 0.15);
+    --mobile-nav-dropdown-border: rgba(203, 213, 225, 0.2);
     --mobile-nav-item-color: var(--text-primary);
-    --mobile-nav-item-border: #bae6fd;
-    --mobile-nav-header-bg: linear-gradient(135deg, #e0f2fe, #f0f9ff);
-    --mobile-nav-danger-hover-bg: linear-gradient(135deg, #fee2e2, #fecaca);
-    --mobile-nav-divider: #bae6fd;
-    --mobile-nav-overlay-bg: rgba(0, 0, 0, 0.5);
+    --mobile-nav-item-border: #cbd5e1;
+    --mobile-nav-header-bg: linear-gradient(135deg, #f1f5f9, #f8fafc);
+    --mobile-nav-danger-hover-bg: linear-gradient(135deg, #fef2f2, #fee2e2);
+    --mobile-nav-divider: #cbd5e1;
+    --mobile-nav-overlay-bg: rgba(0, 0, 0, 0.4);
 
     /* Glass effect */
-    --glass-bg: rgba(14, 165, 233, 0.05);
-    --glass-border: rgba(14, 165, 233, 0.2);
+    --glass-bg: rgba(56, 189, 248, 0.03);
+    --glass-border: rgba(56, 189, 248, 0.15);
 
     /* Sidebar */
     --sidebar-bg: #ffffff;
-    --sidebar-link-color: #0369a1;
-    --sidebar-link-hover-bg: #0ea5e9;
+    --sidebar-link-color: #64748b;
+    --sidebar-link-hover-bg: #38bdf8;
     --sidebar-link-hover-color: #ffffff;
-    --sidebar-active-bg: #0284c7;
+    --sidebar-active-bg: #0ea5e9;
     --sidebar-active-color: #ffffff;
 
     /* Login Card & Icon BG */
     --login-card-bg: rgba(255, 255, 255, 0.95);
-    --navbar-brand-icon-bg: rgba(255, 255, 255, 0.2);
+    --navbar-brand-icon-bg: rgba(255, 255, 255, 0.25);
 }
 
-/* General UI styles */
+/* ============= HIỆU ỨNG CÁ BƠI ============= */
+
+/* Cá chính - Cá lớn */
+.ocean-fish {
+    position: fixed;
+    z-index: -1;
+    pointer-events: none;
+    width: 60px;
+    height: 40px;
+}
+
+.fish-large {
+    position: absolute;
+    width: 60px;
+    height: 40px;
+    background: linear-gradient(45deg, #0ea5e9 0%, #38bdf8 50%, #0284c7 100%);
+    border-radius: 50% 0 50% 0;
+    opacity: 0.6;
+    animation: swimAcross 25s linear infinite;
+}
+
+.fish-large::before {
+    content: '';
+    position: absolute;
+    right: -15px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 0;
+    height: 0;
+    border-left: 20px solid #0ea5e9;
+    border-top: 15px solid transparent;
+    border-bottom: 15px solid transparent;
+    animation: tailWag 1.5s ease-in-out infinite;
+}
+
+.fish-large::after {
+    content: '';
+    position: absolute;
+    left: 10px;
+    top: 12px;
+    width: 6px;
+    height: 6px;
+    background: #ffffff;
+    border-radius: 50%;
+    box-shadow: 2px 0 0 #1e293b;
+}
+
+/* Cá nhỏ */
+.fish-small {
+    position: absolute;
+    width: 30px;
+    height: 20px;
+    background: linear-gradient(45deg, #38bdf8 0%, #7dd3fc 100%);
+    border-radius: 50% 0 50% 0;
+    opacity: 0.5;
+    animation: swimAcrossSmall 18s linear infinite;
+}
+
+.fish-small::before {
+    content: '';
+    position: absolute;
+    right: -8px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 0;
+    height: 0;
+    border-left: 12px solid #38bdf8;
+    border-top: 8px solid transparent;
+    border-bottom: 8px solid transparent;
+    animation: tailWagSmall 1.2s ease-in-out infinite;
+}
+
+.fish-small::after {
+    content: '';
+    position: absolute;
+    left: 6px;
+    top: 6px;
+    width: 3px;
+    height: 3px;
+    background: #ffffff;
+    border-radius: 50%;
+}
+
+/* Cá vàng - Cá nhiệt đới */
+.fish-tropical {
+    position: absolute;
+    width: 45px;
+    height: 30px;
+    background: linear-gradient(45deg, #fbbf24 0%, #f59e0b 50%, #d97706 100%);
+    border-radius: 50% 0 50% 0;
+    opacity: 0.7;
+    animation: swimAcrossTropical 22s linear infinite;
+}
+
+.fish-tropical::before {
+    content: '';
+    position: absolute;
+    right: -12px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 0;
+    height: 0;
+    border-left: 16px solid #f59e0b;
+    border-top: 12px solid transparent;
+    border-bottom: 12px solid transparent;
+    animation: tailWagTropical 1.3s ease-in-out infinite;
+}
+
+.fish-tropical::after {
+    content: '';
+    position: absolute;
+    left: 8px;
+    top: 10px;
+    width: 4px;
+    height: 4px;
+    background: #ffffff;
+    border-radius: 50%;
+    box-shadow: 1px 0 0 #7c2d12;
+}
+
+/* Animation bơi từ phải sang trái */
+@keyframes swimAcross {
+    0% {
+        transform: translateX(100vw) translateY(0px);
+        opacity: 0;
+    }
+    5% {
+        opacity: 0.6;
+    }
+    95% {
+        opacity: 0.6;
+    }
+    100% {
+        transform: translateX(-100px) translateY(-20px);
+        opacity: 0;
+    }
+}
+
+@keyframes swimAcrossSmall {
+    0% {
+        transform: translateX(100vw) translateY(0px) scaleX(1);
+        opacity: 0;
+    }
+    5% {
+        opacity: 0.5;
+    }
+    50% {
+        transform: translateX(50vw) translateY(10px) scaleX(1);
+    }
+    95% {
+        opacity: 0.5;
+    }
+    100% {
+        transform: translateX(-80px) translateY(5px) scaleX(1);
+        opacity: 0;
+    }
+}
+
+@keyframes swimAcrossTropical {
+    0% {
+        transform: translateX(-100px) translateY(0px) scaleX(-1);
+        opacity: 0;
+    }
+    5% {
+        opacity: 0.7;
+    }
+    95% {
+        opacity: 0.7;
+    }
+    100% {
+        transform: translateX(100vw) translateY(-15px) scaleX(-1);
+        opacity: 0;
+    }
+}
+
+/* Animation vẫy đuôi */
+@keyframes tailWag {
+    0%, 100% {
+        transform: translateY(-50%) rotate(0deg);
+    }
+    25% {
+        transform: translateY(-50%) rotate(-5deg);
+    }
+    75% {
+        transform: translateY(-50%) rotate(5deg);
+    }
+}
+
+@keyframes tailWagSmall {
+    0%, 100% {
+        transform: translateY(-50%) rotate(0deg);
+    }
+    25% {
+        transform: translateY(-50%) rotate(-8deg);
+    }
+    75% {
+        transform: translateY(-50%) rotate(8deg);
+    }
+}
+
+@keyframes tailWagTropical {
+    0%, 100% {
+        transform: translateY(-50%) rotate(0deg);
+    }
+    25% {
+        transform: translateY(-50%) rotate(-6deg);
+    }
+    75% {
+        transform: translateY(-50%) rotate(6deg);
+    }
+}
+
+/* Bong bóng nước */
+.ocean-bubble {
+    position: fixed;
+    z-index: -2;
+    pointer-events: none;
+    width: 10px;
+    height: 10px;
+    background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.8), rgba(56, 189, 248, 0.3));
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    animation: bubbleRise 8s linear infinite;
+}
+
+@keyframes bubbleRise {
+    0% {
+        transform: translateY(100vh) translateX(0px) scale(0.5);
+        opacity: 0;
+    }
+    10% {
+        opacity: 0.7;
+    }
+    90% {
+        opacity: 0.7;
+        transform: translateY(10vh) translateX(20px) scale(1);
+    }
+    100% {
+        transform: translateY(-50px) translateX(40px) scale(1.2);
+        opacity: 0;
+    }
+}
+
+/* ============= GENERAL UI STYLES ============= */
+
 [data-theme="ocean"] body {
     background-color: var(--bg-primary);
     color: var(--text-primary);
+    position: relative;
+    overflow-x: hidden;
 }
 
-/* Sidebar nav link fix */
+/* Tạo nền đại dương nhẹ nhàng */
+[data-theme="ocean"] body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: 
+        radial-gradient(ellipse at top, rgba(56, 189, 248, 0.05) 0%, transparent 50%),
+        radial-gradient(ellipse at bottom, rgba(14, 165, 233, 0.03) 0%, transparent 60%);
+    z-index: -10;
+    pointer-events: none;
+}
+
+/* Sidebar nav link */
 [data-theme="ocean"] .sidebar .nav-link {
     color: var(--sidebar-link-color);
-    transition: all 0.2s ease;
+    transition: all 0.3s ease;
 }
 
 [data-theme="ocean"] .sidebar .nav-link:hover {
     background-color: var(--sidebar-link-hover-bg);
     color: var(--sidebar-link-hover-color);
+    transform: translateX(5px);
 }
 
 [data-theme="ocean"] .sidebar .nav-link.active {
@@ -129,6 +391,12 @@
     color: var(--text-color);
     border: 1px solid var(--border-color);
     box-shadow: var(--card-shadow);
+    transition: all 0.3s ease;
+}
+
+[data-theme="ocean"] .card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(56, 189, 248, 0.15);
 }
 
 [data-theme="ocean"] .card-header {
@@ -140,9 +408,10 @@
 [data-theme="ocean"] .card-title {
     color: var(--bg-secondary);
 }
-    [data-theme="ocean"] .card-title .title-desk {
-        color: var(--text-color);
-    }
+
+[data-theme="ocean"] .card-title .title-desk {
+    color: var(--text-color);
+}
 
 [data-theme="ocean"] .form-label {
     color: var(--text-primary);
@@ -168,10 +437,12 @@
     background-color: var(--card-bg);
     color: var(--text-color);
     border-top: 1px solid var(--border-color);
+    transition: all 0.2s ease;
 }
 
 [data-theme="ocean"] .table tbody tr:hover {
     background-color: var(--glass-bg);
+    transform: scale(1.01);
 }
 
 [data-theme="ocean"] .badge.bg-primary {
@@ -197,7 +468,224 @@
     color: var(--text-muted) !important;
 }
 
-/* Utility */
+[data-theme="ocean"] .alert {
+    padding: 0.75rem 1.25rem;
+    border-radius: 0.5rem;
+    font-size: 0.95rem;
+    display: flex; 
+    justify-content: space-between;
+    line-height: 1.5;
+    border: 1px solid var(--border-color);
+}
+
+[data-theme="ocean"] .alert .btn-close {
+    margin-left: 1rem;
+    padding: 0.5rem;
+    align-self: center;
+}
+
+/* ============= HIỆU ỨNG TƯƠNG TÁC ============= */
+
+/* Hiệu ứng hover gợn sóng */
+[data-theme="ocean"] .ripple-hover {
+    position: relative;
+    overflow: hidden;
+}
+
+[data-theme="ocean"] .ripple-hover::after {
+    content: "";
+    position: absolute;
+    background: radial-gradient(circle, rgba(56, 189, 248, 0.15) 10%, transparent 70%);
+    border-radius: 50%;
+    pointer-events: none;
+    width: 100px;
+    height: 100px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 0;
+    transition: transform 0.4s ease-out, opacity 0.4s ease-out;
+}
+
+[data-theme="ocean"] .ripple-hover:hover::after {
+    transform: translate(-50%, -50%) scale(1.5);
+    opacity: 1;
+}
+
+/* Hiệu ứng click gợn sóng tròn */
+.water-ripple {
+    position: fixed;
+    width: 120px;
+    height: 120px;
+    margin-left: -60px;
+    margin-top: -60px;
+    border-radius: 50%;
+    border: 2px solid rgba(56, 189, 248, 0.4);
+    background: radial-gradient(circle, rgba(56, 189, 248, 0.1) 10%, transparent 70%);
+    pointer-events: none;
+    z-index: 9999;
+    animation: waterRippleExpand 1s ease-out forwards;
+}
+
+@keyframes waterRippleExpand {
+    0% {
+        transform: scale(0.2);
+        opacity: 0.8;
+    }
+    50% {
+        opacity: 0.4;
+    }
+    100% {
+        transform: scale(1.2);
+        opacity: 0;
+    }
+}
+
+/* Bong bóng chuột di chuyển */
+.mouse-bubble {
+    position: fixed;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: rgba(56, 189, 248, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    pointer-events: none;
+    z-index: 9999;
+    animation: mouseBubbleRise 2s ease-out forwards;
+}
+
+@keyframes mouseBubbleRise {
+    0% {
+        transform: translate(-50%, -50%) scale(0.3);
+        opacity: 0.8;
+    }
+    50% {
+        transform: translate(-50%, -80px) scale(1);
+        opacity: 0.6;
+    }
+    100% {
+        transform: translate(-50%, -120px) scale(1.3);
+        opacity: 0;
+    }
+}
+
+/* ============= MODAL & FORMS ============= */
+
+[data-theme="ocean"] .modal-header {
+    background: var(--navbar-bg);
+    color: white;
+    border-bottom: 1px solid var(--border-color);
+}
+
+[data-theme="ocean"] .modal-header .modal-title i {
+    color: white;
+}
+
+[data-theme="ocean"] .btn-close-white {
+    filter: brightness(0) invert(1);
+}
+
+[data-theme="ocean"] .modal-footer {
+    background-color: var(--card-bg);
+    border-top: 1px solid var(--border-color);
+}
+
+[data-theme="ocean"] .nav-tabs .nav-link {
+    background-color: var(--input-bg);
+    color: var(--text-secondary);
+    border: 1px solid var(--border-color);
+    margin-right: 0.5rem;
+    border-radius: 0.375rem 0.375rem 0 0;
+    transition: all 0.3s ease;
+}
+
+[data-theme="ocean"] .nav-tabs .nav-link:hover {
+    background-color: var(--glass-bg);
+    color: var(--primary-color);
+}
+
+[data-theme="ocean"] .nav-tabs .nav-link.active {
+    background-color: var(--bg-secondary);
+    color: var(--primary-color);
+    border-bottom: 2px solid var(--primary-color);
+}
+
+[data-theme="ocean"] .tab-content {
+    background-color: var(--card-bg);
+    padding: 1rem;
+    border: 1px solid var(--border-color);
+    border-top: none;
+    border-radius: 0 0 0.375rem 0.375rem;
+}
+
+[data-theme="ocean"] .modal-content .form-control,
+[data-theme="ocean"] .modal-content .form-select {
+    background-color: var(--input-bg);
+    color: var(--text-primary);
+    border: 1px solid var(--input-border);
+    transition: all 0.3s ease;
+}
+
+[data-theme="ocean"] .modal-content .form-control:focus,
+[data-theme="ocean"] .modal-content .form-select:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.2rem rgba(56, 189, 248, 0.25);
+}
+
+[data-theme="ocean"] .modal-content .form-label {
+    color: var(--text-primary);
+}
+
+[data-theme="ocean"] .modal-content .form-text {
+    color: var(--text-muted);
+}
+
+[data-theme="ocean"] .modal-content .btn-primary {
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-ocean));
+    border: none;
+    color: white;
+    transition: all 0.3s ease;
+}
+
+[data-theme="ocean"] .modal-content .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(56, 189, 248, 0.4);
+}
+
+[data-theme="ocean"] .modal-content .btn-secondary {
+    background-color: var(--secondary-color);
+    color: white;
+    border: none;
+}
+
+[data-theme="ocean"] .modal-content .btn-success {
+    background-color: var(--success-color);
+    color: white;
+    border: none;
+}
+
+[data-theme="ocean"] .modal-content .btn-outline-primary {
+    border-color: var(--primary-color);
+    color: var(--primary-color);
+    transition: all 0.3s ease;
+}
+
+[data-theme="ocean"] .modal-content .btn-outline-primary:hover {
+    background-color: var(--primary-color);
+    color: white;
+    transform: translateY(-1px);
+}
+
+[data-theme="ocean"] .tab-pane {
+    background-color: var(--card-bg);
+    color: var(--text-color);
+    padding: 1rem;
+    border-radius: 0 0 0.375rem 0.375rem;
+    border: 1px solid var(--border-color);
+    border-top: none;
+}
+
+/* ============= UTILITIES ============= */
 .text-theme-primary {
     color: var(--primary-color) !important;
 }
@@ -212,184 +700,25 @@
     cursor: default !important;
 }
 
-/* Modal header */
-[data-theme] .modal-header {
-    background-color: var(--primary-color);
-    color: white;
-    border-bottom: 1px solid var(--border-color);
-}
-
-/* Icon hoặc tiêu đề trong modal header */
-[data-theme] .modal-header .modal-title i {
-    color: white;
-}
-
-/* Nút close trắng */
-[data-theme] .btn-close-white {
-    filter: brightness(0) invert(1);
-}
-
-/* Modal footer */
-[data-theme] .modal-footer {
-    background-color: var(--card-bg);
-    border-top: 1px solid var(--border-color);
-}
-
-/* Tabs trong modal */
-[data-theme] .nav-tabs .nav-link {
-    background-color: var(--input-bg);
-    color: var(--text-secondary);
-    border: 1px solid var(--border-color);
-    margin-right: 0.5rem;
-    border-radius: 0.375rem 0.375rem 0 0;
-}
-
-[data-theme] .nav-tabs .nav-link.active {
-    background-color: var(--bg-secondary);
-    color: var(--primary-color);
-    border-bottom: 2px solid var(--primary-color);
-}
-
-/* Tab content */
-[data-theme] .tab-content {
-    background-color: var(--card-bg);
-    padding: 1rem;
-    border: 1px solid var(--border-color);
-    border-top: none;
-    border-radius: 0 0 0.375rem 0.375rem;
-}
-
-/* Form control trong modal */
-[data-theme] .modal-content .form-control,
-[data-theme] .modal-content .form-select {
-    background-color: var(--input-bg);
-    color: var(--text-primary);
-    border: 1px solid var(--input-border);
-}
-
-/* Placeholder & Label */
-[data-theme] .modal-content .form-label {
-    color: var(--text-primary);
-}
-
-[data-theme] .modal-content .form-text {
-    color: var(--text-muted);
-}
-
-/* Button trong modal */
-[data-theme] .modal-content .btn-primary {
-    background: linear-gradient(135deg, var(--primary-color), var(--primary-ocean));
-    border: none;
-    color: white;
-}
-[data-theme] .modal-content .btn-secondary {
-    background-color: var(--secondary-color);
-    color: white;
-    border: none;
-}
-[data-theme] .modal-content .btn-success {
-    background-color: var(--success-color);
-    color: white;
-    border: none;
-}
-[data-theme] .modal-content .btn-outline-primary {
-    border-color: var(--primary-color);
-    color: var(--primary-color);
-}
-[data-theme] .modal-content .btn-outline-primary:hover {
-    background-color: var(--primary-color);
-    color: white;
-}
-[data-theme] .tab-pane {
-    background-color: var(--card-bg);
-    color: var(--text-color);
-    padding: 1rem;
-    border-radius: 0 0 0.375rem 0.375rem;
-    border: 1px solid var(--border-color);
-    border-top: none;
-}
-
-[data-theme="ocean"] .alert {
-    padding: 0.75rem 1.25rem;
-    border-radius: 0.5rem;
-    font-size: 0.95rem;
-    display: flex; 
-    justify-content: space-between;
-    line-height: 1.5;
-}
-
-[data-theme="ocean"] .alert .btn-close {
-    margin-left: 1rem;
-    padding: 0.5rem;
-    align-self: center;
-}
-
-
-/* Hiệu ứng hover gợn sóng */
-[data-theme="ocean"] .ripple-hover::after {
-    content: "";
-    position: absolute;
-    background: radial-gradient(circle, rgba(14, 165, 233, 0.2) 10%, transparent 70%);
-    border-radius: 50%;
-    pointer-events: none;
-    width: 100px;
-    height: 100px;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%) scale(0);
-    opacity: 0;
-    transition: transform 0.4s ease-out, opacity 0.4s ease-out;
-}
-
-[data-theme="ocean"] .ripple-hover:hover::after {
-    transform: translate(-50%, -50%) scale(1.2);
-    opacity: 1;
-}
-
-/* Hiệu ứng click gợn sóng tròn */
-.water-ripple {
-    position: fixed;
-    width: 100px;
-    height: 100px;
-    margin-left: -50px;
-    margin-top: -50px;
-    border-radius: 50%;
-    border: 2px solid rgba(14, 165, 233, 0.5);
-    background: radial-gradient(circle, rgba(14, 165, 233, 0.15) 10%, transparent 70%);
-    pointer-events: none;
-    z-index: 9999;
-    animation: waterRippleExpand 0.8s ease-out forwards;
-}
-
-@keyframes waterRippleExpand {
-    0% {
-        transform: scale(0.3);
-        opacity: 0.7;
+/* ============= RESPONSIVE ============= */
+@media (max-width: 768px) {
+    .ocean-fish {
+        width: 40px;
+        height: 25px;
     }
-    100% {
-        transform: scale(1);
-        opacity: 0;
+    
+    .fish-large {
+        width: 40px;
+        height: 25px;
     }
-}
-
-.mouse-bubble {
-    position: fixed;
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    background: rgba(14, 165, 233, 0.4);
-    pointer-events: none;
-    z-index: 9999;
-    animation: mouseBubbleRise 1.5s ease-out forwards;
-}
-
-@keyframes mouseBubbleRise {
-    0% {
-        transform: translate(-50%, -50%) scale(0.5);
-        opacity: 0.8;
+    
+    .fish-small {
+        width: 20px;
+        height: 15px;
     }
-    100% {
-        transform: translate(-50%, -100px) scale(1.2);
-        opacity: 0;
+    
+    .fish-tropical {
+        width: 30px;
+        height: 20px;
     }
 }
