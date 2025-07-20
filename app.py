@@ -434,7 +434,7 @@ def add_member_ids():
             db.session.add(MemberID(member_id=member_id))
 
     db.session.commit()
-    log_activity("Thêm mã thành viên", f"{current_user.id} đã thêm mã từ MEM-{str(start_num).zfill(3)} đến MEM-{str(end_num).zfill(3)}.")
+    log_activity("Thêm mã thành viên", f"{current_user.display_name} đã thêm mã từ MEM-{str(start_num).zfill(3)} đến MEM-{str(end_num).zfill(3)}.")
     flash(f'Đã thêm mã thành viên từ MEM-{str(start_num).zfill(3)} đến MEM-{str(end_num).zfill(3)}', 'success')
     return redirect(url_for('member_ids'))
 
