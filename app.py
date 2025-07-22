@@ -1540,6 +1540,7 @@ def change_theme():
 
     return render_template('change_theme.html', user=user, themes=themes, THEME_PRESETS=THEME_PRESETS)
 
+import flask
 @app.route("/version")
 @login_required
 def show_version():
