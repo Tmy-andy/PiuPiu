@@ -1,2 +1,2 @@
-Cập nhật lại README.md - HOÀN TẤT PHIÊN BẢN [minor]
+Auto bump version [skip ci]
 

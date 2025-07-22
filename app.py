@@ -258,6 +258,27 @@ def reset_cache_if_new_version():
 with app.app_context():
     reset_cache_if_new_version()
 
+# Timezone conversion
+vietnam_tz = pytz.timezone('Asia/Ho_Chi_Minh')
+
+def convert_logs_timezone(logs, tz=vietnam_tz):
+    converted = []
+    for log in logs:
+        ts = log.timestamp
+        if ts.tzinfo is None:
+            # Giả định ts đang ở UTC
+            ts = pytz.utc.localize(ts)
+        # Chuyển sang timezone VN
+        ts_local = ts.astimezone(tz)
+        # Tạo bản dict mới để giữ nguyên log gốc
+        converted.append({
+            'timestamp': ts_local,
+            'action': log.action,
+            'detail': log.detail,
+        })
+    return converted
+
+
 # Error handlers
 @app.errorhandler(403)
 def forbidden(e):
@@ -1497,12 +1518,12 @@ def frequency():
 @app.route('/activity_log')
 @admin_required
 def activity_log():
-    logs = cache.get('active_logs')
+    logs = cache.get('active_logs_vn')
     if logs is None:
-        logs = ActivityLog.query.order_by(ActivityLog.timestamp.desc()).all()
-        cache.set('active_logs', logs, timeout=300)  # Cache 5 phút
+        raw_logs = ActivityLog.query.order_by(ActivityLog.timestamp.desc()).all()
+        logs = convert_logs_timezone(raw_logs)
+        cache.set('active_logs_vn', logs, timeout=300)
     return render_template("activity_log.html", logs=logs)
-
 
 # Danh sách preset để hiện mô tả cho từng theme
 THEME_PRESETS = {
