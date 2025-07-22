@@ -74,7 +74,7 @@ except Exception as e:
 #Session Cookie Security
 app.config.update(
     SESSION_COOKIE_HTTPONLY=True,
-    SESSION_COOKIE_SECURE=True,  # Bật nếu dùng HTTPS
+    SESSION_COOKIE_SECURE=False,  # Bật nếu dùng HTTPS
     SESSION_COOKIE_SAMESITE='Lax'
 )
 
