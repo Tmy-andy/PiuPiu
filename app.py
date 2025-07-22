@@ -138,6 +138,13 @@ def inject_user():
                 .first()
             )
             last_play_time = last_game.game.created_at if last_game else None
+            if last_play_time:
+                # Nếu last_play_time là naive, giả định nó là UTC
+                if last_play_time.tzinfo is None:
+                    last_play_time = pytz.utc.localize(last_play_time)
+                # Chuyển sang giờ VN
+                last_play_time = last_play_time.astimezone(pytz.timezone('Asia/Ho_Chi_Minh'))
+
             if not last_play_time or (now - last_play_time).days > 7:
                 warning_count += 1
 
