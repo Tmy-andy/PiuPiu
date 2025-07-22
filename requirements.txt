@@ -11,3 +11,5 @@ Flask-Compress
 Flask-Caching
 flask-debugtoolbar
 pytz
+Flask-WTF
+flask_cors

@@ -53,7 +53,10 @@ try:
     app = Flask(__name__)
     app.logger.info(f"Ứng dụng khởi động với phiên bản: {APP_VERSION}")
     app.logger.setLevel(logging.DEBUG)
-    app.secret_key = os.environ.get('SECRET_KEY', 'dev-secret-key')
+    secret = os.environ.get('SECRET_KEY')
+    if not secret:
+        raise RuntimeError("SECRET_KEY không được để trống trong production!")
+    app.secret_key = secret
     app.permanent_session_lifetime = timedelta(days=30)
 
 
@@ -68,6 +71,18 @@ except Exception as e:
     print("🛑 Lỗi khi khởi tạo Flask app:")
     traceback.print_exc()
 
+#Session Cookie Security
+app.config.update(
+    SESSION_COOKIE_HTTPONLY=True,
+    SESSION_COOKIE_SECURE=True,  # Bật nếu dùng HTTPS
+    SESSION_COOKIE_SAMESITE='Lax'
+)
+
+# Cấu hình SQLAlchemy
+from flask_cors import CORS
+CORS(app, resources={r"/*": {"origins": "https://piupiu-production.up.railway.app/"}})
+
+
 from models import db
 
 migrate = Migrate(app, db)
@@ -78,6 +93,9 @@ with app.app_context():
 
 from flask_compress import Compress
 Compress(app)
+
+from flask_wtf.csrf import CSRFProtect
+csrf = CSRFProtect(app)
 
 @app.after_request
 def add_cache_control(response):
