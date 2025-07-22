@@ -195,7 +195,8 @@ def reset_cache_if_new_version():
                     log = ActivityLog(
                         user_id=admin_user.id,
                         action="Nâng cấp hệ thống",
-                        detail=detail_msg
+                        detail=detail_msg,
+                        timestamp=datetime.utcnow()
                     )
                     db.session.add(log)
                     db.session.commit()
