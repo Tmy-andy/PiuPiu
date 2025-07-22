@@ -44,3 +44,7 @@ NEW_VERSION="v${MAJOR}.${MINOR}.${PATCH}"
 # Ghi version mới vào file
 echo "$NEW_VERSION" > "$VERSION_FILE"
 echo "Phiên bản mới: $NEW_VERSION"
+
+# Ghi commit message gần nhất vào changelog.txt
+git log -1 --pretty=%B > changelog.txt
+echo "Cập nhật changelog.txt với commit message mới nhất."

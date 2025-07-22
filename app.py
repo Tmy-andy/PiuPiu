@@ -27,8 +27,27 @@ from flask import jsonify
 import pytz
 
 load_dotenv()
-APP_VERSION = os.environ.get("APP_VERSION", "v0.0")
-APP_CHANGELOG = os.environ.get("APP_CHANGELOG", "Không có ghi chú thay đổi.")
+
+def get_app_version():
+    env_version = os.getenv("APP_VERSION")
+    if env_version:
+        return env_version.strip()
+    try:
+        with open(os.path.join(os.path.dirname(__file__), "version.txt"), "r", encoding="utf-8") as f:
+            return f.read().strip()
+    except FileNotFoundError:
+        return "v0.0"
+
+APP_VERSION = get_app_version()
+
+def get_app_changelog():
+    try:
+        with open(os.path.join(os.path.dirname(__file__), "changelog.txt"), "r", encoding="utf-8") as f:
+            return f.read().strip()
+    except FileNotFoundError:
+        return "Không có ghi chú thay đổi."
+
+APP_CHANGELOG = get_app_changelog()
 
 try:
     app = Flask(__name__)
@@ -205,10 +224,7 @@ def reset_cache_if_new_version():
             with app.app_context():
                 admin_user = User.query.filter_by(member_id='ADMIN-001').first()
                 if admin_user:
-                    detail_msg = (
-                        f"🚀 Admin đã nâng cấp website lên phiên bản {APP_VERSION}: "
-                        f"{APP_CHANGELOG}"
-                    )
+                    detail_msg = f"🚀 Admin đã nâng cấp website lên phiên bản {APP_VERSION}: {APP_CHANGELOG}"
                     log = ActivityLog(
                         user_id=admin_user.id,
                         action="Nâng cấp hệ thống",
