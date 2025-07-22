@@ -91,7 +91,7 @@
                         {% endif %}
                         {% if session.user_role == 'admin'%}
                         <li>
-                            <a class="dropdown-item" href="{{ url_for('version_popup') }}">
+                            <a class="dropdown-item" href="{{ url_for('show_version') }}">
                                 <i class="fa-solid fa-kaaba"></i> Version hệ thống
                             </a>
                         </li>
@@ -148,7 +148,13 @@
                         Tải database
                     </a>
                     {% endif %}
-                    
+                    {% if session.user_role == 'admin'%}
+                    <li>
+                        <a href="{{ url_for('show_version') }}" class="mobile-nav-item">
+                            <i class="fa-solid fa-kaaba"></i> Version hệ thống
+                        </a>
+                    </li>
+                    {% endif %}
                     <div class="mobile-nav-divider"></div>
                     
                     <a href="{{ url_for('logout') }}" class="mobile-nav-item danger">
