@@ -25,6 +25,7 @@ from flask_migrate import Migrate
 from dotenv import load_dotenv
 from flask import jsonify
 import pytz
+from flask_wtf.csrf import CSRFProtect
 
 load_dotenv()
 
@@ -78,6 +79,11 @@ app.config.update(
     SESSION_COOKIE_SAMESITE='Lax'
 )
 
+# Lấy SECRET_KEY từ biến môi trường (Railway Variables)
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'fallback_key_dev')
+# Bật bảo vệ CSRF
+csrf = CSRFProtect(app)
+
 # Cấu hình SQLAlchemy
 from flask_cors import CORS
 CORS(app, resources={r"/*": {"origins": "https://piupiu-production.up.railway.app/"}})
@@ -93,9 +99,6 @@ with app.app_context():
 
 from flask_compress import Compress
 Compress(app)
-
-from flask_wtf.csrf import CSRFProtect
-csrf = CSRFProtect(app)
 
 @app.after_request
 def add_cache_control(response):
