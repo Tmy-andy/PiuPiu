@@ -295,6 +295,7 @@
                     <button type="submit" class="btn-login">
                         <i class="fas fa-sign-in-alt me-2"></i>Đăng nhập
                     </button>
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                 </form>
                 
                 <div class="divider">
