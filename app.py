@@ -189,7 +189,7 @@ def reset_cache_if_new_version():
                 admin_user = User.query.filter_by(member_id='ADMIN-001').first()
                 if admin_user:
                     detail_msg = (
-                        f"Administrator đã nâng cấp website lên phiên bản {APP_VERSION} (🚀 Cache reset): "
+                        f"🚀 Admin đã nâng cấp website lên phiên bản {APP_VERSION}: "
                         f"{APP_CHANGELOG}"
                     )
                     log = ActivityLog(
