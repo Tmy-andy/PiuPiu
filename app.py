@@ -148,12 +148,13 @@ def log_activity(action, detail=""):
         db.session.commit()
         cache.delete('active_logs')  # Xóa cache để reload log mới
 
+from flask_wtf.csrf import generate_csrf
+
 @app.context_processor
 def inject_user():
     user_id = session.get('user_id')
     user = User.query.get(user_id) if user_id else None
 
-    # ⚠️ Chỉ cache warning_count — vẫn giữ theme per-user
     warning_count = cache.get("warning_count")
     vietnam_now = datetime.now(pytz.timezone('Asia/Ho_Chi_Minh'))
     if warning_count is None:
@@ -179,19 +180,22 @@ def inject_user():
             )
             last_play_time = last_game.game.created_at if last_game else None
             if last_play_time:
-                # Nếu last_play_time là naive, giả định nó là UTC
                 if last_play_time.tzinfo is None:
                     last_play_time = pytz.utc.localize(last_play_time)
-                # Chuyển sang giờ VN
                 last_play_time = last_play_time.astimezone(pytz.timezone('Asia/Ho_Chi_Minh'))
 
             if not last_play_time or (now - last_play_time).days > 7:
                 warning_count += 1
 
-        cache.set("warning_count", warning_count, timeout=300)  # cache 5 phút
+        cache.set("warning_count", warning_count, timeout=300)
 
     effective_theme = get_theme_with_cache(user_id) if user_id else 'default'
-    return dict(user=user, warning_count=warning_count, effective_theme=effective_theme)
+    return dict(
+        user=user,
+        warning_count=warning_count,
+        effective_theme=effective_theme,
+        csrf_token=generate_csrf  # Thêm dòng này
+    )
 
 def get_theme_with_cache(user_id):
     cache_key = f"user_theme:{user_id}"

@@ -275,7 +275,7 @@
                 <p class="subtitle">Nhập thông tin để truy cập hệ thống</p>
                 
                 <form method="POST">
-                    <!-- {{ form.hidden_tag() }} -->
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                     <div class="form-group">
                         <label for="member_id" class="form-label">
                             <i class="fas fa-id-card"></i>Mã thành viên
@@ -295,7 +295,6 @@
                     <button type="submit" class="btn-login">
                         <i class="fas fa-sign-in-alt me-2"></i>Đăng nhập
                     </button>
-                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                 </form>
                 
                 <div class="divider">
