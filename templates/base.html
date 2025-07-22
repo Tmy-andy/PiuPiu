@@ -89,6 +89,13 @@
                             </a>
                         </li>
                         {% endif %}
+                        {% if session.user_role == 'admin'%}
+                        <li>
+                            <a class="dropdown-item" href="{{ url_for('version_popup') }}">
+                                <i class="fa-solid fa-kaaba"></i> Version hệ thống
+                            </a>
+                        </li>
+                        {% endif %}
                         <li><hr class="dropdown-divider"></li>
                         <li>
                             <a class="dropdown-item text-danger" href="{{ url_for('logout') }}">
