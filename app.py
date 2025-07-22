@@ -23,6 +23,7 @@ import csv
 import io
 from flask_migrate import Migrate
 from dotenv import load_dotenv
+from flask import jsonify
 
 load_dotenv()
 APP_VERSION = os.environ.get("APP_VERSION", "v0.0")
