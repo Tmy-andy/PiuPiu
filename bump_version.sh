@@ -46,5 +46,5 @@ echo "$NEW_VERSION" > "$VERSION_FILE"
 echo "Phiên bản mới: $NEW_VERSION"
 
 # Cập nhật biến APP_VERSION cho Railway
-echo "APP_VERSION=$NEW_VERSION" >> $RAILWAY_ENV_FILE
+echo "APP_VERSION=$NEW_VERSION"
 echo "Đã cập nhật APP_VERSION=$NEW_VERSION vào $RAILWAY_ENV_FILE"
