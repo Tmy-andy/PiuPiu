@@ -205,7 +205,15 @@ def reset_cache_if_new_version():
         # Ghi log vào ActivityLog
         try:
             with app.app_context():
-                log_activity("Deploy", f"Hệ thống khởi động với phiên bản {APP_VERSION} (cache đã được reset).")
+                admin_user = User.query.filter_by(member_id='ADMIN-001').first()
+                if admin_user:
+                    log = ActivityLog(
+                        user_id=admin_user.id,
+                        action="Nâng cấp hệ thống",
+                        detail=f"Administrator đã nâng cấp website lên phiên bản {APP_VERSION} (🚀 Cache reset)."
+                    )
+                    db.session.add(log)
+                    db.session.commit()
         except Exception as e:
             app.logger.error(f"Lỗi ghi ActivityLog deploy: {e}")
 
