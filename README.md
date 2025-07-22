@@ -122,6 +122,16 @@ python app.py
 - Role-based access control
 - CSRF protection (Flask built-in)
 
+## 🔧 Cách sử dụng Commit & Cập nhật Version
+
+Để quản lý phiên bản và changelog tự động, dự án sử dụng **script bump_version.sh**.
+
+### Commit bình thường:
+```bash
+git commit -m "Fix bug thanh toán [minor]"
+```
+
+
 ## 📝 License
 
 PiuPiu License - Độc quyền Piu Piu sử dụng hệ thống này.

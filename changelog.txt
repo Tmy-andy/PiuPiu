@@ -1,2 +1,2 @@
-Tăng cường bảo mật
+Auto bump version [skip ci]
 
