@@ -25,9 +25,13 @@ from flask_migrate import Migrate
 from dotenv import load_dotenv
 
 load_dotenv()
+APP_VERSION = os.environ.get("APP_VERSION", "v0.0")
+
+
 
 try:
     app = Flask(__name__)
+    app.logger.info(f"Ứng dụng khởi động với phiên bản: {APP_VERSION}")
     app.logger.setLevel(logging.DEBUG)
     app.secret_key = os.environ.get('SECRET_KEY', 'dev-secret-key')
     app.permanent_session_lifetime = timedelta(days=30)
@@ -187,6 +191,27 @@ cache = Cache(config={
     'CACHE_DEFAULT_TIMEOUT': 300
 })
 cache.init_app(app)
+
+# Reset cache nếu có deploy mới
+LAST_DEPLOY_VERSION_KEY = "last_deploy_version"
+
+def reset_cache_if_new_version():
+    last_version = cache.get(LAST_DEPLOY_VERSION_KEY)
+    if last_version != APP_VERSION:
+        cache.clear()  # Xóa toàn bộ cache
+        cache.set(LAST_DEPLOY_VERSION_KEY, APP_VERSION)
+        app.logger.info(f"🚀 Deploy mới: Cache đã reset! Phiên bản: {APP_VERSION}")
+
+        # Ghi log vào ActivityLog
+        try:
+            with app.app_context():
+                log_activity("Deploy", f"Hệ thống khởi động với phiên bản {APP_VERSION} (cache đã được reset).")
+        except Exception as e:
+            app.logger.error(f"Lỗi ghi ActivityLog deploy: {e}")
+
+# Kiểm tra version mới và reset cache nếu cần
+with app.app_context():
+    reset_cache_if_new_version()
 
 # Error handlers
 @app.errorhandler(403)
@@ -1520,3 +1545,15 @@ def change_theme():
             flash('Theme không hợp lệ.', 'danger')
 
     return render_template('change_theme.html', user=user, themes=themes, THEME_PRESETS=THEME_PRESETS)
+
+@app.route("/version")
+@login_required
+def show_version():
+    # Chỉ admin có member_id = ADMIN-001 được phép xem
+    user = User.query.get(session['user_id'])
+    if not user or user.member_id != 'ADMIN-001':
+        flash("Bạn không có quyền truy cập trang này.", "danger")
+        return redirect(url_for('dashboard'))
+
+    # Hiển thị popup thông báo phiên bản
+    return render_template("version_popup.html", version=APP_VERSION)
