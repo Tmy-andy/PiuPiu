@@ -1,2 +1,2 @@
-Cập nhật lại token bảo mật
+Auto bump version [skip ci]
 
