@@ -37,10 +37,145 @@
         :root {
             --theme-name: {{ effective_theme }};
         }
+
+        /* Version Modal Styles */
+        .version-modal .modal-header {
+            background: linear-gradient(135deg, var(--navbar-gradient-start, #667eea) 0%, var(--navbar-gradient-end, #764ba2) 100%);
+            color: white;
+            border-bottom: none;
+            border-radius: 15px 15px 0 0;
+            padding: 1.5rem;
+        }
+
+        .version-modal .modal-content {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            background-color: var(--bg-primary, #ffffff);
+        }
+
+        .version-modal .modal-body {
+            padding: 2rem;
+            background-color: var(--bg-primary, #ffffff);
+        }
+
+        .version-badge {
+            background: linear-gradient(45deg, var(--primary-color, #2563eb), var(--primary-dark, #1d4ed8));
+            color: white;
+            padding: 0.5rem 1.2rem;
+            border-radius: 25px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            display: inline-block;
+            margin-bottom: 1rem;
+            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
+        }
+
+        .info-item {
+            display: flex;
+            align-items: center;
+            padding: 0.8rem 0;
+            border-bottom: 1px solid var(--border-color, #e2e8f0);
+            color: var(--text-primary, #1e293b);
+        }
+
+        .info-item:last-child {
+            border-bottom: none;
+        }
+
+        .info-item i {
+            width: 30px;
+            color: var(--primary-color, #2563eb);
+            font-size: 1.1rem;
+            margin-right: 1rem;
+        }
+
+        .info-label {
+            font-weight: 600;
+            min-width: 120px;
+            color: var(--text-secondary, #475569);
+        }
+
+        .info-value {
+            color: var(--text-primary, #1e293b);
+        }
+
+        .version-modal .modal-footer {
+            background-color: var(--bg-secondary, #f8fafc);
+            border-top: 1px solid var(--border-color, #e2e8f0);
+            padding: 1.5rem;
+        }
+
+        .version-modal .btn-primary {
+            background: linear-gradient(135deg, var(--primary-color, #2563eb), var(--primary-dark, #1d4ed8));
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            padding: 0.7rem 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .version-modal .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(37, 99, 235, 0.4);
+        }
+
+        .version-icon {
+            font-size: 3rem;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 0.5rem;
+        }
+
+        .version-modal .modal-title {
+            font-weight: 700;
+            font-size: 1.5rem;
+        }
+
+        /* Animation cho modal */
+        .version-modal.fade .modal-dialog {
+            transition: transform 0.3s ease-out;
+            transform: translate(0, -50px);
+        }
+
+        .version-modal.show .modal-dialog {
+            transform: translate(0, 0);
+        }
+
+        /* Responsive */
+        @media (max-width: 576px) {
+            .version-modal .modal-body {
+                padding: 1.5rem;
+            }
+            
+            .info-label {
+                min-width: 100px;
+                font-size: 0.9rem;
+            }
+            
+            .version-badge {
+                font-size: 1rem;
+                padding: 0.4rem 1rem;
+            }
+        }
+
+        /* Theme support */
+        [data-theme="{{ effective_theme }}"] .version-badge {
+            background: linear-gradient(45deg, var(--primary-color), var(--primary-dark));
+            box-shadow: var(--card-shadow);
+        }
+
+        [data-theme="{{ effective_theme }}"] .version-modal .btn-primary:hover {
+            box-shadow: var(--btn-hover-shadow);
+        }
+
+        /* Loading spinner */
+        .spinner-border-sm {
+            width: 1rem;
+            height: 1rem;
+        }
     </style>
-    <style>
-        
-    </style>
+    
     <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <!-- Select2 JS -->
@@ -91,7 +226,7 @@
                         {% endif %}
                         {% if session.user_role == 'admin'%}
                         <li>
-                            <a class="dropdown-item" href="{{ url_for('show_version') }}">
+                            <a class="dropdown-item" href="#" id="showVersionBtn">
                                 <i class="fa-solid fa-kaaba"></i> Version hệ thống
                             </a>
                         </li>
@@ -149,11 +284,9 @@
                     </a>
                     {% endif %}
                     {% if session.user_role == 'admin'%}
-                    <li>
-                        <a href="{{ url_for('show_version') }}" class="mobile-nav-item">
-                            <i class="fa-solid fa-kaaba"></i> Version hệ thống
-                        </a>
-                    </li>
+                    <a href="#" id="showVersionMobileBtn" class="mobile-nav-item">
+                        <i class="fa-solid fa-kaaba"></i> Version hệ thống
+                    </a>
                     {% endif %}
                     <div class="mobile-nav-divider"></div>
                     
@@ -169,6 +302,43 @@
 
     <!-- Mobile Navigation Overlay -->
     <div class="mobile-nav-overlay" id="mobileNavOverlay"></div>
+
+    <!-- Version Modal -->
+    <div class="modal fade version-modal" id="versionModal" tabindex="-1" aria-labelledby="versionModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header text-center">
+                    <div class="w-100">
+                        <i class="fas fa-code-branch version-icon"></i>
+                        <h4 class="modal-title" id="versionModalLabel">Thông tin phiên bản</h4>
+                    </div>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="text-center mb-4">
+                        <div class="version-badge" id="versionBadge">
+                            <div class="spinner-border spinner-border-sm text-light me-2" role="status"></div>
+                            Đang tải...
+                        </div>
+                    </div>
+
+                    <div class="info-list" id="versionInfo">
+                        <div class="text-center">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Đang tải...</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer justify-content-center">
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">
+                        <i class="fas fa-check me-2"></i>
+                        Đã hiểu
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Flash Messages -->
     {% with messages = get_flashed_messages(with_categories=true) %}
@@ -204,9 +374,145 @@
         const dropdown = document.getElementById('mobileNavDropdown');
         const overlay = document.getElementById('mobileNavOverlay');
         const scrollToTop = document.getElementById('scrollToTop');
+        const showVersionBtn = document.getElementById('showVersionBtn');
+        const showVersionMobileBtn = document.getElementById('showVersionMobileBtn');
         
         let lastWidth = window.innerWidth;
         let resizeTimeout;
+
+        // Version Modal Functions
+        function showVersionModal() {
+            const modal = new bootstrap.Modal(document.getElementById('versionModal'));
+            modal.show();
+            loadVersionData();
+        }
+
+        function loadVersionData() {
+            // Reset UI
+            document.getElementById('versionBadge').innerHTML = '<div class="spinner-border spinner-border-sm text-light me-2" role="status"></div>Đang tải...';
+            document.getElementById('versionInfo').innerHTML = '<div class="text-center"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Đang tải...</span></div></div>';
+
+            // AJAX request
+            fetch('{{ url_for("show_version") }}?ajax=1')
+                .then(response => response.json())
+                .then(data => {
+                    // Update version badge
+                    document.getElementById('versionBadge').innerHTML = `<i class="fas fa-tag me-2"></i>Phiên bản ${data.version}`;
+
+                    // Update info
+                    let infoHtml = `
+                        <div class="info-item">
+                            <i class="fas fa-calendar-alt"></i>
+                            <span class="info-label">Ngày phát hành:</span>
+                            <span class="info-value">${data.release_date}</span>
+                        </div>
+                        
+                        <div class="info-item">
+                            <i class="fas fa-user-shield"></i>
+                            <span class="info-label">Phiên bản:</span>
+                            <span class="info-value">Stable Release</span>
+                        </div>
+
+                        <div class="info-item">
+                            <i class="fas fa-code"></i>
+                            <span class="info-label">Build:</span>
+                            <span class="info-value">${data.build_number}</span>
+                        </div>
+
+                        <div class="info-item">
+                            <i class="fas fa-shield-alt"></i>
+                            <span class="info-label">Bảo mật:</span>
+                            <span class="info-value text-success">
+                                <i class="fas fa-check-circle me-1"></i>
+                                Được cập nhật
+                            </span>
+                        </div>
+
+                        <div class="info-item">
+                            <i class="fas fa-server"></i>
+                            <span class="info-label">Môi trường:</span>
+                            <span class="info-value">Production</span>
+                        </div>
+
+                        <div class="info-item">
+                            <i class="fas fa-tools"></i>
+                            <span class="info-label">Framework:</span>
+                            <span class="info-value">Flask ${data.flask_version}</span>
+                        </div>
+
+                        <div class="info-item">
+                            <i class="fas fa-edit"></i>
+                            <span class="info-label">Thay đổi:</span>
+                            <span class="info-value">${data.changelog}</span>
+                        </div>
+
+                        <hr>
+                        <h6 class="mt-3 mb-2">Lịch sử nâng cấp gần đây:</h6>
+                        <ul class="list-group small">
+                    `;
+
+                    if (data.logs && data.logs.length > 0) {
+                        data.logs.forEach(log => {
+                            infoHtml += `
+                                <li class="list-group-item">
+                                    <i class="fas fa-history me-1 text-primary"></i>
+                                    ${log.timestamp} — ${log.detail}
+                                </li>
+                            `;
+                        });
+                    } else {
+                        infoHtml += '<li class="list-group-item text-muted">Chưa có lịch sử nâng cấp.</li>';
+                    }
+
+                    infoHtml += `
+                        </ul>
+                        <hr>
+
+                        <div class="mt-4 p-3 rounded" style="background-color: var(--bg-secondary, #f8fafc); border-left: 4px solid var(--primary-color, #2563eb);">
+                            <small class="text-muted">
+                                <i class="fas fa-info-circle me-2"></i>
+                                <strong>Lưu ý:</strong> Thông tin này chỉ dành cho quản trị viên hệ thống.
+                            </small>
+                        </div>
+                    `;
+
+                    document.getElementById('versionInfo').innerHTML = infoHtml;
+                })
+                .catch(error => {
+                    console.error('Error loading version data:', error);
+                    document.getElementById('versionBadge').innerHTML = '<i class="fas fa-exclamation-triangle me-2"></i>Lỗi tải dữ liệu';
+                    document.getElementById('versionInfo').innerHTML = '<div class="alert alert-danger">Không thể tải thông tin phiên bản.</div>';
+                });
+        }
+
+        // Event listeners for version buttons
+        if (showVersionBtn) {
+            showVersionBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                showVersionModal();
+            });
+        }
+
+        if (showVersionMobileBtn) {
+            showVersionMobileBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                // Đóng mobile menu trước
+                dropdown.classList.remove('show');
+                overlay.classList.remove('show');
+                toggle.classList.remove('active');
+                document.body.style.overflow = '';
+                // Hiển thị modal
+                setTimeout(() => showVersionModal(), 300);
+            });
+        }
+
+        // Check URL for version modal trigger
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('show_version') === 'true') {
+            showVersionModal();
+            // Clean URL
+            window.history.replaceState({}, document.title, window.location.pathname);
+        }
 
         // Mobile Navigation
         if (toggle && dropdown && overlay) {
@@ -214,13 +520,11 @@
                 const isOpen = dropdown.classList.contains('show');
                 
                 if (isOpen) {
-                    // Đóng menu
                     dropdown.classList.remove('show');
                     overlay.classList.remove('show');
                     toggle.classList.remove('active');
                     document.body.style.overflow = '';
                 } else {
-                    // Mở menu
                     dropdown.classList.add('show');
                     overlay.classList.add('show');
                     toggle.classList.add('active');
@@ -228,7 +532,6 @@
                 }
             });
 
-            // Đóng menu khi click overlay
             overlay.addEventListener('click', function() {
                 dropdown.classList.remove('show');
                 overlay.classList.remove('show');
@@ -236,8 +539,7 @@
                 document.body.style.overflow = '';
             });
 
-            // Đóng menu khi click vào link
-            const navItems = dropdown.querySelectorAll('.mobile-nav-item');
+            const navItems = dropdown.querySelectorAll('.mobile-nav-item:not(#showVersionMobileBtn)');
             navItems.forEach(item => {
                 item.addEventListener('click', function() {
                     dropdown.classList.remove('show');
@@ -247,20 +549,15 @@
                 });
             });
 
-            // Sửa lại phần xử lý resize để tránh đóng menu khi scroll trên mobile
             window.addEventListener('resize', function() {
-                // Debounce để tránh xử lý quá nhiều sự kiện resize
                 clearTimeout(resizeTimeout);
                 resizeTimeout = setTimeout(function() {
                     const currentWidth = window.innerWidth;
                     
-                    // Chỉ đóng menu khi có thay đổi đáng kể về width
-                    // và chuyển từ mobile sang desktop
                     if (Math.abs(currentWidth - lastWidth) > 50) {
                         const wasMobile = lastWidth <= 991.98;
                         const isMobileNow = currentWidth <= 991.98;
                         
-                        // Chỉ đóng menu khi chuyển từ mobile sang desktop
                         if (wasMobile && !isMobileNow) {
                             dropdown.classList.remove('show');
                             overlay.classList.remove('show');
@@ -270,10 +567,9 @@
                         
                         lastWidth = currentWidth;
                     }
-                }, 150); // Debounce 150ms
+                }, 150);
             });
             
-            // Thêm xử lý cho orientation change (xoay màn hình)
             window.addEventListener('orientationchange', function() {
                 setTimeout(function() {
                     lastWidth = window.innerWidth;
@@ -283,7 +579,6 @@
 
         // Scroll to Top functionality
         if (scrollToTop) {
-            // Hiển thị/ẩn button khi scroll
             window.addEventListener('scroll', function() {
                 if (window.pageYOffset > 300) {
                     scrollToTop.classList.add('show');
@@ -292,7 +587,6 @@
                 }
             });
 
-            // Click để scroll lên đầu trang
             scrollToTop.addEventListener('click', function() {
                 window.scrollTo({
                     top: 0,

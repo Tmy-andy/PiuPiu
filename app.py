@@ -1540,7 +1540,11 @@ def change_theme():
 
     return render_template('change_theme.html', user=user, themes=themes, THEME_PRESETS=THEME_PRESETS)
 
+
 import flask
+from datetime import datetime
+import pytz
+
 @app.route("/version")
 @login_required
 def show_version():
@@ -1549,16 +1553,36 @@ def show_version():
         flash("Bạn không có quyền truy cập trang này.", "danger")
         return redirect(url_for('dashboard'))
 
+    # Múi giờ Việt Nam
+    vietnam_tz = pytz.timezone('Asia/Ho_Chi_Minh')
+    
     recent_logs = ActivityLog.query.filter(ActivityLog.action == "Nâng cấp hệ thống") \
                                    .order_by(ActivityLog.timestamp.desc()) \
                                    .limit(5).all()
-    return render_template(
-        "version_popup.html",
-        version=APP_VERSION,
-        flask_version=flask.__version__,
-        changelog=APP_CHANGELOG,
-        logs=recent_logs
-    )
+    
+    # Chuyển đổi timestamp sang múi giờ Việt Nam
+    for log in recent_logs:
+        if log.timestamp.tzinfo is None:
+            # Nếu timestamp không có timezone, giả định là UTC
+            log.timestamp = pytz.utc.localize(log.timestamp)
+        log.timestamp = log.timestamp.astimezone(vietnam_tz)
+    
+    # Trả về JSON data cho AJAX request
+    if request.headers.get('Content-Type') == 'application/json' or request.args.get('ajax'):
+        return jsonify({
+            'version': APP_VERSION,
+            'flask_version': flask.__version__,
+            'changelog': APP_CHANGELOG,
+            'logs': [{
+                'timestamp': log.timestamp.strftime('%d-%m-%Y %H:%M'),
+                'detail': log.detail
+            } for log in recent_logs],
+            'release_date': '22/07/2025',  # Hoặc lấy từ database
+            'build_number': f"#{APP_VERSION}.{datetime.now(vietnam_tz).strftime('%Y%m%d')}"
+        })
+    
+    # Nếu không phải AJAX request, redirect về dashboard với modal trigger
+    return redirect(url_for('dashboard', show_version='true'))
 
 VERSION_FILE = os.path.join(os.path.dirname(__file__), 'version.txt')
 if os.path.exists(VERSION_FILE):
