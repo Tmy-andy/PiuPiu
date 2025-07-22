@@ -722,3 +722,22 @@
         height: 20px;
     }
 }
+
+[data-theme="ocean"] .pagination .page-link {
+    color: var(--text-primary);
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+    box-shadow: var(--card-shadow);
+}
+
+[data-theme="ocean"] .pagination .page-link:hover {
+    background-color: var(--primary-color);
+    color: #fff;
+}
+
+[data-theme="ocean"] .pagination .page-item.active .page-link {
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+    color: #fff;
+    border: none;
+    box-shadow: 0 4px 12px rgba(var(--primary-color-rgba), 0.5);
+}

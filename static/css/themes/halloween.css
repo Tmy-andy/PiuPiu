@@ -83,3 +83,22 @@
         transform: translateY(100vh) rotate(360deg);
     }
 }
+
+[data-theme="halloween"] .pagination .page-link {
+    color: var(--text-primary);
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+    box-shadow: var(--card-shadow);
+}
+
+[data-theme="halloween"] .pagination .page-link:hover {
+    background-color: var(--primary-color);
+    color: #fff;
+}
+
+[data-theme="halloween"] .pagination .page-item.active .page-link {
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+    color: #fff;
+    border: none;
+    box-shadow: 0 4px 12px rgba(var(--primary-color-rgba), 0.5);
+}
