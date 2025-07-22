@@ -1,2 +1,2 @@
-Auto bump version [skip ci]
+Điều chỉnh hiển thị của log cập nhật hệ thống
 
