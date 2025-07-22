@@ -24,6 +24,7 @@ import io
 from flask_migrate import Migrate
 from dotenv import load_dotenv
 from flask import jsonify
+import pytz
 
 load_dotenv()
 APP_VERSION = os.environ.get("APP_VERSION", "v0.0")
@@ -96,9 +97,16 @@ def log_activity(action, detail=""):
 
     user_id = session.get("user_id")
     if user_id:
-        log = ActivityLog(user_id=user_id, action=action, detail=detail)
+        vietnam_tz = pytz.timezone('Asia/Ho_Chi_Minh')
+        log = ActivityLog(
+            user_id=user_id,
+            action=action,
+            detail=detail,
+            timestamp=datetime.now(vietnam_tz)
+        )
         db.session.add(log)
         db.session.commit()
+        cache.delete('active_logs')  # Xóa cache để reload log mới
 
 @app.context_processor
 def inject_user():
@@ -107,9 +115,10 @@ def inject_user():
 
     # ⚠️ Chỉ cache warning_count — vẫn giữ theme per-user
     warning_count = cache.get("warning_count")
+    vietnam_now = datetime.now(pytz.timezone('Asia/Ho_Chi_Minh'))
     if warning_count is None:
         warning_count = 0
-        now = datetime.utcnow()
+        now = vietnam_now
         users = User.query.all()
 
         for u in users:
@@ -151,7 +160,7 @@ def get_theme_with_cache(user_id):
         return 'default'
 
     # 3. Ưu tiên ngày lễ
-    today = datetime.today()
+    today = datetime.now(pytz.timezone('Asia/Ho_Chi_Minh'))
     if today.month == 10 and today.day >= 25:
         theme = 'halloween'
     elif today.month == 12 and today.day >= 24:
@@ -197,7 +206,7 @@ def reset_cache_if_new_version():
                         user_id=admin_user.id,
                         action="Nâng cấp hệ thống",
                         detail=detail_msg,
-                        timestamp=datetime.utcnow()
+                        timestamp=datetime.now(pytz.timezone('Asia/Ho_Chi_Minh'))
                     )
                     db.session.add(log)
                     db.session.commit()
@@ -920,7 +929,7 @@ def increase_death(user_id):
             user.has_kim_bai = True
         db.session.commit()
 
-        log = KimBaiLog(user_id=user.id, timestamp=datetime.utcnow())
+        log = KimBaiLog(user_id=user.id, timestamp=datetime.now(pytz.timezone('Asia/Ho_Chi_Minh')))
         db.session.add(log)
         db.session.commit()
         cache.delete_memoized(top_tier)
@@ -976,8 +985,9 @@ def decrease_death(user_id):
 @login_required
 def top_tier():
     # Top 3 chết nhiều nhất tháng
-    current_month = datetime.utcnow().month
-    current_year = datetime.utcnow().year
+    vietnam_now = datetime.now(pytz.timezone('Asia/Ho_Chi_Minh'))
+    current_month = vietnam_now.month
+    current_year = vietnam_now.year
 
     top_deaths = (
         db.session.query(User.display_name, func.count(KimBaiLog.id).label("death_count"))
@@ -990,7 +1000,7 @@ def top_tier():
         .all()
     )
 
-    return render_template("top_tier.html", top_deaths=top_deaths, now=datetime.utcnow())
+    return render_template("top_tier.html", top_deaths=top_deaths, now=datetime.now(pytz.timezone('Asia/Ho_Chi_Minh')))
 
 
 # Blacklist management
@@ -1347,7 +1357,8 @@ from sqlalchemy.orm import lazyload, joinedload
 @app.route("/frequency")
 @login_required
 def frequency():
-    today = datetime.utcnow().date()
+    vietnam_now = datetime.now(pytz.timezone('Asia/Ho_Chi_Minh'))
+    today = vietnam_now.date()
 
     # 🔎 Tải tất cả user và map theo ID để tra nhanh
     users = User.query.options(lazyload("*")).filter_by(role='member').all()
@@ -1445,8 +1456,12 @@ def frequency():
 @app.route('/activity_log')
 @admin_required
 def activity_log():
-    logs = ActivityLog.query.order_by(ActivityLog.timestamp.desc()).all()
+    logs = cache.get('active_logs')
+    if logs is None:
+        logs = ActivityLog.query.order_by(ActivityLog.timestamp.desc()).all()
+        cache.set('active_logs', logs, timeout=300)  # Cache 5 phút
     return render_template("activity_log.html", logs=logs)
+
 
 # Danh sách preset để hiện mô tả cho từng theme
 THEME_PRESETS = {
@@ -1504,7 +1519,7 @@ THEME_PRESETS = {
 
 # Trả về theme hiệu lực (ưu tiên ngày lễ)
 def get_theme(user):
-    today = datetime.today()
+    today = datetime.now(pytz.timezone('Asia/Ho_Chi_Minh'))
 
     # Ưu tiên theme đặc biệt theo ngày lễ
     if today.month == 10 and today.day >= 25:
@@ -1544,7 +1559,6 @@ def change_theme():
 
 import flask
 from datetime import datetime
-import pytz
 
 @app.route("/version")
 @login_required
