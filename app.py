@@ -1555,7 +1555,7 @@ def show_version():
     return render_template(
         "version_popup.html",
         version=APP_VERSION,
-        flask_version=Flask.__version__,
+        flask_version=flask.__version__,
         changelog=APP_CHANGELOG,
         logs=recent_logs
     )
