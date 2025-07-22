@@ -38,13 +38,6 @@
             --theme-name: {{ effective_theme }};
         }
 
-        .version-modal {
-            z-index: 2000 !important;
-        }
-        .version-modal .modal-backdrop {
-            z-index: 1990 !important;
-        }
-
         /* Version Modal Styles */
         .version-modal .modal-header {
             background: linear-gradient(135deg, var(--navbar-gradient-start, #667eea) 0%, var(--navbar-gradient-end, #764ba2) 100%);
@@ -181,6 +174,16 @@
             width: 1rem;
             height: 1rem;
         }
+
+        @media (max-width: 991.98px) {
+            .version-modal {
+                z-index: 9999 !important;
+            }
+            .modal-backdrop {
+                z-index: 9998 !important;
+            }
+        }
+
     </style>
     
     <!-- jQuery -->
