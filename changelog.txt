@@ -1,2 +1,2 @@
-Tạm thời tắt token bảo mật đăng nhập, giữ lại mã hóa mật khẩu
+Auto bump version [skip ci]
 
