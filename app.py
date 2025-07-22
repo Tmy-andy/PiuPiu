@@ -26,8 +26,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 APP_VERSION = os.environ.get("APP_VERSION", "v0.0")
-
-
+APP_CHANGELOG = os.environ.get("APP_CHANGELOG", "Không có ghi chú thay đổi.")
 
 try:
     app = Flask(__name__)
@@ -69,23 +68,6 @@ def add_cache_control(response):
         response.headers['Pragma'] = 'no-cache'
         response.headers['Expires'] = '0'
     return response
-
-
-# def login_required(f):
-#     @wraps(f)
-#     def decorated_function(*args, **kwargs):
-#         user_id = session.get('user_id')
-#         if not user_id:
-#             return redirect(url_for('login'))
-
-#         user = User.query.get(user_id) if user_id else None
-#         if not user:
-#             session.clear()
-#             flash('Tài khoản không tồn tại hoặc đã bị xóa.', 'error')
-#             return redirect(url_for('login'))
-
-#         return f(*args, **kwargs)
-#     return decorated_function
 
 def admin_required(f):
     @wraps(f)
@@ -198,19 +180,22 @@ LAST_DEPLOY_VERSION_KEY = "last_deploy_version"
 def reset_cache_if_new_version():
     last_version = cache.get(LAST_DEPLOY_VERSION_KEY)
     if last_version != APP_VERSION:
-        cache.clear()  # Xóa toàn bộ cache
+        cache.clear()
         cache.set(LAST_DEPLOY_VERSION_KEY, APP_VERSION)
         app.logger.info(f"🚀 Deploy mới: Cache đã reset! Phiên bản: {APP_VERSION}")
 
-        # Ghi log vào ActivityLog
         try:
             with app.app_context():
                 admin_user = User.query.filter_by(member_id='ADMIN-001').first()
                 if admin_user:
+                    detail_msg = (
+                        f"Administrator đã nâng cấp website lên phiên bản {APP_VERSION} (🚀 Cache reset): "
+                        f"{APP_CHANGELOG}"
+                    )
                     log = ActivityLog(
                         user_id=admin_user.id,
                         action="Nâng cấp hệ thống",
-                        detail=f"Administrator đã nâng cấp website lên phiên bản {APP_VERSION} (🚀 Cache reset)."
+                        detail=detail_msg
                     )
                     db.session.add(log)
                     db.session.commit()
@@ -1557,11 +1542,18 @@ def change_theme():
 @app.route("/version")
 @login_required
 def show_version():
-    # Chỉ admin có member_id = ADMIN-001 được phép xem
     user = User.query.get(session['user_id'])
-    if not user or user.member_id != 'ADMIN-001':
+    if not user or user.role != 'admin':
         flash("Bạn không có quyền truy cập trang này.", "danger")
         return redirect(url_for('dashboard'))
 
-    # Hiển thị popup thông báo phiên bản
-    return render_template("version_popup.html", version=APP_VERSION)
+    recent_logs = ActivityLog.query.filter(ActivityLog.action == "Nâng cấp hệ thống") \
+                                   .order_by(ActivityLog.timestamp.desc()) \
+                                   .limit(5).all()
+    return render_template(
+        "version_popup.html",
+        version=APP_VERSION,
+        flask_version=Flask.__version__,
+        changelog=APP_CHANGELOG,
+        logs=recent_logs
+    )
