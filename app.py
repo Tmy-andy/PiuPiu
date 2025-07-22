@@ -1559,3 +1559,10 @@ def show_version():
         changelog=APP_CHANGELOG,
         logs=recent_logs
     )
+
+VERSION_FILE = os.path.join(os.path.dirname(__file__), 'version.txt')
+if os.path.exists(VERSION_FILE):
+    with open(VERSION_FILE) as f:
+        APP_VERSION = f.read().strip()
+else:
+    APP_VERSION = "v0.0.0"

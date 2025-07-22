@@ -4,7 +4,7 @@
 
 VERSION_FILE="version.txt"
 
-# Nếu version.txt chưa có, tạo mới
+# Nếu version.txt chưa tồn tại, tạo mới
 if [ ! -f "$VERSION_FILE" ]; then
     echo "v1.0.0" > "$VERSION_FILE"
     echo "Tạo mới version.txt với phiên bản v1.0.0"
@@ -44,7 +44,3 @@ NEW_VERSION="v${MAJOR}.${MINOR}.${PATCH}"
 # Ghi version mới vào file
 echo "$NEW_VERSION" > "$VERSION_FILE"
 echo "Phiên bản mới: $NEW_VERSION"
-
-# Cập nhật biến APP_VERSION cho Railway
-echo "APP_VERSION=$NEW_VERSION"
-echo "Đã cập nhật APP_VERSION=$NEW_VERSION vào $RAILWAY_ENV_FILE"
