@@ -28,6 +28,19 @@
     --sidebar-active-bg: #1f2937;
     --sidebar-active-color: #ffffff;
 
+    /* Dropdown colors */
+    --dropdown-bg: var(--card-bg); /* Màu trắng đồng bộ card */
+    --dropdown-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+    --dropdown-border: var(--border-color);
+    --dropdown-header-bg: var(--light-bg);
+    --dropdown-header-text: var(--primary-color);
+    --dropdown-item-text: var(--text-color);
+    --dropdown-item-hover-bg: #eef2ff; /* xanh nhạt nhẹ hợp với primary */
+    --dropdown-item-hover-text: var(--primary-color);
+    --dropdown-divider: var(--border-color);
+    --dropdown-icon-color: var(--text-muted);
+    --dropdown-danger-text: var(--danger-color);
+    --dropdown-danger-hover-bg: #fef2f2;
 }
 
 .sidebar-header:hover {

@@ -69,6 +69,20 @@
     --sidebar-link-hover-color: #ffffff;
     --sidebar-active-bg: var(--primary-dark);
     --sidebar-active-color: #ffffff;
+
+    /* Dropdown colors */
+    --dropdown-bg: var(--card-bg); /* nền trắng đồng bộ với card */
+    --dropdown-shadow: 0 8px 24px rgba(22, 163, 74, 0.12); /* bóng xanh trong suốt */
+    --dropdown-border: var(--border-color);
+    --dropdown-header-bg: var(--bg-secondary);
+    --dropdown-header-text: var(--primary-color);
+    --dropdown-item-text: var(--text-color);
+    --dropdown-item-hover-bg: #dcfce7; /* xanh nhạt hợp với primary */
+    --dropdown-item-hover-text: var(--primary-dark);
+    --dropdown-divider: var(--border-color);
+    --dropdown-icon-color: var(--text-muted);
+    --dropdown-danger-text: var(--danger-color);
+    --dropdown-danger-hover-bg: #fee2e2; /* đỏ nhạt */
 }
 
 /* Rơi lá rừng */

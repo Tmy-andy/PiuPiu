@@ -81,6 +81,20 @@
     /* Login Card & Icon BG */
     --login-card-bg: rgba(15, 23, 42, 0.95);
     --navbar-brand-icon-bg: rgba(255, 255, 255, 0.15);
+
+    /* Dropdown colors */
+    --dropdown-bg: var(--card-bg); /* Nền đồng bộ với card */
+    --dropdown-shadow: 0 8px 24px rgba(14, 165, 233, 0.15); /* Bóng xanh lam nhẹ */
+    --dropdown-border: var(--border-color);
+    --dropdown-header-bg: var(--bg-secondary);
+    --dropdown-header-text: var(--primary-color);
+    --dropdown-item-text: var(--text-primary);
+    --dropdown-item-hover-bg: rgba(14, 165, 233, 0.15); /* Xanh lam trong suốt */
+    --dropdown-item-hover-text: var(--primary-color);
+    --dropdown-divider: var(--border-color);
+    --dropdown-icon-color: var(--text-muted);
+    --dropdown-danger-text: var(--danger-color);
+    --dropdown-danger-hover-bg: rgba(239, 68, 68, 0.15); /* Đỏ nhạt */
 }
 
 /* Background star field */
