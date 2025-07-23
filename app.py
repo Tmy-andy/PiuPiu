@@ -585,21 +585,24 @@ def delete_member_ids():
     if start_num > end_num:
         return jsonify(success=False, message='Mã bắt đầu phải nhỏ hơn hoặc bằng mã kết thúc!'), 400
 
-    deleted = 0
-    for i in range(start_num, end_num + 1):
-        mid = f"MEM-{str(i).zfill(3)}"
-        member_id = MemberID.query.filter_by(member_id=mid, is_used=False).first()
-        if member_id:
-            db.session.delete(member_id)
-            deleted += 1
+    # Danh sách mã cần xóa
+    ids_to_delete = [f"MEM-{str(i).zfill(3)}" for i in range(start_num, end_num + 1)]
+
+    # Xóa hàng loạt (chỉ mã chưa sử dụng)
+    deleted = MemberID.query.filter(
+        MemberID.member_id.in_(ids_to_delete),
+        MemberID.is_used == False
+    ).delete(synchronize_session=False)
 
     db.session.commit()
-    if deleted > 0:
-        log_activity(
-            "Xoá mã thành viên",
-            f"{current_user.display_name} đã xoá {deleted} mã thành viên chưa sử dụng (từ {start_id} đến {end_id})."
-        )
+
+    log_activity(
+        "Xoá mã thành viên",
+        f"{current_user.display_name} đã xoá {deleted} mã thành viên chưa sử dụng (từ {start_id} đến {end_id})."
+    )
+
     return jsonify(success=True, deleted=deleted)
+
 
 @app.route('/update_points/<int:member_id>', methods=['POST'])
 @admin_required
