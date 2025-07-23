@@ -323,9 +323,6 @@
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 </head>
 <body data-theme="{{ effective_theme }}">
-    <div id="loading-overlay">
-        <div class="spinner"></div>
-    </div>
     <!-- Desktop Navigation -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
         <div class="container">
@@ -762,25 +759,6 @@
             });
         });
         window.addEventListener('load', () => NProgress.done());
-    });
-    </script>
-
-    <!-- Loading Overlay -->
-    <script>
-    function showLoading() {
-        if (window.innerWidth <= 768) {  // Chỉ cho mobile
-            document.getElementById('loading-overlay').classList.add('show');
-        }
-    }
-    function hideLoading() {
-        document.getElementById('loading-overlay').classList.remove('show');
-    }
-
-    document.addEventListener("DOMContentLoaded", function() {
-        document.querySelectorAll('form, a, button').forEach(el => {
-            el.addEventListener('click', () => showLoading());
-        });
-        window.addEventListener('load', () => hideLoading());
     });
     </script>
 
