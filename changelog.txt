@@ -1,2 +1,2 @@
-Cập nhật lại popup version - mobile
+Auto bump version [skip ci]
 
