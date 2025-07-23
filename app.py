@@ -580,12 +580,10 @@ def delete_member_ids():
         start_num = int(start_id.split('-')[1])
         end_num = int(end_id.split('-')[1])
     except (IndexError, ValueError):
-        flash('Định dạng mã không hợp lệ!', 'danger')
-        return redirect(url_for('member_ids'))
+        return jsonify(success=False, message='Định dạng mã không hợp lệ!'), 400
 
     if start_num > end_num:
-        flash('Mã bắt đầu phải nhỏ hơn hoặc bằng mã kết thúc!', 'danger')
-        return redirect(url_for('member_ids'))
+        return jsonify(success=False, message='Mã bắt đầu phải nhỏ hơn hoặc bằng mã kết thúc!'), 400
 
     deleted = 0
     for i in range(start_num, end_num + 1):
@@ -601,8 +599,7 @@ def delete_member_ids():
             "Xoá mã thành viên",
             f"{current_user.display_name} đã xoá {deleted} mã thành viên chưa sử dụng (từ {start_id} đến {end_id})."
         )
-    flash(f'Đã xóa {deleted} mã thành viên chưa sử dụng.', 'success')    
-    return redirect(url_for('member_ids')) 
+    return jsonify(success=True, deleted=deleted)
 
 @app.route('/update_points/<int:member_id>', methods=['POST'])
 @admin_required

@@ -161,4 +161,57 @@ document.addEventListener('DOMContentLoaded', () => {
     attachPaginationEvents();
 });
 </script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+    // Form thêm mã
+    const addForm = document.querySelector('form[action="{{ url_for("add_member_ids") }}"]');
+    if (addForm) {
+        addForm.addEventListener('submit', function (e) {
+            e.preventDefault();
+            const formData = new FormData(addForm);
+            fetch(addForm.action, {
+                method: 'POST',
+                body: formData
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    reloadMemberTable(); // reload bảng + phân trang
+                } else {
+                    alert(data.message || 'Lỗi khi thêm mã');
+                }
+            })
+            .catch(err => console.error('Lỗi khi thêm mã:', err));
+        });
+    }
+
+    // Form xóa mã
+    const deleteForm = document.querySelector('form[action="{{ url_for("delete_member_ids") }}"]');
+    if (deleteForm) {
+        deleteForm.addEventListener('submit', function (e) {
+            e.preventDefault();
+            const formData = new FormData(deleteForm);
+            fetch(deleteForm.action, {
+                method: 'POST',
+                body: formData
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    alert(`Đã xóa ${data.deleted} mã chưa sử dụng.`);
+                    reloadMemberTable();
+                } else {
+                    alert(data.message || 'Lỗi khi xóa mã');
+                }
+            })
+            .catch(err => console.error('Lỗi khi xóa mã:', err));
+        });
+    }
+
+    // Gắn event click phân trang ban đầu
+    attachPaginationEvents();
+});
+
+</script>
 {% endblock %}
