@@ -11,14 +11,14 @@ function setupAjaxPagination(tableSelector, urlBase) {
             const pagination = document.querySelector('#pagination-container');
             if (pagination) pagination.innerHTML = data.pagination;
 
-            attachEvents();
+            attachEvents();  // Gắn lại sự kiện cho nút mới
         })
         .catch(err => console.error('Lỗi load bảng:', err));
     }
 
     function attachEvents() {
         document.querySelectorAll('.pagination-link').forEach(link => {
-            link.addEventListener('click', function(e) {
+            link.addEventListener('click', function (e) {
                 e.preventDefault();
                 const page = this.dataset.page;
                 reloadTable(page);

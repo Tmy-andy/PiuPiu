@@ -464,7 +464,7 @@ def members():
     # Nếu là AJAX, trả về JSON
     if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
         rows_html = render_template('partials/_members_rows.html', members=members)
-        pagination_html = render_template('_pagination.html', page=page, total_pages=total_pages)
+        pagination_html = render_template('partials/_pagination.html', page=page, total_pages=total_pages)
         return jsonify(rows=rows_html, pagination=pagination_html)
 
     return render_template(
@@ -523,8 +523,8 @@ def member_ids():
         .all()
 
     if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-        rows_html = render_template('_member_ids_rows.html', member_ids=member_ids)
-        pagination_html = render_template('_pagination.html', page=page, total_pages=total_pages)
+        rows_html = render_template('partials/_member_ids_rows.html', member_ids=member_ids)
+        pagination_html = render_template('partials/_pagination.html', page=page, total_pages=total_pages)
         return jsonify(rows=rows_html, pagination=pagination_html)
 
     return render_template(

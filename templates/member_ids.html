@@ -130,37 +130,10 @@
 {% block scripts %}
 <script src="{{ url_for('static', filename='js/pagination.js') }}"></script>
 <script>
-function reloadMemberTable(page = 1) {
-    fetch(`/member_ids?page=${page}`, {
-        headers: { 'X-Requested-With': 'XMLHttpRequest' }
-    })
-    .then(res => res.json())
-    .then(data => {
-        // Cập nhật danh sách và phân trang
-        document.querySelector('#member-ids-table tbody').innerHTML = data.rows;
-        document.querySelector('#pagination-container').innerHTML = data.pagination;
-
-        // Gắn lại sự kiện phân trang
-        attachPaginationEvents();
-    })
-    .catch(err => console.error('Lỗi load bảng:', err));
-}
-
-function attachPaginationEvents() {
-    document.querySelectorAll('.pagination-link').forEach(link => {
-        link.addEventListener('click', function (e) {
-            e.preventDefault();
-            const page = this.getAttribute('data-page');
-            reloadMemberTable(page);
-        });
-    });
-}
-
 document.addEventListener('DOMContentLoaded', () => {
-    // Kích hoạt phân trang Ajax
     setupAjaxPagination('#member-ids-table', '/member_ids');
 
-    // Gắn sự kiện cho form thêm mã
+    // Form thêm mã
     const addForm = document.querySelector('form[action="{{ url_for("add_member_ids") }}"]');
     if (addForm) {
         addForm.addEventListener('submit', function (e) {
@@ -171,7 +144,7 @@ document.addEventListener('DOMContentLoaded', () => {
             .then(data => {
                 if (data.success) {
                     alert('Đã thêm mã thành viên!');
-                    reloadMemberTable();
+                    setupAjaxPagination('#member-ids-table', '/member_ids'); // reload
                 } else {
                     alert(data.message || 'Lỗi khi thêm mã');
                 }
@@ -180,7 +153,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Gắn sự kiện cho form xóa mã
+    // Form xóa mã
     const deleteForm = document.querySelector('form[action="{{ url_for("delete_member_ids") }}"]');
     if (deleteForm) {
         deleteForm.addEventListener('submit', function (e) {
@@ -191,7 +164,7 @@ document.addEventListener('DOMContentLoaded', () => {
             .then(data => {
                 if (data.success) {
                     alert(`Đã xóa ${data.deleted} mã chưa sử dụng.`);
-                    reloadMemberTable();
+                    setupAjaxPagination('#member-ids-table', '/member_ids'); // reload
                 } else {
                     alert(data.message || 'Lỗi khi xóa mã');
                 }
@@ -199,9 +172,6 @@ document.addEventListener('DOMContentLoaded', () => {
             .catch(err => console.error('Lỗi khi xóa mã:', err));
         });
     }
-
-    // Gắn event click phân trang lần đầu
-    attachPaginationEvents();
 });
 </script>
 {% endblock %}
