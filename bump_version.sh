@@ -54,6 +54,5 @@ echo "$NEW_VERSION" > "$VERSION_FILE"
 echo "Phiên bản mới: $NEW_VERSION"
 
 # Cập nhật changelog.txt với commit message
-NOW=$(date +"%d-%m-%Y %H:%M")
-echo "$NOW — 🚀 ${COMMIT_MSG}" > "$CHANGELOG_FILE"
+echo "$🚀 ${COMMIT_MSG}" > "$CHANGELOG_FILE"
 echo "Cập nhật $CHANGELOG_FILE với commit message mới nhất."
