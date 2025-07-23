@@ -44,7 +44,7 @@ APP_VERSION = get_app_version()
 def get_app_changelog():
     try:
         with open(os.path.join(os.path.dirname(__file__), "changelog.txt"), "r", encoding="utf-8") as f:
-            return f.read().strip()
+            return f.readline().strip()  # Chỉ lấy 1 dòng đầu tiên
     except FileNotFoundError:
         return "Không có ghi chú thay đổi."
 
@@ -249,6 +249,7 @@ def reset_cache_if_new_version():
             with app.app_context():
                 admin_user = User.query.filter_by(member_id='ADMIN-001').first()
                 if admin_user:
+                    # APP_CHANGELOG đã chỉ còn 1 dòng
                     detail_msg = f"🚀 Admin đã nâng cấp website lên phiên bản {APP_VERSION}: {APP_CHANGELOG}"
                     log = ActivityLog(
                         user_id=admin_user.id,
