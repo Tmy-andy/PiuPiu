@@ -56,66 +56,253 @@ body.loading {
     cursor: wait !important;  /* Con trỏ dạng loading */
 }
 
-/* NProgress Style */
+/* ===== ENHANCED NPROGRESS STYLES ===== */
 #nprogress .bar {
-    background: linear-gradient(90deg, var(--primary-color), var(--secondary-color)) !important;
+    background: linear-gradient(90deg, var(--primary-color, #2563eb), var(--secondary-color, #764ba2)) !important;
     height: 4px !important;
-    box-shadow: 0 0 10px var(--primary-color), 0 0 5px var(--secondary-color);
+    box-shadow: 0 0 15px var(--primary-color, #2563eb), 0 0 8px var(--secondary-color, #764ba2);
+    border-radius: 2px;
+    overflow: hidden;
+    position: relative;
+}
+
+/* Animated gradient effect */
+#nprogress .bar::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(270deg, 
+        transparent, 
+        rgba(255, 255, 255, 0.3), 
+        transparent
+    );
+    background-size: 200% 100%;
+    animation: nprogressShimmer 2s ease-in-out infinite;
+}
+
+@keyframes nprogressShimmer {
+    0% { 
+        background-position: -200% 0; 
+    }
+    100% { 
+        background-position: 200% 0; 
+    }
 }
 
 #nprogress .peg {
-    box-shadow: 0 0 10px var(--primary-color), 0 0 5px var(--secondary-color);
+    box-shadow: 0 0 15px var(--primary-color, #2563eb), 0 0 8px var(--secondary-color, #764ba2);
+    border-radius: 50%;
+    width: 120px;
+    opacity: 0.8;
+}
+
+#nprogress .spinner {
+    top: 20px;
+    right: 20px;
 }
 
 #nprogress .spinner-icon {
-    border-top-color: var(--primary-color);
-    border-left-color: var(--secondary-color);
+    width: 24px;
+    height: 24px;
+    border: 3px solid transparent;
+    border-top-color: var(--primary-color, #2563eb);
+    border-left-color: var(--secondary-color, #764ba2);
+    border-radius: 50%;
+    animation: nprogress-spinner 0.8s ease-in-out infinite;
+    box-shadow: 0 0 10px rgba(37, 99, 235, 0.3);
 }
 
-#nprogress .bar {
-    background: linear-gradient(270deg, var(--primary-color), var(--secondary-color), var(--primary-color));
-    background-size: 400% 400%;
-    animation: nprogressGradient 3s ease infinite;
+@keyframes nprogress-spinner {
+    0% { 
+        transform: rotate(0deg);
+        box-shadow: 0 0 5px rgba(37, 99, 235, 0.3);
+    }
+    50% {
+        box-shadow: 0 0 15px rgba(37, 99, 235, 0.6);
+    }
+    100% { 
+        transform: rotate(360deg);
+        box-shadow: 0 0 5px rgba(37, 99, 235, 0.3);
+    }
 }
 
-@keyframes nprogressGradient {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
-}
-
-
-/* Loading overlay */
+/* ===== ENHANCED LOADING OVERLAY ===== */
 #loading-overlay {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    display: flex;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    display: none;
     justify-content: center;
     align-items: center;
     z-index: 9999;
-    display: none;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
 }
 
 #loading-overlay.show {
     display: flex;
+    opacity: 1;
 }
 
+/* Modern spinner design */
 .spinner {
-    border: 6px solid #f3f3f3;
-    border-top: 6px solid #3498db;
+    position: relative;
+    width: 60px;
+    height: 60px;
     border-radius: 50%;
+    background: conic-gradient(
+        from 0deg,
+        var(--primary-color, #2563eb),
+        var(--secondary-color, #764ba2),
+        var(--primary-color, #2563eb)
+    );
+    animation: spinRotate 1.2s linear infinite;
+    padding: 4px;
+}
+
+.spinner::before {
+    content: '';
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    right: 4px;
+    bottom: 4px;
+    background: var(--bg-primary, #ffffff);
+    border-radius: 50%;
+    z-index: 1;
+}
+
+.spinner::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 8px;
+    height: 8px;
+    background: var(--primary-color, #2563eb);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2;
+    animation: spinPulse 1.2s ease-in-out infinite;
+}
+
+@keyframes spinRotate {
+    0% { 
+        transform: rotate(0deg);
+        filter: hue-rotate(0deg);
+    }
+    100% { 
+        transform: rotate(360deg);
+        filter: hue-rotate(360deg);
+    }
+}
+
+@keyframes spinPulse {
+    0%, 100% { 
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 1;
+    }
+    50% { 
+        transform: translate(-50%, -50%) scale(1.5);
+        opacity: 0.7;
+    }
+}
+
+/* Alternative elegant spinner (comment out above spinner styles and use this instead if preferred) */
+/*
+.spinner {
     width: 50px;
     height: 50px;
-    animation: spin 1s linear infinite;
+    position: relative;
 }
 
-@keyframes spin {
+.spinner::before,
+.spinner::after {
+    content: '';
+    position: absolute;
+    border-radius: 50%;
+    border: 3px solid transparent;
+    border-top-color: var(--primary-color, #2563eb);
+}
+
+.spinner::before {
+    width: 50px;
+    height: 50px;
+    animation: spinLarge 1s linear infinite;
+}
+
+.spinner::after {
+    width: 35px;
+    height: 35px;
+    top: 7.5px;
+    left: 7.5px;
+    border-top-color: var(--secondary-color, #764ba2);
+    animation: spinSmall 0.8s linear infinite reverse;
+}
+
+@keyframes spinLarge {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
+}
+
+@keyframes spinSmall {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+*/
+
+/* Theme-specific adjustments */
+/* [data-theme="dark"] #loading-overlay {
+    background: rgba(0, 0, 0, 0.8);
+}
+
+[data-theme="dark"] .spinner::before {
+    background: var(--bg-primary, #1a1a1a);
+} */
+
+/* Mobile optimizations */
+@media (max-width: 768px) {
+    #nprogress .bar {
+        height: 3px !important;
+    }
+    
+    #nprogress .spinner {
+        top: 15px;
+        right: 15px;
+    }
+    
+    #nprogress .spinner-icon {
+        width: 20px;
+        height: 20px;
+        border-width: 2px;
+    }
+    
+    .spinner {
+        width: 50px;
+        height: 50px;
+    }
+}
+
+/* Accessibility improvements */
+@media (prefers-reduced-motion: reduce) {
+    #nprogress .bar::before,
+    #nprogress .spinner-icon,
+    .spinner,
+    .spinner::after {
+        animation: none;
+    }
+    
+    #nprogress .bar {
+        background: var(--primary-color, #2563eb) !important;
+    }
 }
 
 /* Ẩn loading overlay trên desktop */
