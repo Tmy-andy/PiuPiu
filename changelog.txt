@@ -1,2 +1,2 @@
-Auto bump version [skip ci]
+Fix lỗi 500 - admins
 
