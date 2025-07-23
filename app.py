@@ -250,7 +250,7 @@ def reset_cache_if_new_version():
                 admin_user = User.query.filter_by(member_id='ADMIN-001').first()
                 if admin_user:
                     # APP_CHANGELOG đã chỉ còn 1 dòng
-                    detail_msg = f"🚀 Admin đã nâng cấp website lên phiên bản {APP_VERSION}: {APP_CHANGELOG}"
+                    detail_msg = f"Phiên bản {APP_VERSION}: {APP_CHANGELOG}"
                     log = ActivityLog(
                         user_id=admin_user.id,
                         action="Nâng cấp hệ thống",
