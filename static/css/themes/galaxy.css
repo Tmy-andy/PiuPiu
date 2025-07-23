@@ -398,3 +398,59 @@
     box-shadow: 0 4px 12px rgba(var(--primary-color-rgba), 0.5);
 }
 
+/* Form login/register */
+[data-theme="galaxy"] .login-container {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg-primary);
+}
+
+[data-theme="galaxy"] .login-card {
+    background: rgba(15, 23, 42, 0.9); /* gần giống card nhưng mờ */
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(14, 165, 233, 0.2);
+    color: var(--text-primary);
+}
+
+[data-theme="galaxy"] .login-card .form-label {
+    color: var(--text-primary);
+}
+
+[data-theme="galaxy"] .login-card .form-control {
+    background-color: var(--input-bg);
+    color: var(--text-primary);
+    border: 1px solid var(--input-border);
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+[data-theme="galaxy"] .login-card .form-control:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.2rem rgba(var(--primary-color-rgb), 0.25);
+}
+
+[data-theme="galaxy"] .login-card .btn-primary {
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+    border: none;
+    color: #fff;
+    font-weight: 600;
+    transition: transform 0.2s ease;
+}
+
+[data-theme="galaxy"] .login-card .btn-primary:hover {
+    transform: scale(1.02);
+}
+
+[data-theme="galaxy"] .login-card .btn-outline-primary {
+    border: 1px solid var(--primary-color);
+    color: var(--primary-color);
+    background: transparent;
+}
+
+[data-theme="galaxy"] .login-card .btn-outline-primary:hover {
+    background: var(--primary-color);
+    color: #fff;
+}
+
