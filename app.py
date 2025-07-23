@@ -498,21 +498,22 @@ def assign_member(user_id):
 def member_ids():
     UsedBy = aliased(User)
 
-    # ⚙️ Phân trang
     per_page = 30
     page = int(request.args.get('page', 1))
     offset = (page - 1) * per_page
 
-    # 🔢 Tổng số mã
     total = MemberID.query.count()
     total_pages = ceil(total / per_page)
 
-    # ⬇️ Truy vấn phân trang + join người dùng
     member_ids = db.session.query(MemberID, UsedBy.display_name.label("used_by_name")) \
         .outerjoin(UsedBy, MemberID.used_by == UsedBy.id) \
         .order_by(MemberID.member_id.asc()) \
         .offset(offset).limit(per_page) \
         .all()
+
+    # Nếu là AJAX thì trả về chỉ <tr>
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        return render_template('_member_ids_rows.html', member_ids=member_ids)
 
     return render_template(
         'member_ids.html',
@@ -526,20 +527,48 @@ def member_ids():
 @app.route('/add_member_ids', methods=['POST'])
 @admin_required
 def add_member_ids():
-    start_num = int(request.form['start_num'])
-    end_num = int(request.form['end_num'])
+    try:
+        start_num = int(request.form['start_num'])
+        end_num = int(request.form['end_num'])
 
-    for i in range(start_num, end_num + 1):
-        member_id = f"MEM-{str(i).zfill(3)}"
-        exists = MemberID.query.filter_by(member_id=member_id).first()
-        if not exists:
-            db.session.add(MemberID(member_id=member_id))
+        # Tạo danh sách ID mới
+        new_ids = [f"MEM-{str(i).zfill(3)}" for i in range(start_num, end_num + 1)]
 
-    db.session.commit()
-    log_activity("Thêm mã thành viên", f"{current_user.display_name} đã thêm mã từ MEM-{str(start_num).zfill(3)} đến MEM-{str(end_num).zfill(3)}.")
-    flash(f'Đã thêm mã thành viên từ MEM-{str(start_num).zfill(3)} đến MEM-{str(end_num).zfill(3)}', 'success')
-    return redirect(url_for('member_ids'))
+        # Kiểm tra ID đã tồn tại
+        existing_ids = set(
+            db.session.query(MemberID.member_id)
+            .filter(MemberID.member_id.in_(new_ids))
+            .all()
+        )
+        existing_ids = {x[0] for x in existing_ids}
 
+        to_insert = [MemberID(member_id=mid) for mid in new_ids if mid not in existing_ids]
+        added_count = len(to_insert)
+
+        if added_count > 0:
+            db.session.bulk_save_objects(to_insert)
+            db.session.commit()
+
+            log_activity(
+                "Thêm mã thành viên",
+                f"{current_user.display_name} đã thêm {added_count} mã từ {new_ids[0]} đến {new_ids[-1]}."
+            )
+
+            return jsonify(success=True, added=added_count)
+        else:
+            return jsonify(success=False, message="Không có mã mới được thêm.")
+
+    except Exception as e:
+        db.session.rollback()
+        return jsonify(success=False, message=str(e)), 500
+    
+# Tạo bảng mã thành viên
+@app.route('/member_ids_table')
+@admin_required
+def member_ids_table():
+    member_ids = db.session.query(MemberID).order_by(MemberID.created_at.desc()).all()
+    return render_template('_member_ids_table.html', member_ids=member_ids)
+    
 
 @app.route('/update_points/<int:member_id>', methods=['POST'])
 @admin_required
