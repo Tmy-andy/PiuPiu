@@ -1045,78 +1045,96 @@ def kim_bai():
 @app.route('/increase_death/<int:user_id>', methods=['POST'])
 @admin_required
 def increase_death(user_id):
-    user = User.query.get(user_id)
-    if not user:
-        return jsonify({"error": "User not found"}), 404
+    try:
+        user = User.query.get(user_id)
+        if not user:
+            return jsonify({"success": False, "message": "User not found"}), 404
 
-    user.death_count += 1
-    if user.death_count > 0 and user.death_count % 2 == 0:
-        user.has_kim_bai = True
-    db.session.commit()
+        user.death_count += 1
+        if user.death_count > 0 and user.death_count % 2 == 0:
+            user.has_kim_bai = True
 
-    log = KimBaiLog(user_id=user.id, timestamp=datetime.now(pytz.timezone('Asia/Ho_Chi_Minh')))
-    db.session.add(log)
-    db.session.commit()
-    cache.delete_memoized(top_tier)
-    log_activity(
-        "Tăng lượt chết",
-        f"{current_user.username} tăng lượt chết cho {user.display_name} (ID {user.id}). Tổng: {user.death_count}."
-    )
-    return jsonify({
-        "message": "Đã tăng lượt chết.",
-        "death_count": user.death_count,
-        "has_kim_bai": user.has_kim_bai
-    })
+        log = KimBaiLog(user_id=user.id, timestamp=datetime.now(pytz.timezone('Asia/Ho_Chi_Minh')))
+        db.session.add(log)
+        db.session.commit()
+
+        cache.delete_memoized(top_tier)
+        log_activity("Tăng lượt chết", f"{current_user.username} tăng lượt chết cho {user.display_name} (ID {user.id}). Tổng: {user.death_count}.")
+
+        return jsonify({
+            "success": True,
+            "message": "Đã tăng lượt chết.",
+            "death_count": user.death_count,
+            "has_kim_bai": user.has_kim_bai
+        })
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"success": False, "message": f"Lỗi: {str(e)}"}), 500
+
 
 @app.route('/use_kim_bai/<int:user_id>', methods=['POST'])
 @admin_required
 def use_kim_bai(user_id):
-    user = User.query.get(user_id)
-    if not user:
-        return jsonify({"error": "User not found"}), 404
+    try:
+        user = User.query.get(user_id)
+        if not user:
+            return jsonify({"success": False, "message": "User not found"}), 404
 
-    if user.has_kim_bai:
+        if not user.has_kim_bai:
+            return jsonify({"success": False, "message": "Không có kim bài để dùng."}), 400
+
         user.has_kim_bai = False
         db.session.commit()
+
         log_activity("Sử dụng kim bài", f"{current_user.username} đánh dấu {user.display_name} (ID {user.id}) đã sử dụng kim bài.")
+
         return jsonify({
+            "success": True,
             "message": "Đã sử dụng kim bài.",
             "death_count": user.death_count,
             "has_kim_bai": user.has_kim_bai
         })
-    else:
-        return jsonify({"error": "Không có kim bài để dùng."}), 400
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"success": False, "message": f"Lỗi: {str(e)}"}), 500
+
 
 @app.route('/decrease_death/<int:user_id>', methods=['POST'])
 @admin_required
 def decrease_death(user_id):
-    user = User.query.get(user_id)
-    if not user:
-        return jsonify({"error": "User not found"}), 404
+    try:
+        user = User.query.get(user_id)
+        if not user:
+            return jsonify({"success": False, "message": "User not found"}), 404
 
-    if user.death_count > 0:
+        if user.death_count <= 0:
+            return jsonify({"success": False, "message": "Không thể giảm nữa."}), 400
+
         user.death_count -= 1
 
-        # Xóa log gần nhất của người này
-        last_log = KimBaiLog.query.filter_by(user_id=user.id)\
-                                  .order_by(KimBaiLog.timestamp.desc())\
+        # Xóa log gần nhất
+        last_log = KimBaiLog.query.filter_by(user_id=user.id) \
+                                  .order_by(KimBaiLog.timestamp.desc()) \
                                   .first()
         if last_log:
             db.session.delete(last_log)
 
-        # Cập nhật kim bài
+        # Cập nhật trạng thái kim bài
         user.has_kim_bai = (user.death_count > 0 and user.death_count % 2 == 0)
 
         db.session.commit()
         cache.delete_memoized(top_tier)
         log_activity("Giảm lượt chết", f"{current_user.username} giảm lượt chết cho {user.display_name} (ID {user.id}). Còn {user.death_count} lượt chết.")
+
         return jsonify({
+            "success": True,
             "message": "Đã giảm lượt chết.",
             "death_count": user.death_count,
             "has_kim_bai": user.has_kim_bai
         })
-    else:
-        return jsonify({"error": "Không thể giảm nữa."}), 400
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"success": False, "message": f"Lỗi: {str(e)}"}), 500
 
 #Top
 @cache.cached(timeout=300)

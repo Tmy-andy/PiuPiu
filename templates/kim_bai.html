@@ -14,6 +14,7 @@
         <!-- Welcome Section -->
         <div class="card mb-4">
             <div class="card-body">
+                <input type="hidden" id="csrf_token" value="{{ csrf_token() }}">
                 <h1 class="card-title fw-bold">
                     <i class="fa-solid fa-scroll-torah"></i>
                     Kim bài miễn tử
@@ -28,6 +29,7 @@
             <div class="col-lg-4 col-md-6 mb-3">
                 <div class="card stats-card-warning text-white">
                     <div class="card-body">
+                        <input type="hidden" id="csrf_token" value="{{ csrf_token() }}">
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
                                 <h6 class="card-title opacity-75">Có kim bài</h6>
@@ -41,6 +43,7 @@
             <div class="col-lg-4 col-md-6 mb-3">
                 <div class="card stats-card text-white">
                     <div class="card-body">
+                        <input type="hidden" id="csrf_token" value="{{ csrf_token() }}">
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
                                 <h6 class="card-title opacity-75">Không có kim bài</h6>
@@ -54,6 +57,7 @@
             <div class="col-lg-4 col-md-6 mb-3">
                 <div class="card stats-card-info text-white">
                     <div class="card-body">
+                        <input type="hidden" id="csrf_token" value="{{ csrf_token() }}">
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
                                 <h6 class="card-title opacity-75">Tổng thành viên</h6>
@@ -75,6 +79,7 @@
                 </h5>
             </div>
             <div class="card-body">
+                <input type="hidden" id="csrf_token" value="{{ csrf_token() }}">
                 {% if members %}
                 <div class="table-responsive">
                     <table class="table table-hover">
@@ -115,7 +120,6 @@
                                 {% if user.role == 'admin' %}
                                 <td>
                                     <div class="d-flex gap-2 align-items-center">
-                                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                                         <!-- Giảm lượt chết -->
                                         <button class="btn btn-sm btn-outline-secondary" onclick="updateDeath({{ m.id }}, 'decrease')">
                                             <i class="fas fa-minus"></i>
@@ -165,72 +169,84 @@
 
 <script>
 function updateDeath(id, action) {
-    fetch(`/${action}_death/${id}`, { method: 'POST' })
-        .then(res => {
-            if (!res.ok) throw new Error(`Lỗi: ${res.status}`);
-            return res.json();
-        })
-        .then(data => {
-            if (data.error) {
-                alert(data.error);
-                return;
-            }
-            // Cập nhật badge lượt chết
-            const deathCell = document.getElementById(`death-${id}`);
-            if (deathCell) {
-                let badgeClass = 'success';
-                if (data.death_count > 2) badgeClass = 'danger';
-                else if (data.death_count > 0) badgeClass = 'warning';
-                deathCell.innerHTML = `<span class="badge bg-${badgeClass}">${data.death_count} lần</span>`;
-            }
+    const csrfToken = document.getElementById('csrf_token').value;
 
-            // Cập nhật trạng thái kim bài
-            const kimCell = document.getElementById(`kim-${id}`);
-            if (kimCell) {
-                if (data.has_kim_bai) {
-                    kimCell.innerHTML = `
-                        <span class="badge bg-warning text-dark">
-                            <i class="fas fa-shield-alt me-1"></i>Có kim bài
-                        </span>`;
-                    addUseButton(id); // Thêm nút "Sử dụng"
-                } else {
-                    kimCell.innerHTML = `
-                        <span class="badge bg-secondary">
-                            <i class="fas fa-times me-1"></i>Không có
-                        </span>`;
-                    removeUseButton(id); // Xóa nút nếu không còn kim bài
-                }
-            }
-        })
-        .catch(err => {
-            alert("Không thể cập nhật: " + err.message);
-        });
-}
-
-function useKimBai(id) {
-    fetch(`/use_kim_bai/${id}`, { method: 'POST' })
-        .then(res => {
-            if (!res.ok) throw new Error(`Lỗi: ${res.status}`);
-            return res.json();
-        })
-        .then(data => {
-            if (data.error) {
-                alert(data.error);
-                return;
-            }
-            // Reset trạng thái kim bài
-            const kimCell = document.getElementById(`kim-${id}`);
-            if (kimCell) {
+    fetch(`/${action}_death/${id}`, {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': csrfToken
+        }
+    })
+    .then(res => {
+        if (!res.ok) throw new Error(`Lỗi: ${res.status}`);
+        return res.json();
+    })
+    .then(data => {
+        if (data.error) {
+            alert(data.error);
+            return;
+        }
+        // Cập nhật badge lượt chết
+        const deathCell = document.getElementById(`death-${id}`);
+        if (deathCell) {
+            let badgeClass = 'success';
+            if (data.death_count > 2) badgeClass = 'danger';
+            else if (data.death_count > 0) badgeClass = 'warning';
+            deathCell.innerHTML = `<span class="badge bg-${badgeClass}">${data.death_count} lần</span>`;
+        }
+        // Cập nhật trạng thái kim bài
+        const kimCell = document.getElementById(`kim-${id}`);
+        if (kimCell) {
+            if (data.has_kim_bai) {
+                kimCell.innerHTML = `
+                    <span class="badge bg-warning text-dark">
+                        <i class="fas fa-shield-alt me-1"></i>Có kim bài
+                    </span>`;
+                addUseButton(id);
+            } else {
                 kimCell.innerHTML = `
                     <span class="badge bg-secondary">
                         <i class="fas fa-times me-1"></i>Không có
                     </span>`;
                 removeUseButton(id);
             }
-        })
-        .catch(err => {
-            alert("Không thể sử dụng kim bài: " + err.message);
-        });
+        }
+    })
+    .catch(err => {
+        alert("Không thể cập nhật: " + err.message);
+    });
+}
+
+function useKimBai(id) {
+    const csrfToken = document.getElementById('csrf_token').value;
+
+    fetch(`/use_kim_bai/${id}`, {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': csrfToken
+        }
+    })
+    .then(res => {
+        if (!res.ok) throw new Error(`Lỗi: ${res.status}`);
+        return res.json();
+    })
+    .then(data => {
+        if (data.error) {
+            alert(data.error);
+            return;
+        }
+        const kimCell = document.getElementById(`kim-${id}`);
+        if (kimCell) {
+            kimCell.innerHTML = `
+                <span class="badge bg-secondary">
+                    <i class="fas fa-times me-1"></i>Không có
+                </span>`;
+            removeUseButton(id);
+        }
+    })
+    .catch(err => {
+        alert("Không thể sử dụng kim bài: " + err.message);
+    });
 }
 
 // Thêm nút "Sử dụng" nếu có kim bài

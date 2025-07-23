@@ -56,15 +56,32 @@ body.loading {
     cursor: wait !important;  /* Con trỏ dạng loading */
 }
 
-/* Progress bar */
-/* Tùy biến màu NProgress theo theme */
+/* NProgress Style */
 #nprogress .bar {
     background: linear-gradient(90deg, var(--primary-color), var(--secondary-color)) !important;
     height: 4px !important;
-    box-shadow: 0 0 10px var(--primary-color);
+    box-shadow: 0 0 10px var(--primary-color), 0 0 5px var(--secondary-color);
 }
+
 #nprogress .peg {
     box-shadow: 0 0 10px var(--primary-color), 0 0 5px var(--secondary-color);
+}
+
+#nprogress .spinner-icon {
+    border-top-color: var(--primary-color);
+    border-left-color: var(--secondary-color);
+}
+
+#nprogress .bar {
+    background: linear-gradient(270deg, var(--primary-color), var(--secondary-color), var(--primary-color));
+    background-size: 400% 400%;
+    animation: nprogressGradient 3s ease infinite;
+}
+
+@keyframes nprogressGradient {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
 }
 
 
