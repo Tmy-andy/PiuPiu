@@ -1,2 +1,2 @@
-Auto bump version [skip ci]
+Cập nhật lại trang ID Member
 
