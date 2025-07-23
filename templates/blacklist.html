@@ -151,17 +151,10 @@
                             {% endfor %}
                         </tbody>
                     </table>
-                    {% if total_pages > 1 %}
-                    <nav>
-                        <ul class="pagination">
-                            {% for p in range(1, total_pages + 1) %}
-                            <li class="page-item {% if p == page %}active{% endif %}">
-                                <a class="page-link" href="?page={{ p }}">{{ p }}</a>
-                            </li>
-                            {% endfor %}
-                        </ul>
-                    </nav>
-                    {% endif %}
+                    <!-- Pagination -->
+                    <div id="pagination-container">
+                        {% include '_pagination.html' %}
+                    </div>
                 </div>
                 {% else %}
                 <div class="text-center py-4">

@@ -1,0 +1,21 @@
+<nav aria-label="Page navigation" class="mt-4">
+    <ul class="pagination pagination-sm shadow-sm">
+        {% if page > 1 %}
+        <li class="page-item">
+            <a class="page-link pagination-link" data-page="{{ page - 1 }}" href="#">← Trước</a>
+        </li>
+        {% endif %}
+
+        {% for p in range(1, total_pages + 1) %}
+        <li class="page-item {% if p == page %}active{% endif %}">
+            <a class="page-link pagination-link" data-page="{{ p }}" href="#">{{ p }}</a>
+        </li>
+        {% endfor %}
+
+        {% if page < total_pages %}
+        <li class="page-item">
+            <a class="page-link pagination-link" data-page="{{ page + 1 }}" href="#">Tiếp →</a>
+        </li>
+        {% endif %}
+    </ul>
+</nav>
