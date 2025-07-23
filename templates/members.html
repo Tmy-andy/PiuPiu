@@ -22,7 +22,7 @@
             <div class="card-body">
                 {% if members %}
                 <div class="table-responsive">
-                    <table class="table table-hover">
+                    <table id="members-table" class="table table-hover">
                         <thead>
                             <tr>
                                 <th>Mã thành viên</th>
@@ -34,53 +34,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            {% for member in members %}
-                            <tr>
-                                <td>
-                                    <span class="badge bg-primary">{{ member.member_id }}</span>
-                                </td>
-                                <td class="fw-semibold">{{ member.display_name }}</td>
-                                <td>
-                                    <span class="badge bg-{{ 'success' if member.points >= 8 else 'warning' if member.points >= 6 else 'danger' }}">
-                                        {{ member.points }} điểm
-                                    </span>
-                                </td>
-                                <td>
-                                    {% if member.admin_name %}
-                                        <i class="fas fa-user-shield me-1 text-theme-primary"></i>
-                                        {{ member.admin_name }}
-                                    {% else %}
-                                        <span class="text-theme-primary">Chưa phân công</span>
-                                    {% endif %}
-                                </td>
-                                <td class="text-theme-primary">{{ member.created_at.strftime('%Y-%m-%d') }}</td>
-                                <td>
-                                    <div class="btn-group" role="group">
-                                        <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" 
-                                                data-bs-target="#updatePointsModal" 
-                                                data-member-id="{{ member.id }}" 
-                                                data-member-name="{{ member.display_name }}">
-                                            <i class="fas fa-edit"></i>
-                                        </button>
-                                        <button class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" 
-                                                data-bs-target="#assignMemberModal" 
-                                                data-member-id="{{ member.id }}" 
-                                                data-member-name="{{ member.display_name }}"
-                                                data-current-admin="{{ member.assigned_admin_id or '' }}">
-                                            <i class="fas fa-user-cog"></i>
-                                        </button>
-                                        <!-- Nút xóa thành viên -->
-                                        <form action="{{ url_for('delete_member', user_id=member.id) }}" method="post" style="display:inline;">
-                                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                                            <button type="submit" class="btn btn-sm btn-outline-danger"
-                                                onclick="return confirm('Bạn có chắc muốn xóa thành viên này?');">
-                                                <i class="fas fa-trash"></i>
-                                            </button>
-                                        </form>
-                                    </div>
-                                </td>
-                            </tr>
-                            {% endfor %}
+                            {% include 'partials/_members_rows.html' %}
                         </tbody>
                     </table>
                     <!-- Pagination -->
@@ -214,4 +168,40 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 </script>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    setupAjaxPagination('#members-table', '/members');
+});
+
+function reloadMemberList(page = 1) {
+    fetch(`/members?page=${page}`, {
+        headers: { 'X-Requested-With': 'XMLHttpRequest' }
+    })
+    .then(res => res.json())
+    .then(data => {
+        document.querySelector('#members-table tbody').innerHTML = data.rows;
+        document.querySelector('#pagination-container').innerHTML = data.pagination;
+        attachPaginationEvents();
+    })
+    .catch(err => console.error('Lỗi load danh sách:', err));
+}
+
+function attachPaginationEvents() {
+    document.querySelectorAll('.pagination-link').forEach(link => {
+        link.addEventListener('click', function (e) {
+            e.preventDefault();
+            const page = this.getAttribute('data-page');
+            reloadMemberList(page);
+        });
+    });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    attachPaginationEvents();
+});
+
+</script>
+
+
 {% endblock %}

@@ -96,7 +96,7 @@
             <div class="card-body">
                 {% if member_ids %}
                 <div class="table-responsive">
-                    <table class="table table-hover">
+                    <table id="member-ids-table" class="table table-hover">
                         <thead>
                             <tr>
                                 <th>ID</th>
@@ -106,12 +106,12 @@
                             </tr>
                         </thead>
                         <tbody>
-                            {% include "_member_ids_rows.html" %}
+                            {% include 'partials/_member_ids_rows.html' %}
                         </tbody>
                     </table>
                     <!-- Pagination -->
                     <div id="pagination-container">
-                        {% include '_pagination.html' %}
+                        {% include 'partials/_pagination.html' %}
                     </div>
                 </div>
                 {% else %}
@@ -128,25 +128,23 @@
 {% endblock %}
 
 {% block scripts %}
+<script src="{{ url_for('static', filename='js/pagination.js') }}"></script>
 <script>
-function reloadMemberTable(page = 1) {
-    fetch(`/member_ids?page=${page}`, {
+document.addEventListener('DOMContentLoaded', () => {
+    setupAjaxPagination('#member-ids-table', '/member_ids');
+});
+
+function reloadMemberList(page = 1) {
+    fetch(`/members?page=${page}`, {
         headers: { 'X-Requested-With': 'XMLHttpRequest' }
     })
     .then(res => res.json())
     .then(data => {
-        // Cập nhật phần rows
-        const tbody = document.querySelector('table.table tbody');
-        if (tbody) tbody.innerHTML = data.rows;
-
-        // Cập nhật phần pagination
-        const pagination = document.querySelector('#pagination-container');
-        if (pagination) pagination.innerHTML = data.pagination;
-
-        // Gắn lại sự kiện phân trang
+        document.querySelector('#members-table tbody').innerHTML = data.rows;
+        document.querySelector('#pagination-container').innerHTML = data.pagination;
         attachPaginationEvents();
     })
-    .catch(err => console.error('Lỗi load bảng:', err));
+    .catch(err => console.error('Lỗi load danh sách:', err));
 }
 
 function attachPaginationEvents() {
@@ -154,36 +152,13 @@ function attachPaginationEvents() {
         link.addEventListener('click', function (e) {
             e.preventDefault();
             const page = this.getAttribute('data-page');
-            reloadMemberTable(page);
+            reloadMemberList(page);
         });
     });
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    // Gắn event click phân trang ban đầu
     attachPaginationEvents();
-
-    // Form thêm mã
-    const addForm = document.querySelector('form[action="{{ url_for("add_member_ids") }}"]');
-    if (addForm) {
-        addForm.addEventListener('submit', function (e) {
-            e.preventDefault();
-            const formData = new FormData(addForm);
-            fetch(addForm.action, {
-                method: 'POST',
-                body: formData
-            })
-            .then(res => res.json())
-            .then(data => {
-                if (data.success) {
-                    reloadMemberTable(); // reload bảng + phân trang
-                } else {
-                    alert(data.message || 'Lỗi khi thêm mã');
-                }
-            })
-            .catch(err => console.error('Lỗi khi thêm mã:', err));
-        });
-    }
 });
 </script>
 {% endblock %}
