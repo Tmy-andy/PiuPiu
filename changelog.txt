@@ -1,2 +1,2 @@
-Auto bump version [skip ci]
+Cập nhật trang báo lỗi (400)
 
