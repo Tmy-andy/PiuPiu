@@ -418,19 +418,15 @@ def dashboard():
 @app.route('/members')
 @admin_required
 def members():
-
     Admin = aliased(User)
 
-    # ⚙️ Cấu hình phân trang
     per_page = 20
     page = int(request.args.get('page', 1))
     offset = (page - 1) * per_page
 
-    # 🔎 Tổng số thành viên
     total = User.query.filter_by(role='member').count()
     total_pages = ceil(total / per_page)
 
-    # ⚡ Truy vấn có phân trang + join admin
     results = db.session.query(
         User,
         Admin.display_name.label("admin_name")
@@ -439,14 +435,18 @@ def members():
      .order_by(User.member_id.asc()) \
      .offset(offset).limit(per_page).all()
 
-    # ✅ Gắn admin_name vào user
     members = []
     for user, admin_name in results:
         user.admin_name = admin_name
         members.append(user)
 
-    # ✅ Lấy danh sách admin
     all_admins = User.query.filter_by(role='admin').order_by(User.display_name).all()
+
+    # Nếu là AJAX, trả về JSON
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        rows_html = render_template('partials/_members_rows.html', members=members)
+        pagination_html = render_template('_pagination.html', page=page, total_pages=total_pages)
+        return jsonify(rows=rows_html, pagination=pagination_html)
 
     return render_template(
         'members.html',
@@ -462,36 +462,28 @@ def members():
 def assign_member(user_id):
     try:
         new_admin_id = request.form.get('admin_id')
+        user = User.query.get(user_id)
 
-        user = User.query.get(user_id) if user_id else None
         if not user or user.role != 'member':
-            flash('Không tìm thấy thành viên hợp lệ.', 'danger')
-            return redirect(url_for('members'))
+            return jsonify(success=False, message='Không tìm thấy thành viên hợp lệ.'), 404
 
         if new_admin_id:
             try:
                 new_admin_id = int(new_admin_id)
                 new_admin = User.query.get(new_admin_id)
+                if not new_admin or new_admin.role != 'admin':
+                    return jsonify(success=False, message='Admin không hợp lệ.'), 400
+                user.assigned_admin_id = new_admin.id
             except ValueError:
-                flash('ID admin không hợp lệ.', 'danger')
-                return redirect(url_for('members'))
-
-            if not new_admin or new_admin.role != 'admin':
-                flash('Admin không hợp lệ.', 'danger')
-                return redirect(url_for('members'))
-
-            user.assigned_admin_id = new_admin.id
+                return jsonify(success=False, message='ID admin không hợp lệ.'), 400
         else:
             user.assigned_admin_id = None
 
         db.session.commit()
-        flash(f'Đã cập nhật admin phụ trách cho {user.display_name}.', 'success')
-        return redirect(url_for('members'))
-
+        return jsonify(success=True, message=f'Đã cập nhật admin phụ trách cho {user.display_name}.')
     except Exception as e:
         print("Lỗi ở /assign_member:", e)
-        flash('Đã xảy ra lỗi nội bộ.', 'danger')
-        return redirect(url_for('members'))
+        return jsonify(success=False, message='Lỗi máy chủ.'), 500
 
 @app.route('/member_ids')
 @admin_required
@@ -604,29 +596,39 @@ def delete_member_ids():
 @app.route('/update_points/<int:member_id>', methods=['POST'])
 @admin_required
 def update_points(member_id):
-    points_change = int(request.form['points_change'])
-    reason = request.form['reason']
+    try:
+        points_change = int(request.form['points_change'])
+        reason = request.form['reason']
 
-    user = User.query.get(member_id)
-    if user:
-        # Nếu không cho tự cộng điểm, bật đoạn này
+        user = User.query.get(member_id)
+        if not user:
+            return jsonify(success=False, message='Không tìm thấy người dùng.'), 404
+
+        # Nếu không cho tự cộng điểm
         # if user.id == session['user_id']:
-        #     flash('Bạn không thể tự cộng điểm cho chính mình.', 'warning')
-        #     return redirect(request.referrer or url_for('dashboard'))
+        #     return jsonify(success=False, message='Bạn không thể tự cộng điểm cho chính mình.')
 
         user.points += points_change
-        log = PointLog(member_id=member_id,
-                       points_change=points_change,
-                       reason=reason,
-                       admin_id=session['user_id'])
+        log = PointLog(
+            member_id=member_id,
+            points_change=points_change,
+            reason=reason,
+            admin_id=session['user_id']
+        )
         db.session.add(log)
         db.session.commit()
-        log_activity("Thay đổi điểm", f"{current_user.username}: cập nhật {points_change:+} điểm cho {user.username} (ID {user.id}) — lý do: {reason}")
-        flash('Cập nhật điểm thành công!', 'success')
-    else:
-        flash('Không tìm thấy người dùng.', 'danger')
 
-    return redirect(request.referrer or url_for('dashboard'))
+        log_activity(
+            "Thay đổi điểm",
+            f"{current_user.display_name}: cập nhật {points_change:+} điểm cho {user.display_name} (ID {user.id}) — lý do: {reason}"
+        )
+
+        return jsonify(success=True, message='Cập nhật điểm thành công!')
+    except ValueError:
+        return jsonify(success=False, message='Giá trị điểm không hợp lệ.'), 400
+    except Exception as e:
+        print("Lỗi khi cập nhật điểm:", e)
+        return jsonify(success=False, message='Lỗi máy chủ.'), 500
 
 @app.route('/logout')
 def logout():

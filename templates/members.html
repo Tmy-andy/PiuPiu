@@ -134,46 +134,8 @@
 {% endblock %}
 
 {% block scripts %}
+<script src="{{ url_for('static', filename='js/pagination.js') }}"></script>
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Update Points Modal
-    const updatePointsModal = document.getElementById('updatePointsModal');
-    const updatePointsForm = document.getElementById('updatePointsForm');
-    const memberName = document.getElementById('memberName');
-
-    updatePointsModal.addEventListener('show.bs.modal', function(event) {
-        const button = event.relatedTarget;
-        const memberId = button.getAttribute('data-member-id');
-        const memberNameText = button.getAttribute('data-member-name');
-        
-        memberName.textContent = memberNameText;
-        updatePointsForm.action = `/update_points/${memberId}`;
-    });
-
-    // Assign Member Modal
-    const assignMemberModal = document.getElementById('assignMemberModal');
-    const assignMemberForm = document.getElementById('assignMemberForm');
-    const assignMemberName = document.getElementById('assignMemberName');
-    const adminSelect = document.getElementById('admin_id');
-
-    assignMemberModal.addEventListener('show.bs.modal', function(event) {
-        const button = event.relatedTarget;
-        const memberId = button.getAttribute('data-member-id');
-        const memberNameText = button.getAttribute('data-member-name');
-        const currentAdmin = button.getAttribute('data-current-admin');
-        
-        assignMemberName.textContent = memberNameText;
-        assignMemberForm.action = `/assign_member/${memberId}`;
-        adminSelect.value = currentAdmin;
-    });
-});
-</script>
-
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-    setupAjaxPagination('#members-table', '/members');
-});
-
 function reloadMemberList(page = 1) {
     fetch(`/members?page=${page}`, {
         headers: { 'X-Requested-With': 'XMLHttpRequest' }
@@ -183,6 +145,7 @@ function reloadMemberList(page = 1) {
         document.querySelector('#members-table tbody').innerHTML = data.rows;
         document.querySelector('#pagination-container').innerHTML = data.pagination;
         attachPaginationEvents();
+        attachModalEvents(); // Gắn lại sự kiện modal sau khi reload
     })
     .catch(err => console.error('Lỗi load danh sách:', err));
 }
@@ -197,11 +160,78 @@ function attachPaginationEvents() {
     });
 }
 
+function attachModalEvents() {
+    // Update Points Modal
+    const updatePointsModal = document.getElementById('updatePointsModal');
+    if (updatePointsModal) {
+        updatePointsModal.addEventListener('show.bs.modal', function(event) {
+            const button = event.relatedTarget;
+            const memberId = button.getAttribute('data-member-id');
+            const memberNameText = button.getAttribute('data-member-name');
+            document.getElementById('memberName').textContent = memberNameText;
+            document.getElementById('updatePointsForm').action = `/update_points/${memberId}`;
+        });
+    }
+
+    // Assign Member Modal
+    const assignMemberModal = document.getElementById('assignMemberModal');
+    if (assignMemberModal) {
+        assignMemberModal.addEventListener('show.bs.modal', function(event) {
+            const button = event.relatedTarget;
+            const memberId = button.getAttribute('data-member-id');
+            const memberNameText = button.getAttribute('data-member-name');
+            const currentAdmin = button.getAttribute('data-current-admin');
+            document.getElementById('assignMemberName').textContent = memberNameText;
+            document.getElementById('assignMemberForm').action = `/assign_member/${memberId}`;
+            document.getElementById('admin_id').value = currentAdmin;
+        });
+    }
+}
+
 document.addEventListener('DOMContentLoaded', () => {
+    setupAjaxPagination('#members-table', '/members');
     attachPaginationEvents();
+    attachModalEvents();
+
+    // Submit form update points
+    const updatePointsForm = document.getElementById('updatePointsForm');
+    if (updatePointsForm) {
+        updatePointsForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const formData = new FormData(updatePointsForm);
+            fetch(updatePointsForm.action, { method: 'POST', body: formData })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    reloadMemberList();
+                    bootstrap.Modal.getInstance(document.getElementById('updatePointsModal')).hide();
+                } else {
+                    alert(data.message || 'Có lỗi xảy ra khi cập nhật điểm');
+                }
+            })
+            .catch(err => console.error('Lỗi update points:', err));
+        });
+    }
+
+    // Submit form assign member
+    const assignMemberForm = document.getElementById('assignMemberForm');
+    if (assignMemberForm) {
+        assignMemberForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const formData = new FormData(assignMemberForm);
+            fetch(assignMemberForm.action, { method: 'POST', body: formData })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    reloadMemberList();
+                    bootstrap.Modal.getInstance(document.getElementById('assignMemberModal')).hide();
+                } else {
+                    alert(data.message || 'Có lỗi xảy ra khi phân công');
+                }
+            })
+            .catch(err => console.error('Lỗi assign member:', err));
+        });
+    }
 });
-
 </script>
-
-
 {% endblock %}

@@ -130,21 +130,20 @@
 {% block scripts %}
 <script src="{{ url_for('static', filename='js/pagination.js') }}"></script>
 <script>
-document.addEventListener('DOMContentLoaded', () => {
-    setupAjaxPagination('#member-ids-table', '/member_ids');
-});
-
-function reloadMemberList(page = 1) {
-    fetch(`/members?page=${page}`, {
+function reloadMemberTable(page = 1) {
+    fetch(`/member_ids?page=${page}`, {
         headers: { 'X-Requested-With': 'XMLHttpRequest' }
     })
     .then(res => res.json())
     .then(data => {
-        document.querySelector('#members-table tbody').innerHTML = data.rows;
+        // Cập nhật danh sách và phân trang
+        document.querySelector('#member-ids-table tbody').innerHTML = data.rows;
         document.querySelector('#pagination-container').innerHTML = data.pagination;
+
+        // Gắn lại sự kiện phân trang
         attachPaginationEvents();
     })
-    .catch(err => console.error('Lỗi load danh sách:', err));
+    .catch(err => console.error('Lỗi load bảng:', err));
 }
 
 function attachPaginationEvents() {
@@ -152,32 +151,27 @@ function attachPaginationEvents() {
         link.addEventListener('click', function (e) {
             e.preventDefault();
             const page = this.getAttribute('data-page');
-            reloadMemberList(page);
+            reloadMemberTable(page);
         });
     });
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    attachPaginationEvents();
-});
-</script>
+    // Kích hoạt phân trang Ajax
+    setupAjaxPagination('#member-ids-table', '/member_ids');
 
-<script>
-    document.addEventListener('DOMContentLoaded', () => {
-    // Form thêm mã
+    // Gắn sự kiện cho form thêm mã
     const addForm = document.querySelector('form[action="{{ url_for("add_member_ids") }}"]');
     if (addForm) {
         addForm.addEventListener('submit', function (e) {
             e.preventDefault();
             const formData = new FormData(addForm);
-            fetch(addForm.action, {
-                method: 'POST',
-                body: formData
-            })
+            fetch(addForm.action, { method: 'POST', body: formData })
             .then(res => res.json())
             .then(data => {
                 if (data.success) {
-                    reloadMemberTable(); // reload bảng + phân trang
+                    alert('Đã thêm mã thành viên!');
+                    reloadMemberTable();
                 } else {
                     alert(data.message || 'Lỗi khi thêm mã');
                 }
@@ -186,16 +180,13 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Form xóa mã
+    // Gắn sự kiện cho form xóa mã
     const deleteForm = document.querySelector('form[action="{{ url_for("delete_member_ids") }}"]');
     if (deleteForm) {
         deleteForm.addEventListener('submit', function (e) {
             e.preventDefault();
             const formData = new FormData(deleteForm);
-            fetch(deleteForm.action, {
-                method: 'POST',
-                body: formData
-            })
+            fetch(deleteForm.action, { method: 'POST', body: formData })
             .then(res => res.json())
             .then(data => {
                 if (data.success) {
@@ -209,9 +200,8 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Gắn event click phân trang ban đầu
+    // Gắn event click phân trang lần đầu
     attachPaginationEvents();
 });
-
 </script>
 {% endblock %}
