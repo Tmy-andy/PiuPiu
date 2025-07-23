@@ -37,11 +37,10 @@
         :root {
             --theme-name: {{ effective_theme }};
         }
-
-        /* Version Modal Styles - Horizontal Layout for Desktop */
+        /* Version Modal Styles - Updated for horizontal layout */
         .version-modal .modal-dialog {
-            max-width: 900px;
-            width: 90%;
+            max-width: 90%;
+            width: 1000px;
         }
 
         .version-modal .modal-header {
@@ -49,7 +48,7 @@
             color: white;
             border-bottom: none;
             border-radius: 15px 15px 0 0;
-            padding: 1.5rem 2rem;
+            padding: 1.2rem 1.5rem;
         }
 
         .version-modal .modal-content {
@@ -58,115 +57,125 @@
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
             overflow: hidden;
             background-color: var(--bg-primary, #ffffff);
+            max-height: 85vh;
         }
 
         .version-modal .modal-body {
-            padding: 2rem;
+            padding: 1.5rem;
             background-color: var(--bg-primary, #ffffff);
+            max-height: calc(85vh - 120px);
+            overflow: hidden;
         }
 
         .version-badge {
             background: linear-gradient(45deg, var(--primary-color, #2563eb), var(--primary-dark, #1d4ed8));
             color: white;
-            padding: 0.7rem 1.5rem;
+            padding: 0.4rem 1rem;
             border-radius: 25px;
             font-weight: 600;
-            font-size: 1.2rem;
+            font-size: 1rem;
             display: inline-block;
-            margin-bottom: 1.5rem;
+            margin-bottom: 1rem;
             box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
         }
 
-        /* Main content grid - Desktop horizontal layout */
+        /* Two column layout for desktop */
         .version-content {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 2rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .version-info-section {
-            background: var(--bg-secondary, #f8fafc);
-            border-radius: 12px;
-            padding: 1.5rem;
-            border: 1px solid var(--border-color, #e2e8f0);
-        }
-
-        .section-title {
-            font-size: 1.1rem;
-            font-weight: 700;
-            color: var(--text-primary, #1e293b);
-            margin-bottom: 1rem;
             display: flex;
-            align-items: center;
-            gap: 0.5rem;
+            gap: 2rem;
+            height: 100%;
         }
 
-        .section-title i {
-            color: var(--primary-color, #2563eb);
+        .version-left-column {
+            flex: 1;
+            min-width: 0;
         }
 
-        .info-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 0.8rem;
+        .version-right-column {
+            flex: 1;
+            min-width: 0;
         }
 
         .info-item {
             display: flex;
-            flex-direction: column;
-            padding: 0.8rem;
-            background: white;
-            border-radius: 8px;
-            border: 1px solid var(--border-color, #e2e8f0);
-            transition: all 0.2s ease;
+            align-items: center;
+            padding: 0.6rem 0;
+            border-bottom: 1px solid var(--border-color, #e2e8f0);
+            color: var(--text-primary, #1e293b);
         }
 
-        .info-item:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        .info-item:last-child {
+            border-bottom: none;
         }
 
         .info-item i {
+            width: 25px;
             color: var(--primary-color, #2563eb);
-            font-size: 1.1rem;
-            margin-bottom: 0.3rem;
+            font-size: 1rem;
+            margin-right: 0.8rem;
+            flex-shrink: 0;
         }
 
         .info-label {
             font-weight: 600;
-            font-size: 0.85rem;
+            min-width: 100px;
             color: var(--text-secondary, #475569);
-            margin-bottom: 0.2rem;
+            font-size: 0.9rem;
         }
 
         .info-value {
             color: var(--text-primary, #1e293b);
-            font-weight: 500;
+            font-size: 0.9rem;
         }
 
-        /* History section - full width */
-        .history-section {
-            grid-column: 1 / -1;
+        .version-history-section {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .version-history-title {
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--primary-color, #2563eb);
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-primary, #1e293b);
+        }
+
+        .version-history-list {
+            flex: 1;
+            overflow-y: auto;
+            max-height: 300px;
+            padding-right: 0.5rem;
+        }
+
+        .version-history-list::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .version-history-list::-webkit-scrollbar-track {
             background: var(--bg-secondary, #f8fafc);
-            border-radius: 12px;
-            padding: 1.5rem;
-            border: 1px solid var(--border-color, #e2e8f0);
+            border-radius: 3px;
         }
 
-        .history-list {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 0.8rem;
-            margin-bottom: 0;
+        .version-history-list::-webkit-scrollbar-thumb {
+            background: var(--primary-color, #2563eb);
+            border-radius: 3px;
+        }
+
+        .version-history-list::-webkit-scrollbar-thumb:hover {
+            background: var(--primary-dark, #1d4ed8);
         }
 
         .history-item {
-            background: white;
-            padding: 1rem;
+            padding: 0.6rem;
+            margin-bottom: 0.5rem;
+            background-color: var(--bg-secondary, #f8fafc);
             border-radius: 8px;
-            border: 1px solid var(--border-color, #e2e8f0);
-            font-size: 0.9rem;
+            border-left: 3px solid var(--primary-color, #2563eb);
+            font-size: 0.85rem;
+            line-height: 1.4;
         }
 
         .history-item i {
@@ -174,19 +183,19 @@
             margin-right: 0.5rem;
         }
 
-        .note-section {
-            grid-column: 1 / -1;
-            padding: 1rem 1.5rem;
-            background: linear-gradient(45deg, rgba(37, 99, 235, 0.05), rgba(118, 75, 162, 0.05));
-            border-left: 4px solid var(--primary-color, #2563eb);
-            border-radius: 8px;
+        .version-note {
             margin-top: 1rem;
+            padding: 0.8rem;
+            border-radius: 8px;
+            background-color: var(--bg-secondary, #f8fafc);
+            border-left: 4px solid var(--primary-color, #2563eb);
+            font-size: 0.8rem;
         }
 
         .version-modal .modal-footer {
             background-color: var(--bg-secondary, #f8fafc);
             border-top: 1px solid var(--border-color, #e2e8f0);
-            padding: 1.5rem 2rem;
+            padding: 1rem 1.5rem;
         }
 
         .version-modal .btn-primary {
@@ -194,7 +203,7 @@
             border: none;
             border-radius: 8px;
             font-weight: 600;
-            padding: 0.7rem 1.5rem;
+            padding: 0.6rem 1.2rem;
             transition: all 0.3s ease;
         }
 
@@ -205,7 +214,7 @@
 
         .version-modal .modal-title {
             font-weight: 700;
-            font-size: 1.5rem;
+            font-size: 1.3rem;
         }
 
         /* Animation cho modal */
@@ -218,44 +227,71 @@
             transform: translate(0, 0);
         }
 
-        /* Responsive - Mobile vẫn giữ layout dọc */
-        @media (max-width: 768px) {
+        /* Mobile responsive - keep single column on mobile */
+        @media (max-width: 991.98px) {
+            .version-modal .modal-dialog {
+                max-width: 95%;
+                width: auto;
+            }
+            
             .version-content {
-                grid-template-columns: 1fr;
+                flex-direction: column;
                 gap: 1rem;
             }
             
-            .info-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .history-list {
-                grid-template-columns: 1fr;
-            }
-            
             .version-modal .modal-body {
-                padding: 1.5rem;
+                padding: 1rem;
+                max-height: 70vh;
+                overflow-y: auto;
+            }
+            
+            .version-history-list {
+                max-height: 200px;
+            }
+            
+            .info-label {
+                min-width: 80px;
+                font-size: 0.85rem;
+            }
+            
+            .info-value {
+                font-size: 0.85rem;
             }
             
             .version-badge {
-                font-size: 1rem;
-                padding: 0.5rem 1rem;
+                font-size: 0.9rem;
+                padding: 0.3rem 0.8rem;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .version-modal .modal-body {
+                padding: 1rem;
             }
             
-            .version-modal .modal-dialog {
-                width: 95%;
-                max-width: none;
+            .info-label {
+                min-width: 70px;
+                font-size: 0.8rem;
+            }
+            
+            .info-value {
+                font-size: 0.8rem;
+            }
+            
+            .version-badge {
+                font-size: 0.85rem;
+                padding: 0.3rem 0.7rem;
             }
         }
 
         /* Theme support */
-        [data-theme] .version-badge {
+        [data-theme="{{ effective_theme }}"] .version-badge {
             background: linear-gradient(45deg, var(--primary-color), var(--primary-dark));
-            box-shadow: var(--card-shadow, 0 4px 15px rgba(37, 99, 235, 0.3));
+            box-shadow: var(--card-shadow);
         }
 
-        [data-theme] .version-modal .btn-primary:hover {
-            box-shadow: var(--btn-hover-shadow, 0 8px 25px rgba(37, 99, 235, 0.4));
+        [data-theme="{{ effective_theme }}"] .version-modal .btn-primary:hover {
+            box-shadow: var(--btn-hover-shadow);
         }
 
         /* Loading spinner */
@@ -497,80 +533,91 @@
                     // Update version badge
                     document.getElementById('versionBadge').innerHTML = `<i class="fas fa-tag me-2"></i>Phiên bản ${data.version}`;
 
-                    // Update info
+                    // Create two-column layout
                     let infoHtml = `
-                        <div class="info-item">
-                            <i class="fas fa-calendar-alt"></i>
-                            <span class="info-label">Ngày phát hành:</span>
-                            <span class="info-value">${data.release_date}</span>
-                        </div>
-                        
-                        <div class="info-item">
-                            <i class="fas fa-user-shield"></i>
-                            <span class="info-label">Phiên bản:</span>
-                            <span class="info-value">Stable Release</span>
-                        </div>
+                        <div class="version-content">
+                            <!-- Left Column - System Information -->
+                            <div class="version-left-column">
+                                <div class="info-item">
+                                    <i class="fas fa-calendar-alt"></i>
+                                    <span class="info-label">Ngày phát hành:</span>
+                                    <span class="info-value">${data.release_date}</span>
+                                </div>
+                                
+                                <div class="info-item">
+                                    <i class="fas fa-user-shield"></i>
+                                    <span class="info-label">Phiên bản:</span>
+                                    <span class="info-value">Stable Release</span>
+                                </div>
 
-                        <div class="info-item">
-                            <i class="fas fa-code"></i>
-                            <span class="info-label">Build:</span>
-                            <span class="info-value">${data.build_number}</span>
-                        </div>
+                                <div class="info-item">
+                                    <i class="fas fa-code"></i>
+                                    <span class="info-label">Build:</span>
+                                    <span class="info-value">${data.build_number}</span>
+                                </div>
 
-                        <div class="info-item">
-                            <i class="fas fa-shield-alt"></i>
-                            <span class="info-label">Bảo mật:</span>
-                            <span class="info-value text-success">
-                                <i class="fas fa-check-circle me-1"></i>
-                                Được cập nhật
-                            </span>
-                        </div>
+                                <div class="info-item">
+                                    <i class="fas fa-shield-alt"></i>
+                                    <span class="info-label">Bảo mật:</span>
+                                    <span class="info-value text-success">
+                                        <i class="fas fa-check-circle me-1"></i>
+                                        Được cập nhật
+                                    </span>
+                                </div>
 
-                        <div class="info-item">
-                            <i class="fas fa-server"></i>
-                            <span class="info-label">Môi trường:</span>
-                            <span class="info-value">Production</span>
-                        </div>
+                                <div class="info-item">
+                                    <i class="fas fa-server"></i>
+                                    <span class="info-label">Môi trường:</span>
+                                    <span class="info-value">Production</span>
+                                </div>
 
-                        <div class="info-item">
-                            <i class="fas fa-tools"></i>
-                            <span class="info-label">Framework:</span>
-                            <span class="info-value">Flask ${data.flask_version}</span>
-                        </div>
+                                <div class="info-item">
+                                    <i class="fas fa-tools"></i>
+                                    <span class="info-label">Framework:</span>
+                                    <span class="info-value">Flask ${data.flask_version}</span>
+                                </div>
 
-                        <div class="info-item">
-                            <i class="fas fa-edit"></i>
-                            <span class="info-label">Thay đổi:</span>
-                            <span class="info-value">${data.changelog}</span>
-                        </div>
+                                <div class="info-item">
+                                    <i class="fas fa-edit"></i>
+                                    <span class="info-label">Thay đổi:</span>
+                                    <span class="info-value">${data.changelog}</span>
+                                </div>
 
-                        <hr>
-                        <h6 class="mt-3 mb-2">Lịch sử nâng cấp gần đây:</h6>
-                        <ul class="list-group small">
+                                <div class="version-note">
+                                    <i class="fas fa-info-circle me-2"></i>
+                                    <strong>Lưu ý:</strong> Thông tin này chỉ dành cho quản trị viên hệ thống.
+                                </div>
+                            </div>
+
+                            <!-- Right Column - Update History -->
+                            <div class="version-right-column">
+                                <div class="version-history-section">
+                                    <div class="version-history-title">
+                                        <i class="fas fa-history me-2"></i>
+                                        Lịch sử nâng cấp
+                                    </div>
+                                    
+                                    <div class="version-history-list">
                     `;
 
                     if (data.logs && data.logs.length > 0) {
                         data.logs.forEach(log => {
                             infoHtml += `
-                                <li class="list-group-item">
-                                    <i class="fas fa-history me-1 text-primary"></i>
-                                    ${log.timestamp} — ${log.detail}
-                                </li>
+                                <div class="history-item">
+                                    <i class="fas fa-clock"></i>
+                                    <strong>${log.timestamp}</strong><br>
+                                    ${log.detail}
+                                </div>
                             `;
                         });
                     } else {
-                        infoHtml += '<li class="list-group-item text-muted">Chưa có lịch sử nâng cấp.</li>';
+                        infoHtml += '<div class="history-item text-muted">Chưa có lịch sử nâng cấp.</div>';
                     }
 
                     infoHtml += `
-                        </ul>
-                        <hr>
-
-                        <div class="mt-4 p-3 rounded" style="background-color: var(--bg-secondary, #f8fafc); border-left: 4px solid var(--primary-color, #2563eb);">
-                            <small class="text-muted">
-                                <i class="fas fa-info-circle me-2"></i>
-                                <strong>Lưu ý:</strong> Thông tin này chỉ dành cho quản trị viên hệ thống.
-                            </small>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     `;
 
