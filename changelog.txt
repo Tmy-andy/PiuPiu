@@ -1,2 +1,2 @@
-Cập nhật lại hiển thị trang Đăng Ký [minor]
+Auto bump version [skip ci]
 
