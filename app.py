@@ -602,6 +602,7 @@ def delete_member_ids():
             f"{current_user.display_name} đã xoá {deleted} mã thành viên chưa sử dụng (từ {start_id} đến {end_id})."
         )
     flash(f'Đã xóa {deleted} mã thành viên chưa sử dụng.', 'success')    
+    return redirect(url_for('member_ids')) 
 
 @app.route('/update_points/<int:member_id>', methods=['POST'])
 @admin_required
@@ -683,7 +684,6 @@ def register_admin():
         return redirect(url_for('login'))
 
     return render_template('register_admin.html')
-    return redirect(url_for('member_ids'))
 
 @app.route('/profile', methods=['GET', 'POST'])
 @login_required

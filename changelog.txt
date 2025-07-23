@@ -1,2 +1,2 @@
-Tối ưu phân trang
+Auto bump version [skip ci]
 
