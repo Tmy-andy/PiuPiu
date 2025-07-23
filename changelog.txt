@@ -1,2 +1,2 @@
-Auto bump version [skip ci]
+Cài lại hiển thị trang Đăng Ký
 
