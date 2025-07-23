@@ -1045,44 +1045,59 @@ def kim_bai():
 @app.route('/increase_death/<int:user_id>', methods=['POST'])
 @admin_required
 def increase_death(user_id):
-    user = User.query.get(user_id) if user_id else None
-    if user:
-        user.death_count += 1
-        # Nếu death_count chia hết cho 2 → cấp kim bài
-        if user.death_count > 0 and user.death_count % 2 == 0:
-            user.has_kim_bai = True
-        db.session.commit()
+    user = User.query.get(user_id)
+    if not user:
+        return jsonify({"error": "User not found"}), 404
 
-        log = KimBaiLog(user_id=user.id, timestamp=datetime.now(pytz.timezone('Asia/Ho_Chi_Minh')))
-        db.session.add(log)
-        db.session.commit()
-        cache.delete_memoized(top_tier)
-        log_activity("Tăng lượt chết", f"{current_user.username} tăng lượt chết cho {user.display_name} (ID {user.id}). Tổng: {user.death_count}.")
-        flash('Đã tăng lượt chết.', 'success')
-    return redirect(url_for('kim_bai'))
+    user.death_count += 1
+    if user.death_count > 0 and user.death_count % 2 == 0:
+        user.has_kim_bai = True
+    db.session.commit()
+
+    log = KimBaiLog(user_id=user.id, timestamp=datetime.now(pytz.timezone('Asia/Ho_Chi_Minh')))
+    db.session.add(log)
+    db.session.commit()
+    cache.delete_memoized(top_tier)
+    log_activity(
+        "Tăng lượt chết",
+        f"{current_user.username} tăng lượt chết cho {user.display_name} (ID {user.id}). Tổng: {user.death_count}."
+    )
+    return jsonify({
+        "message": "Đã tăng lượt chết.",
+        "death_count": user.death_count,
+        "has_kim_bai": user.has_kim_bai
+    })
 
 @app.route('/use_kim_bai/<int:user_id>', methods=['POST'])
 @admin_required
 def use_kim_bai(user_id):
-    user = User.query.get(user_id) if user_id else None
-    if user and user.has_kim_bai:
+    user = User.query.get(user_id)
+    if not user:
+        return jsonify({"error": "User not found"}), 404
+
+    if user.has_kim_bai:
         user.has_kim_bai = False
         db.session.commit()
         log_activity("Sử dụng kim bài", f"{current_user.username} đánh dấu {user.display_name} (ID {user.id}) đã sử dụng kim bài.")
-        flash('Đã sử dụng kim bài.', 'success')
+        return jsonify({
+            "message": "Đã sử dụng kim bài.",
+            "death_count": user.death_count,
+            "has_kim_bai": user.has_kim_bai
+        })
     else:
-        flash('Không có kim bài để dùng.', 'danger')
-    return redirect(url_for('kim_bai'))
+        return jsonify({"error": "Không có kim bài để dùng."}), 400
 
 @app.route('/decrease_death/<int:user_id>', methods=['POST'])
 @admin_required
 def decrease_death(user_id):
-    user = User.query.get(user_id) if user_id else None
-    if user and user.death_count > 0:
-        # Trừ lượt chết
+    user = User.query.get(user_id)
+    if not user:
+        return jsonify({"error": "User not found"}), 404
+
+    if user.death_count > 0:
         user.death_count -= 1
 
-        # Xóa dòng log gần nhất của người này
+        # Xóa log gần nhất của người này
         last_log = KimBaiLog.query.filter_by(user_id=user.id)\
                                   .order_by(KimBaiLog.timestamp.desc())\
                                   .first()
@@ -1090,18 +1105,18 @@ def decrease_death(user_id):
             db.session.delete(last_log)
 
         # Cập nhật kim bài
-        if user.death_count > 0 and user.death_count % 2 == 0:
-            user.has_kim_bai = True
-        else:
-            user.has_kim_bai = False
+        user.has_kim_bai = (user.death_count > 0 and user.death_count % 2 == 0)
 
         db.session.commit()
         cache.delete_memoized(top_tier)
         log_activity("Giảm lượt chết", f"{current_user.username} giảm lượt chết cho {user.display_name} (ID {user.id}). Còn {user.death_count} lượt chết.")
-        flash('Đã giảm lượt chết.', 'success')
+        return jsonify({
+            "message": "Đã giảm lượt chết.",
+            "death_count": user.death_count,
+            "has_kim_bai": user.has_kim_bai
+        })
     else:
-        flash('Không thể giảm nữa.', 'warning')
-    return redirect(url_for('kim_bai'))
+        return jsonify({"error": "Không thể giảm nữa."}), 400
 
 #Top
 @cache.cached(timeout=300)

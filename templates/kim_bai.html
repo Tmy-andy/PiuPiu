@@ -115,6 +115,7 @@
                                 {% if user.role == 'admin' %}
                                 <td>
                                     <div class="d-flex gap-2 align-items-center">
+                                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                                         <!-- Giảm lượt chết -->
                                         <button class="btn btn-sm btn-outline-secondary" onclick="updateDeath({{ m.id }}, 'decrease')">
                                             <i class="fas fa-minus"></i>
@@ -164,15 +165,97 @@
 
 <script>
 function updateDeath(id, action) {
-    fetch(`/${action}_death/${id}`, {
-        method: 'POST'
-    }).then(() => location.reload());
+    fetch(`/${action}_death/${id}`, { method: 'POST' })
+        .then(res => {
+            if (!res.ok) throw new Error(`Lỗi: ${res.status}`);
+            return res.json();
+        })
+        .then(data => {
+            if (data.error) {
+                alert(data.error);
+                return;
+            }
+            // Cập nhật badge lượt chết
+            const deathCell = document.getElementById(`death-${id}`);
+            if (deathCell) {
+                let badgeClass = 'success';
+                if (data.death_count > 2) badgeClass = 'danger';
+                else if (data.death_count > 0) badgeClass = 'warning';
+                deathCell.innerHTML = `<span class="badge bg-${badgeClass}">${data.death_count} lần</span>`;
+            }
+
+            // Cập nhật trạng thái kim bài
+            const kimCell = document.getElementById(`kim-${id}`);
+            if (kimCell) {
+                if (data.has_kim_bai) {
+                    kimCell.innerHTML = `
+                        <span class="badge bg-warning text-dark">
+                            <i class="fas fa-shield-alt me-1"></i>Có kim bài
+                        </span>`;
+                    addUseButton(id); // Thêm nút "Sử dụng"
+                } else {
+                    kimCell.innerHTML = `
+                        <span class="badge bg-secondary">
+                            <i class="fas fa-times me-1"></i>Không có
+                        </span>`;
+                    removeUseButton(id); // Xóa nút nếu không còn kim bài
+                }
+            }
+        })
+        .catch(err => {
+            alert("Không thể cập nhật: " + err.message);
+        });
 }
 
 function useKimBai(id) {
-    fetch(`/use_kim_bai/${id}`, {
-        method: 'POST'
-    }).then(() => location.reload());
+    fetch(`/use_kim_bai/${id}`, { method: 'POST' })
+        .then(res => {
+            if (!res.ok) throw new Error(`Lỗi: ${res.status}`);
+            return res.json();
+        })
+        .then(data => {
+            if (data.error) {
+                alert(data.error);
+                return;
+            }
+            // Reset trạng thái kim bài
+            const kimCell = document.getElementById(`kim-${id}`);
+            if (kimCell) {
+                kimCell.innerHTML = `
+                    <span class="badge bg-secondary">
+                        <i class="fas fa-times me-1"></i>Không có
+                    </span>`;
+                removeUseButton(id);
+            }
+        })
+        .catch(err => {
+            alert("Không thể sử dụng kim bài: " + err.message);
+        });
+}
+
+// Thêm nút "Sử dụng" nếu có kim bài
+function addUseButton(id) {
+    const row = document.getElementById(`member-${id}`);
+    if (row) {
+        const actionCell = row.querySelector('td:last-child');
+        if (actionCell && !actionCell.querySelector('.btn-outline-warning')) {
+            const btn = document.createElement('button');
+            btn.className = 'btn btn-sm btn-outline-warning';
+            btn.innerHTML = '<i class="fas fa-shield-alt me-1"></i>Sử dụng';
+            btn.onclick = () => useKimBai(id);
+            actionCell.appendChild(btn);
+        }
+    }
+}
+
+// Xóa nút "Sử dụng" nếu không còn kim bài
+function removeUseButton(id) {
+    const row = document.getElementById(`member-${id}`);
+    if (row) {
+        const btn = row.querySelector('.btn-outline-warning');
+        if (btn) btn.remove();
+    }
 }
 </script>
+
 {% endblock %}
