@@ -1,0 +1,7 @@
+{% for log in logs %}
+<tr>
+    <td class="text-theme-primary">{{ log.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+    <td class="fw-semibold">{{ log.action }}</td>
+    <td>{{ log.detail }}</td>
+</tr>
+{% endfor %}

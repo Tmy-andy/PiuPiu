@@ -35,18 +35,12 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {% for log in logs %}
-                                    <tr>
-                                        <td class="text-theme-primary">{{ log.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</td>
-                                        <td class="fw-semibold">{{ log.action }}</td>
-                                        <td>{{ log.detail }}</td>
-                                    </tr>
-                                    {% endfor %}
+                                    {% include 'partials/_activity_log_rows.html' %}
                                 </tbody>
                             </table>
                             <!-- Pagination -->
                             <div id="pagination-container">
-                                {% include '_pagination.html' %}
+                                {% include 'partials/_pagination.html' %}
                             </div>
                         </div>
                     {% else %}
@@ -62,3 +56,34 @@
     </div>
 </div>
 {% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/pagination.js') }}"></script>
+<script>
+function reloadLogs(page = 1) {
+    fetch(`/logs?page=${page}`, { headers: { 'X-Requested-With': 'XMLHttpRequest' } })
+    .then(res => res.json())
+    .then(data => {
+        document.querySelector('table.table tbody').innerHTML = data.rows;
+        document.querySelector('#pagination-container').innerHTML = data.pagination;
+        attachPaginationEvents();
+    })
+    .catch(err => console.error('Lỗi load logs:', err));
+}
+
+function attachPaginationEvents() {
+    document.querySelectorAll('.pagination-link').forEach(link => {
+        link.addEventListener('click', function (e) {
+            e.preventDefault();
+            const page = this.getAttribute('data-page');
+            reloadLogs(page);
+        });
+    });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    attachPaginationEvents();
+});
+</script>
+{% endblock %}
+

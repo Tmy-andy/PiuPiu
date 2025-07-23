@@ -398,7 +398,24 @@ def dashboard():
         total_points = db.session.query(db.func.sum(User.points)).filter_by(role='member').scalar() or 0
         avg_points = total_points / total_members if total_members > 0 else 0
 
-        assigned_members = User.query.filter_by(role='member', assigned_admin_id=user.id).order_by(User.points.desc()).all()
+        # Phân trang cho assigned_members
+        per_page = 10
+        page = int(request.args.get('page', 1))
+        offset = (page - 1) * per_page
+
+        query = User.query.filter_by(role='member', assigned_admin_id=user.id)
+        total_assigned = query.count()
+
+        assigned_members = query.order_by(User.points.desc()).offset(offset).limit(per_page).all()
+
+        if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+            rows_html = render_template('partials/_assigned_members_rows.html', assigned_members=assigned_members)
+            pagination_html = render_template(
+                'partials/_pagination.html',
+                page=page,
+                total_pages=ceil(total_assigned / per_page)
+            )
+            return jsonify(rows=rows_html, pagination=pagination_html)
 
         return render_template(
             'admin_dashboard.html',
@@ -406,7 +423,9 @@ def dashboard():
             total_points=total_points,
             avg_points=round(avg_points, 1),
             assigned_members=assigned_members,
-            admin_points=user.points  # 👈 thêm dòng này
+            admin_points=user.points,
+            page=page,
+            total_pages=ceil(total_assigned / per_page)
         )
     else:
         point_logs = db.session.query(PointLog).join(User, PointLog.admin_id == User.id) \
@@ -1560,12 +1579,31 @@ def frequency():
 @app.route('/activity_log')
 @admin_required
 def activity_log():
+    per_page = 20
+    page = int(request.args.get('page', 1))
+    offset = (page - 1) * per_page
+
     logs = cache.get('active_logs_vn')
     if logs is None:
         raw_logs = ActivityLog.query.order_by(ActivityLog.timestamp.desc()).all()
         logs = convert_logs_timezone(raw_logs)
         cache.set('active_logs_vn', logs, timeout=300)
-    return render_template("activity_log.html", logs=logs)
+
+    total = len(logs)
+    total_pages = ceil(total / per_page)
+
+    logs_paginated = logs[offset: offset + per_page]
+
+    # AJAX: chỉ trả rows + phân trang
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        rows_html = render_template('partials/_activity_log_rows.html', logs=logs_paginated)
+        pagination_html = render_template('partials/_pagination.html', page=page, total_pages=total_pages)
+        return jsonify(rows=rows_html, pagination=pagination_html)
+
+    return render_template("activity_log.html",
+                           logs=logs_paginated,
+                           page=page,
+                           total_pages=total_pages)
 
 # Danh sách preset để hiện mô tả cho từng theme
 THEME_PRESETS = {
