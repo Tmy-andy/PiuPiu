@@ -133,20 +133,41 @@ function reloadMemberTable(page = 1) {
     fetch(`/member_ids?page=${page}`, {
         headers: { 'X-Requested-With': 'XMLHttpRequest' }
     })
-    .then(res => res.text())
-    .then(html => {
-        // Cập nhật nội dung tbody
+    .then(res => res.json())
+    .then(data => {
+        // Cập nhật phần rows
         const tbody = document.querySelector('table.table tbody');
-        if (tbody) tbody.innerHTML = html;
+        if (tbody) tbody.innerHTML = data.rows;
+
+        // Cập nhật phần pagination
+        const pagination = document.querySelector('#pagination-container');
+        if (pagination) pagination.innerHTML = data.pagination;
+
+        // Gắn lại sự kiện phân trang
+        attachPaginationEvents();
     })
     .catch(err => console.error('Lỗi load bảng:', err));
 }
 
+function attachPaginationEvents() {
+    document.querySelectorAll('.pagination-link').forEach(link => {
+        link.addEventListener('click', function (e) {
+            e.preventDefault();
+            const page = this.getAttribute('data-page');
+            reloadMemberTable(page);
+        });
+    });
+}
+
 document.addEventListener('DOMContentLoaded', () => {
+    // Gắn event click phân trang ban đầu
+    attachPaginationEvents();
+
+    // Form thêm mã
     const addForm = document.querySelector('form[action="{{ url_for("add_member_ids") }}"]');
     if (addForm) {
-        addForm.addEventListener('submit', function(e) {
-            e.preventDefault(); // chặn reload trang
+        addForm.addEventListener('submit', function (e) {
+            e.preventDefault();
             const formData = new FormData(addForm);
             fetch(addForm.action, {
                 method: 'POST',
@@ -155,7 +176,7 @@ document.addEventListener('DOMContentLoaded', () => {
             .then(res => res.json())
             .then(data => {
                 if (data.success) {
-                    reloadMemberTable(); // reload bảng
+                    reloadMemberTable(); // reload bảng + phân trang
                 } else {
                     alert(data.message || 'Lỗi khi thêm mã');
                 }

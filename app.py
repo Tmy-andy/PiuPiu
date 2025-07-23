@@ -511,9 +511,10 @@ def member_ids():
         .offset(offset).limit(per_page) \
         .all()
 
-    # Nếu là AJAX thì trả về chỉ <tr>
     if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-        return render_template('_member_ids_rows.html', member_ids=member_ids)
+        rows_html = render_template('_member_ids_rows.html', member_ids=member_ids)
+        pagination_html = render_template('_pagination.html', page=page, total_pages=total_pages)
+        return jsonify(rows=rows_html, pagination=pagination_html)
 
     return render_template(
         'member_ids.html',
