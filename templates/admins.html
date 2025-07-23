@@ -59,6 +59,7 @@
                                 <td>
                                     <form method="POST" action="{{ url_for('delete_admin', user_id=admin.id) }}"
                                         onsubmit="return confirm('Bạn có chắc muốn xóa admin này không?');">
+                                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                                         <button type="submit" class="btn btn-danger btn-sm">Xóa</button>
                                     </form>
                                 </td>

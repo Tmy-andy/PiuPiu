@@ -32,6 +32,7 @@
             </div>
             <div class="card-body">
                 <form method="get">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                     <div class="row g-3 align-items-end">
                         <div class="col-md-4">
                             <label class="form-label fw-semibold">Lọc theo người nhập:</label>
@@ -60,6 +61,7 @@
             </div>
             <div class="card-body">
                 <form method="POST" action="{{ url_for('add_blacklist') }}">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                     <div class="row g-3">
                         <div class="col-md-4">
                             <label class="form-label fw-semibold">Tên <span class="text-danger">*</span></label>
@@ -120,6 +122,7 @@
                                     <span class="badge bg-secondary">{{ entry.created_by.display_name }}</span>
                                     {% if user.member_id == 'ADMIN-001' %}
                                     <form method="POST" action="{{ url_for('edit_blacklist_author', entry_id=entry.id) }}" class="mt-2">
+                                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                                         <div class="d-flex gap-2">
                                             <select name="new_user_id" class="form-select form-select-sm" required>
                                                 {% for u in all_users %}
@@ -137,6 +140,7 @@
                                 <td>
                                     {% if user.id == entry.created_by_id or user.member_id == 'ADMIN-001' %}
                                     <form method="POST" action="{{ url_for('delete_blacklist', entry_id=entry.id) }}" style="display:inline;">
+                                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                                         <button class="btn btn-sm btn-outline-danger" onclick="return confirm('Bạn có chắc chắn muốn xóa {{ entry.name }} khỏi blacklist?')">
                                             <i class="fas fa-trash me-1"></i>Xoá
                                         </button>

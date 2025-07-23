@@ -31,6 +31,7 @@
             </div>
             <div class="card-body">
                 <form method="POST" action="{{ url_for('day_off') }}">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                     <div class="row">
                         {% if current_user.role == 'admin' %}
                         <div class="col-md-12 mb-3">
@@ -69,7 +70,7 @@
                         </div>
                         
                         <div class="col-md-12">
-                            
+
                             <button type="submit" class="btn btn-success">
                                 <i class="fas fa-paper-plane me-2"></i>Gửi yêu cầu
                             </button>
@@ -136,6 +137,7 @@
                                 {% if current_user.role == 'admin' %}
                                 <td>
                                     <form method="POST" action="{{ url_for('delete_off', off_id=o.id) }}" onsubmit="return confirm('Bạn có chắc muốn xóa yêu cầu này?');">
+                                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                                         <button type="submit" class="btn btn-sm btn-danger">
                                             <i class="fas fa-trash-alt"></i>
                                         </button>

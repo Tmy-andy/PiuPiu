@@ -1,2 +1,2 @@
-Test
+Auto bump version [skip ci]
 

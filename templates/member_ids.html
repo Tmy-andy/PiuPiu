@@ -21,6 +21,7 @@
             </div>
             <div class="card-body">
                 <form method="POST" action="{{ url_for('add_member_ids') }}" class="row g-3">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                     <div class="col-md-4">
                         <label for="start_num" class="form-label fw-semibold">Từ số:</label>
                         <input type="number" class="form-control" id="start_num" name="start_num" 
@@ -57,6 +58,7 @@
                 </div>
                 <div class="card-body">
                     <form action="{{ url_for('delete_member_ids') }}" method="post" class="row g-3 align-items-end">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                         <div class="col-md-4">
                             <label for="start_id" class="form-label fw-semibold">Từ mã</label>
                             <input type="text" class="form-control" id="start_id" name="start_id" placeholder="Ví dụ: MEM-001" required>

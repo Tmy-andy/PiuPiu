@@ -59,6 +59,7 @@
             <div class="card-body">
                 <p class="text-theme-primary mb-3">Xuất nội dung luật ra các định dạng khác nhau</p>
                 <form method="GET" action="{{ url_for('export_rules') }}">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                     <button type="submit" class="btn btn-secondary">
                         <i class="fas fa-file-word me-2"></i>Xuất ra Word
                     </button>
