@@ -56,6 +56,18 @@ body.loading {
     cursor: wait !important;  /* Con trỏ dạng loading */
 }
 
+/* Progress bar */
+/* Tùy biến màu NProgress theo theme */
+#nprogress .bar {
+    background: linear-gradient(90deg, var(--primary-color), var(--secondary-color)) !important;
+    height: 4px !important;
+    box-shadow: 0 0 10px var(--primary-color);
+}
+#nprogress .peg {
+    box-shadow: 0 0 10px var(--primary-color), 0 0 5px var(--secondary-color);
+}
+
+
 /* Loading overlay */
 #loading-overlay {
     position: fixed;

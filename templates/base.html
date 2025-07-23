@@ -755,12 +755,13 @@
     <!-- NProgress -->
     <script>
     document.addEventListener("DOMContentLoaded", function() {
-        // Khi chuyển trang hoặc submit form
-        document.querySelectorAll('form, a').forEach(el => {
-            el.addEventListener('click', () => NProgress.start());
+        document.querySelectorAll('form, a, button').forEach(el => {
+            el.addEventListener('click', (e) => {
+                if (el.tagName === 'A' && (el.href.includes('#') || el.href.startsWith('javascript:'))) return;
+                NProgress.start();
+            });
         });
-
-        // Khi trang load xong
+        // Xử lý khi tải trang
         window.addEventListener('load', () => NProgress.done());
     });
     </script>
