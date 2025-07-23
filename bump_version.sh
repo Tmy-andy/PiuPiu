@@ -4,6 +4,7 @@
 #   [major] -> tăng MAJOR
 #   [minor] -> tăng MINOR
 #   mặc định -> tăng PATCH
+# Đồng thời cập nhật changelog.txt
 
 VERSION_FILE="version.txt"
 CHANGELOG_FILE="changelog.txt"
@@ -19,14 +20,8 @@ CURRENT_VERSION=$(cat "$VERSION_FILE")
 VERSION_NUM=${CURRENT_VERSION#v}
 IFS='.' read -r MAJOR MINOR PATCH <<< "$VERSION_NUM"
 
-# Lấy commit message cuối cùng
-COMMIT_MSG=$(git show -s --format=%B HEAD)
-
-# Nếu commit message đã chứa phiên bản hiện tại -> không bump nữa
-if echo "$COMMIT_MSG" | grep -q "$CURRENT_VERSION"; then
-    echo "Phiên bản $CURRENT_VERSION đã được gắn cho commit này. Không tăng nữa."
-    exit 0
-fi
+# Lấy commit message gần nhất
+COMMIT_MSG=$(git log -1 --pretty=%B)
 
 # Xác định loại bump
 if echo "$COMMIT_MSG" | grep -qi "\[major\]"; then
@@ -53,15 +48,12 @@ case "$BUMP_TYPE" in
     ;;
 esac
 
+# Ghi version mới
 NEW_VERSION="v${MAJOR}.${MINOR}.${PATCH}"
 echo "$NEW_VERSION" > "$VERSION_FILE"
 echo "Phiên bản mới: $NEW_VERSION"
 
-# Cập nhật changelog.txt
-{
-    echo "$(date +'%d-%m-%Y %H:%M') — 🚀 $COMMIT_MSG"
-    echo
-    cat "$CHANGELOG_FILE" 2>/dev/null
-} > "$CHANGELOG_FILE.tmp" && mv "$CHANGELOG_FILE.tmp" "$CHANGELOG_FILE"
-
-echo "Cập nhật changelog.txt với commit message mới nhất."
+# Cập nhật changelog.txt với commit message
+NOW=$(date +"%d-%m-%Y %H:%M")
+echo "$NOW — 🚀 ${COMMIT_MSG}" > "$CHANGELOG_FILE"
+echo "Cập nhật $CHANGELOG_FILE với commit message mới nhất."
