@@ -1,2 +1,2 @@
-Auto bump version [skip ci]
+Fixx lỗi 500 khi xóa IDs
 
