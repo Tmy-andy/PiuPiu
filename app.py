@@ -569,7 +569,39 @@ def add_member_ids():
 def member_ids_table():
     member_ids = db.session.query(MemberID).order_by(MemberID.created_at.desc()).all()
     return render_template('_member_ids_table.html', member_ids=member_ids)
-    
+
+@app.route('/delete_member_ids', methods=['POST'])
+@admin_required
+def delete_member_ids():
+    start_id = request.form['start_id'].strip()
+    end_id = request.form['end_id'].strip()
+
+    try:
+        start_num = int(start_id.split('-')[1])
+        end_num = int(end_id.split('-')[1])
+    except (IndexError, ValueError):
+        flash('Định dạng mã không hợp lệ!', 'danger')
+        return redirect(url_for('member_ids'))
+
+    if start_num > end_num:
+        flash('Mã bắt đầu phải nhỏ hơn hoặc bằng mã kết thúc!', 'danger')
+        return redirect(url_for('member_ids'))
+
+    deleted = 0
+    for i in range(start_num, end_num + 1):
+        mid = f"MEM-{str(i).zfill(3)}"
+        member_id = MemberID.query.filter_by(member_id=mid, is_used=False).first()
+        if member_id:
+            db.session.delete(member_id)
+            deleted += 1
+
+    db.session.commit()
+    if deleted > 0:
+        log_activity(
+            "Xoá mã thành viên",
+            f"{current_user.display_name} đã xoá {deleted} mã thành viên chưa sử dụng (từ {start_id} đến {end_id})."
+        )
+    flash(f'Đã xóa {deleted} mã thành viên chưa sử dụng.', 'success')    
 
 @app.route('/update_points/<int:member_id>', methods=['POST'])
 @admin_required
@@ -651,36 +683,6 @@ def register_admin():
         return redirect(url_for('login'))
 
     return render_template('register_admin.html')
-
-@app.route('/delete_member_ids', methods=['POST'])
-@admin_required
-def delete_member_ids():
-    start_id = request.form['start_id'].strip()
-    end_id = request.form['end_id'].strip()
-
-    try:
-        start_num = int(start_id.split('-')[1])
-        end_num = int(end_id.split('-')[1])
-    except (IndexError, ValueError):
-        flash('Định dạng mã không hợp lệ!', 'danger')
-        return redirect(url_for('member_ids'))
-
-    if start_num > end_num:
-        flash('Mã bắt đầu phải nhỏ hơn hoặc bằng mã kết thúc!', 'danger')
-        return redirect(url_for('member_ids'))
-
-    deleted = 0
-    for i in range(start_num, end_num + 1):
-        mid = f"MEM-{str(i).zfill(3)}"
-        member_id = MemberID.query.filter_by(member_id=mid, is_used=False).first()
-        if member_id:
-            db.session.delete(member_id)
-            deleted += 1
-
-    db.session.commit()
-    if deleted > 0:
-        log_activity("Xoá mã thành viên", f"{current_user.username} đã xoá {deleted} mã thành viên chưa sử dụng (từ {start_id} đến {end_id}).")
-    flash(f'Đã xóa {deleted} mã thành viên chưa sử dụng.', 'success')
     return redirect(url_for('member_ids'))
 
 @app.route('/profile', methods=['GET', 'POST'])
