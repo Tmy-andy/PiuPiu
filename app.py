@@ -668,7 +668,7 @@ def delete_member(user_id):
 
         db.session.delete(user)
         db.session.commit()
-        log_activity("Xoá thành viên", f"{current_user.username} đã xoá thành viên {user.username} (ID {user.id}, mã {user.member_id}).")
+        log_activity("Xoá thành viên", f"{current_user.display_name} đã xoá thành viên {user.display_name} (ID {user.id}, mã {user.member_id}).")
         flash('Đã xóa thành viên và giải phóng mã thành viên.', 'success')
     else:
         flash('Không tìm thấy người dùng.', 'error')
@@ -766,7 +766,7 @@ def delete_admin(user_id):
         return redirect(url_for('admins'))
 
     if user_id == current_user.id:
-        log_activity("Xoá admin thất bại", f"{current_user.username} cố xoá chính mình (ID {current_user.id}) — bị từ chối.")
+        log_activity("Xoá admin thất bại", f"{current_user.display_name} cố xoá chính mình (ID {current_user.id}) — bị từ chối.")
         flash('Không thể tự xóa chính mình.', 'danger')
         return redirect(url_for('admins'))
 
@@ -774,7 +774,7 @@ def delete_admin(user_id):
     if admin and admin.role == 'admin':
         db.session.delete(admin)
         db.session.commit()
-        log_activity("Xoá admin", f"{current_user.username} đã xoá admin {admin.username} (ID {admin.id}).")
+        log_activity("Xoá admin", f"{current_user.display_name} đã xoá admin {admin.display_name} (ID {admin.id}).")
         flash('Đã xóa admin thành công.', 'success')
     else:
         flash('Không tìm thấy admin.', 'error')
@@ -796,7 +796,7 @@ def update_admin_points(user_id):
             points = int(request.form['points'])
             admin.points = points
             db.session.commit()
-            log_activity("Cập nhật điểm admin", f"{current_user.username} đã cập nhật điểm cho {admin.username} (ID {admin.id}) thành {points} điểm.")
+            log_activity("Cập nhật điểm admin", f"{current_user.display_name} đã cập nhật điểm cho {admin.display_name} (ID {admin.id}) thành {points} điểm.")
             flash('Cập nhật điểm thành công.', 'success')
         except ValueError:
             flash('Giá trị điểm không hợp lệ.', 'danger')
@@ -865,7 +865,7 @@ def rules():
             rule = Rule(content=content)
             db.session.add(rule)
         db.session.commit()
-        log_activity("Cập nhật luật", f"{current_user.username} đã cập nhật luật.")
+        log_activity("Cập nhật luật", f"{current_user.display_name} đã cập nhật luật.")
         flash('Cập nhật nội dung luật thành công.', 'success')
         return redirect(url_for('rules'))
     return render_template('rules.html', rule=rule)
@@ -967,7 +967,7 @@ def add_ability():
     db.session.add(new_ability)
     db.session.commit()
     cache.delete_memoized(abilities)
-    log_activity("Thêm chức năng", f"{current_user.username} đã thêm chức năng mới: '{new_ability.name}' (ID {new_ability.id}) vào phe {new_ability.faction}.")
+    log_activity("Thêm chức năng", f"{current_user.display_name} đã thêm chức năng mới: '{new_ability.name}' (ID {new_ability.id}) vào phe {new_ability.faction}.")
     flash('Đã thêm chức năng.', 'success')
     return redirect(url_for('abilities'))
 
@@ -983,7 +983,7 @@ def edit_ability(ability_id):
         ability.description = request.form['description']
         db.session.commit()
         cache.delete_memoized(abilities)
-        log_activity("Sửa chức năng", f"{current_user.username} đã cập nhật chức năng '{ability.name}' (ID {ability.id}).")
+        log_activity("Sửa chức năng", f"{current_user.display_name} đã cập nhật chức năng '{ability.name}' (ID {ability.id}).")
         flash('Đã cập nhật.', 'success')
     else:
         flash('Không tìm thấy chức năng.', 'danger')
@@ -998,7 +998,7 @@ def delete_ability(ability_id):
         db.session.delete(ability)
         db.session.commit()
         cache.delete_memoized(abilities)
-        log_activity("Xóa chức năng", f"{current_user.username} đã xóa chức năng '{ability.name}' (ID {ability.id}).")
+        log_activity("Xóa chức năng", f"{current_user.display_name} đã xóa chức năng '{ability.name}' (ID {ability.id}).")
         flash('Đã xóa chức năng.', 'success')
     else:
         flash('Không tìm thấy chức năng.', 'danger')
@@ -1059,7 +1059,7 @@ def increase_death(user_id):
         db.session.commit()
 
         cache.delete_memoized(top_tier)
-        log_activity("Tăng lượt chết", f"{current_user.username} tăng lượt chết cho {user.display_name} (ID {user.id}). Tổng: {user.death_count}.")
+        log_activity("Tăng lượt chết", f"{current_user.display_name} tăng lượt chết cho {user.display_name} (ID {user.id}). Tổng: {user.death_count}.")
 
         return jsonify({
             "success": True,
@@ -1086,7 +1086,7 @@ def use_kim_bai(user_id):
         user.has_kim_bai = False
         db.session.commit()
 
-        log_activity("Sử dụng kim bài", f"{current_user.username} đánh dấu {user.display_name} (ID {user.id}) đã sử dụng kim bài.")
+        log_activity("Sử dụng kim bài", f"{current_user.display_name} đánh dấu {user.display_name} (ID {user.id}) đã sử dụng kim bài.")
 
         return jsonify({
             "success": True,
@@ -1124,7 +1124,7 @@ def decrease_death(user_id):
 
         db.session.commit()
         cache.delete_memoized(top_tier)
-        log_activity("Giảm lượt chết", f"{current_user.username} giảm lượt chết cho {user.display_name} (ID {user.id}). Còn {user.death_count} lượt chết.")
+        log_activity("Giảm lượt chết", f"{current_user.display_name} giảm lượt chết cho {user.display_name} (ID {user.id}). Còn {user.death_count} lượt chết.")
 
         return jsonify({
             "success": True,
@@ -1226,7 +1226,7 @@ def add_blacklist():
     db.session.add(new_entry)
     db.session.commit()
     cache.delete_memoized(blacklist)
-    log_activity("Thêm blacklist", f"{current_user.username} thêm '{new_entry.name}' vào blacklist.")
+    log_activity("Thêm blacklist", f"{current_user.display_name} thêm '{new_entry.name}' vào blacklist.")
     flash('Đã thêm vào blacklist.', 'success')
     return redirect(url_for('blacklist'))
 
@@ -1240,7 +1240,7 @@ def delete_blacklist(entry_id):
         db.session.delete(entry)
         db.session.commit()
         cache.delete_memoized(blacklist)
-        log_activity("Xóa blacklist", f"{current_user.username} đã xóa blacklist entry ID {entry.id}.")
+        log_activity("Xóa blacklist", f"{current_user.display_name} đã xóa blacklist entry ID {entry.id}.")
         flash('Đã xoá mục khỏi blacklist.', 'success')
     else:
         flash('Bạn không có quyền xoá mục này.', 'danger')
@@ -1262,7 +1262,7 @@ def edit_blacklist_author(entry_id):
         entry.created_by_id = user_target.id
         db.session.commit()
         cache.delete_memoized(blacklist)
-        log_activity("Cập nhật người nhập blacklist", f"{current_user.username} sửa created_by_id của entry ID {entry.id} thành user ID {user_target.id}.")
+        log_activity("Cập nhật người nhập blacklist", f"{current_user.display_name} sửa created_by_id của entry ID {entry.id} thành user ID {user_target.id}.")
         flash('Đã cập nhật người nhập.', 'success')
     else:
         flash('Không tìm thấy người dùng hoặc mục!', 'danger')
@@ -1355,10 +1355,10 @@ def create_game():
                     reason="Tham gia ván chơi",
                     admin_id=session.get("user_id")
                 ))
-                log_activity("Cộng điểm", f"{current_user.username} cộng {user.points - before} điểm cho {user.display_name} (ID {user.id}) trong ván chơi.")
+                log_activity("Cộng điểm", f"{current_user.display_name} cộng {user.points - before} điểm cho {user.display_name} (ID {user.id}) trong ván chơi.")
                 # print(f"✔️ +{user.points - before} điểm cho {user.display_name} (ID {user.id}): {before} ➜ {user.points}")
         db.session.commit()
-        log_activity("Tạo ván chơi", f"{current_user.username} tạo ván chơi (thủ công), game ID {new_game.id}, {len(manual_players)} người chơi.")
+        log_activity("Tạo ván chơi", f"{current_user.display_name} tạo ván chơi (thủ công), game ID {new_game.id}, {len(manual_players)} người chơi.")
         flash("Đã tạo ván chơi phân thủ công!", "success")
         return redirect(url_for('game_history'))
 
@@ -1396,10 +1396,10 @@ def create_game():
                     reason="Tham gia ván chơi",
                     admin_id=session.get("user_id")
                 ))
-                log_activity("Cộng điểm", f"{current_user.username} cộng {user.points - before} điểm cho {user.display_name} (ID {user.id}) trong ván chơi.")
+                log_activity("Cộng điểm", f"{current_user.display_name} cộng {user.points - before} điểm cho {user.display_name} (ID {user.id}) trong ván chơi.")
                 # print(f"✔️ +{user.points - before} điểm cho {user.display_name} (ID {user.id}): {before} ➜ {user.points}")
         db.session.commit()
-        log_activity("Tạo ván chơi", f"{current_user.username} tạo ván chơi (ngẫu nhiên), game ID {new_game.id}, {len(player_ids)} người chơi.")
+        log_activity("Tạo ván chơi", f"{current_user.display_name} tạo ván chơi (ngẫu nhiên), game ID {new_game.id}, {len(player_ids)} người chơi.")
         flash("Tạo ván (phân ngẫu nhiên) thành công!", "success")
         return redirect(url_for('game_history'))
 
@@ -1420,7 +1420,7 @@ def update_game_note(game_id):
     print("After:", game.notes, game.tags)
 
     db.session.commit()
-    log_activity("Cập nhật ván chơi", f"Admin {current_user.username} cập nhật note và tag cho ván chơi ID {game.id}.")
+    log_activity("Cập nhật ván chơi", f"Admin {current_user.display_name} cập nhật note và tag cho ván chơi ID {game.id}.")
     flash('Đã cập nhật ván chơi.', 'success')
     return redirect(url_for('game_history'))
 
@@ -1430,7 +1430,7 @@ def delete_game(game_id):
     game = GameHistory.query.get_or_404(game_id)
     db.session.delete(game)
     db.session.commit()
-    log_activity("Xóa ván chơi", f"Admin {current_user.username} đã xóa ván chơi ID {game.id}.")
+    log_activity("Xóa ván chơi", f"Admin {current_user.display_name} đã xóa ván chơi ID {game.id}.")
     flash('Đã xóa ván chơi.', 'success')
     return redirect(url_for('game_history'))
 
@@ -1465,9 +1465,9 @@ def day_off():
         db.session.add(request_off)
         db.session.commit()
         if actual_user_id == user.id:
-            log_activity("Gửi yêu cầu nghỉ", f"{user.username} xin nghỉ từ {start_date} đến {end_date}.")
+            log_activity("Gửi yêu cầu nghỉ", f"{user.display_name} xin nghỉ từ {start_date} đến {end_date}.")
         else:
-            log_activity("Tạo yêu cầu nghỉ hộ", f"Admin {user.username} tạo yêu cầu nghỉ từ {start_date} đến {end_date} cho user ID {actual_user_id}.")
+            log_activity("Tạo yêu cầu nghỉ hộ", f"Admin {user.display_name} tạo yêu cầu nghỉ từ {start_date} đến {end_date} cho user ID {actual_user_id}.")
 
         flash("✔️ Đã gửi yêu cầu xin nghỉ!", "success")
         return redirect(url_for("day_off"))
@@ -1499,7 +1499,7 @@ def delete_off(off_id):
     off = PlayerOffRequest.query.get_or_404(off_id)
     db.session.delete(off)
     db.session.commit()
-    log_activity("Xóa yêu cầu nghỉ", f"Admin {user.username} đã xóa yêu cầu nghỉ ID {off.id} của user ID {off.user_id}.")
+    log_activity("Xóa yêu cầu nghỉ", f"Admin {user.display_name} đã xóa yêu cầu nghỉ ID {off.id} của user ID {off.user_id}.")
     flash("✔️ Đã xóa yêu cầu nghỉ!", "success")
     return redirect(url_for("day_off"))
 
