@@ -61,7 +61,7 @@
 <script src="{{ url_for('static', filename='js/pagination.js') }}"></script>
 <script>
 function reloadLogs(page = 1) {
-    fetch(`/logs?page=${page}`, { headers: { 'X-Requested-With': 'XMLHttpRequest' } })
+    fetch(`/activity_log?page=${page}`, { headers: { 'X-Requested-With': 'XMLHttpRequest' } })
     .then(res => res.json())
     .then(data => {
         document.querySelector('table.table tbody').innerHTML = data.rows;
