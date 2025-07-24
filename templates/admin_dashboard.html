@@ -115,16 +115,10 @@
         </div>
     </div>
 
-<!-- Update Points Modal -->
-<div class="modal fade" id="updatePointsModal" tabindex="-1">
-    <div class="modal-dialog">
+<!-- Modal Update Points -->
+<div class="modal fade" id="updatePointsModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">
-                    <i class="fas fa-edit me-2"></i>Cập nhật điểm
-                </h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
             <form method="POST" id="updatePointsForm">
                 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                 <div class="modal-body">
@@ -158,18 +152,48 @@
 
 {% block scripts %}
 <script>
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     const updatePointsModal = document.getElementById('updatePointsModal');
     const updatePointsForm = document.getElementById('updatePointsForm');
     const memberName = document.getElementById('memberName');
 
-    updatePointsModal.addEventListener('show.bs.modal', function(event) {
+    // Khi mở modal
+    updatePointsModal.addEventListener('show.bs.modal', function (event) {
         const button = event.relatedTarget;
         const memberId = button.getAttribute('data-member-id');
         const memberNameText = button.getAttribute('data-member-name');
-        
+
         memberName.textContent = memberNameText;
         updatePointsForm.action = `/update_points/${memberId}`;
+    });
+
+    // Gửi form khi submit
+    updatePointsForm.addEventListener("submit", function (e) {
+        e.preventDefault();
+
+        const formData = new FormData(updatePointsForm);
+        const actionUrl = updatePointsForm.action;
+
+        fetch(actionUrl, {
+            method: "POST",
+            body: formData,
+            headers: {
+                "X-Requested-With": "XMLHttpRequest"
+            }
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                alert(data.message);
+                location.reload(); // Reload trang để cập nhật điểm
+            } else {
+                alert(data.message || "Cập nhật thất bại!");
+            }
+        })
+        .catch(err => {
+            console.error("Lỗi khi gửi yêu cầu:", err);
+            alert("Lỗi máy chủ!");
+        });
     });
 });
 </script>
