@@ -20,9 +20,9 @@
             </div>
             <div class="card-body">
                 {% if current_user.role != 'admin' %}
-                    <div class="alert alert-danger">
-                        <i class="fas fa-lock me-2"></i>Bạn không có quyền truy cập trang này.
-                    </div>
+                    <script>
+                        showToast("danger", '<i class="fas fa-lock me-2"></i>Bạn không có quyền truy cập trang này.');
+                    </script>
                 {% else %}
                     {% if logs %}
                         <div class="table-responsive">

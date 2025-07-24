@@ -806,7 +806,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }));
 
         if (players.length !== chars.length || players.length === 0) {
-            alert("Số lượng người chơi và nhân vật phải bằng nhau và lớn hơn 0.");
+            showToast("Số lượng người chơi và nhân vật phải bằng nhau và lớn hơn 0.", 'danger');
             return;
         }
 
@@ -839,7 +839,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const selectedChars = randomizedCharIds;
 
         if (selectedPlayers.length === 0 || selectedPlayers.length !== selectedChars.length) {
-            alert("Số lượng người chơi và nhân vật phải bằng nhau và lớn hơn 0.");
+            showToast("Số lượng người chơi và nhân vật phải bằng nhau và lớn hơn 0.", "warning");
             e.preventDefault();
             return;
         }

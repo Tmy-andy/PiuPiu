@@ -184,21 +184,21 @@ document.addEventListener('DOMContentLoaded', function () {
         .then(res => res.json())
         .then(data => {
             if (data.success) {
-                alert(data.message);
+                showToast(data.message, 'success');
 
                 // Đóng modal
                 const modalInstance = bootstrap.Modal.getInstance(updatePointsModal);
                 modalInstance.hide();
 
                 // Reload trang để cập nhật điểm
-                location.reload();
+                setTimeout(() => location.reload(), 1000); // đợi 1 giây cho toast hiển thị
             } else {
-                alert(data.message || "Cập nhật thất bại!");
+                showToast(data.message || "Cập nhật thất bại!", 'danger');
             }
         })
         .catch(err => {
             console.error("Lỗi khi gửi yêu cầu:", err);
-            alert("Lỗi máy chủ!");
+            showToast("Lỗi máy chủ!", 'danger');
         });
     });
 });

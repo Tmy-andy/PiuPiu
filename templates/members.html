@@ -206,7 +206,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     reloadMemberList();
                     bootstrap.Modal.getInstance(document.getElementById('updatePointsModal')).hide();
                 } else {
-                    alert(data.message || 'Có lỗi xảy ra khi cập nhật điểm');
+                    showToast(data.message || 'Có lỗi xảy ra khi cập nhật điểm', "danger");
                 }
             })
             .catch(err => console.error('Lỗi update points:', err));
@@ -226,7 +226,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     reloadMemberList();
                     bootstrap.Modal.getInstance(document.getElementById('assignMemberModal')).hide();
                 } else {
-                    alert(data.message || 'Có lỗi xảy ra khi phân công');
+                    showToast(data.message || 'Có lỗi xảy ra khi phân công', "danger");
                 }
             })
             .catch(err => console.error('Lỗi assign member:', err));

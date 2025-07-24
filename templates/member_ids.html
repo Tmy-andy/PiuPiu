@@ -143,10 +143,10 @@ document.addEventListener('DOMContentLoaded', () => {
             .then(res => res.json())
             .then(data => {
                 if (data.success) {
-                    alert('Đã thêm mã thành viên!');
+                    showToast('Đã thêm mã thành viên!', "success");
                     setupAjaxPagination('#member-ids-table', '/member_ids'); // reload
                 } else {
-                    alert(data.message || 'Lỗi khi thêm mã');
+                    showToast(data.message || 'Lỗi khi thêm mã', "danger");
                 }
             })
             .catch(err => console.error('Lỗi khi thêm mã:', err));
@@ -163,10 +163,10 @@ document.addEventListener('DOMContentLoaded', () => {
             .then(res => res.json())
             .then(data => {
                 if (data.success) {
-                    alert(`Đã xóa ${data.deleted} mã chưa sử dụng.`);
+                    showToast(`Đã xóa ${data.deleted} mã chưa sử dụng.`, "success");
                     setupAjaxPagination('#member-ids-table', '/member_ids'); // reload
                 } else {
-                    alert(data.message || 'Lỗi khi xóa mã');
+                    showToast(data.message || 'Lỗi khi xóa mã', "danger");
                 }
             })
             .catch(err => console.error('Lỗi khi xóa mã:', err));

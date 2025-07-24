@@ -174,7 +174,7 @@ function updateDeath(id, action) {
     })
     .then(data => {
         if (data.error) {
-            alert(data.error);
+            showToast(data.error, "danger");
             return;
         }
         // Cập nhật badge lượt chết
@@ -204,7 +204,7 @@ function updateDeath(id, action) {
         }
     })
     .catch(err => {
-        alert("Không thể cập nhật: " + err.message);
+        showToast("Không thể cập nhật: " + err.message, "danger");
     });
 }
 
@@ -223,7 +223,7 @@ function useKimBai(id) {
     })
     .then(data => {
         if (data.error) {
-            alert(data.error);
+            showToast(data.error, "danger");
             return;
         }
         const kimCell = document.getElementById(`kim-${id}`);
@@ -236,7 +236,7 @@ function useKimBai(id) {
         }
     })
     .catch(err => {
-        alert("Không thể sử dụng kim bài: " + err.message);
+        showToast("Không thể sử dụng kim bài: " + err.message, "danger");
     });
 }
 
