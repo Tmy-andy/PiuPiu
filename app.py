@@ -1012,10 +1012,10 @@ from sqlalchemy import func, case
 @app.route('/kim_bai')
 @login_required
 def kim_bai():
-    per_page = 30
+    per_page = 20
     page = int(request.args.get('page', 1))
 
-    # 🔁 Gộp các count lại 1 truy vấn duy nhất
+    # 🔁 Lấy tổng số user và số lượng kim bài
     counts = db.session.query(
         func.count(User.id).label('total'),
         func.sum(case((User.has_kim_bai == True, 1), else_=0)).label('has_kim_bai_count'),
@@ -1026,11 +1026,13 @@ def kim_bai():
     has_kim_bai_count = counts.has_kim_bai_count or 0
     no_kim_bai_count = counts.no_kim_bai_count or 0
 
-    # 📄 Truy vấn danh sách người dùng (có phân trang)
+    # 📄 Truy vấn danh sách user theo phân trang
     members = User.query.order_by(User.member_id.asc()) \
-        .offset((page - 1) * per_page).limit(per_page).all()
+        .offset((page - 1) * per_page) \
+        .limit(per_page) \
+        .all()
 
-    total_pages = ceil(total / per_page)
+    total_pages = ceil(total / per_page) if total > 0 else 1
 
     return render_template(
         'kim_bai.html',
