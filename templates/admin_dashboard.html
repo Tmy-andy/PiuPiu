@@ -185,7 +185,13 @@ document.addEventListener('DOMContentLoaded', function () {
         .then(data => {
             if (data.success) {
                 alert(data.message);
-                location.reload(); // Reload trang để cập nhật điểm
+
+                // Đóng modal
+                const modalInstance = bootstrap.Modal.getInstance(updatePointsModal);
+                modalInstance.hide();
+
+                // Reload trang để cập nhật điểm
+                location.reload();
             } else {
                 alert(data.message || "Cập nhật thất bại!");
             }
@@ -198,3 +204,4 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 </script>
 {% endblock %}
+
