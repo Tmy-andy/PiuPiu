@@ -33,7 +33,7 @@
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
                                 <h6 class="card-title opacity-75">Có kim bài</h6>
-                                <h2 class="fw-bold mb-0">{{ members|selectattr('has_kim_bai')|list|length }}</h2>
+                                <h2 class="fw-bold mb-0">{{ has_kim_bai_count }}</h2>
                             </div>
                             <i class="fas fa-shield-alt fa-2x opacity-75"></i>
                         </div>
@@ -47,7 +47,7 @@
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
                                 <h6 class="card-title opacity-75">Không có kim bài</h6>
-                                <h2 class="fw-bold mb-0">{{ members|rejectattr('has_kim_bai')|list|length }}</h2>
+                                <h2 class="fw-bold mb-0">{{ no_kim_bai_count }}</h2>
                             </div>
                             <i class="fas fa-skull fa-2x opacity-75"></i>
                         </div>
@@ -61,7 +61,7 @@
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
                                 <h6 class="card-title opacity-75">Tổng thành viên</h6>
-                                <h2 class="fw-bold mb-0">{{ members|length }}</h2>
+                                <h2 class="fw-bold mb-0">{{ total }}</h2>
                             </div>
                             <i class="fas fa-users fa-2x opacity-75"></i>
                         </div>
@@ -142,15 +142,6 @@
                             {% endfor %}
                         </tbody>
                     </table>
-                    <nav aria-label="Pagination">
-                        <ul class="pagination justify-content-center mt-4">
-                            {% for p in range(1, total_pages + 1) %}
-                            <li class="page-item {% if p == page %}active{% endif %}">
-                                <a class="page-link" href="{{ url_for('kim_bai') }}?page={{ p }}">{{ p }}</a>
-                            </li>
-                            {% endfor %}
-                        </ul>
-                    </nav>
                 </div>
                 {% else %}
                 <div class="text-center py-4">
