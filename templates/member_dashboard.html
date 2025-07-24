@@ -119,7 +119,7 @@
                             <tr>
                                 <td class="text-theme-primary">
                                     <i class="fas fa-calendar me-1"></i>
-                                    {{ log.created_at[:16] }}
+                                    {{ log.created_at.strftime('%Y-%m-%d %H:%M') }}
                                 </td>
                                 <td>
                                     <span class="badge bg-{{ 'success' if log.points_change > 0 else 'danger' }}">
