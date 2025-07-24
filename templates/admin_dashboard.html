@@ -83,7 +83,7 @@
                                 </td>
                                 <td class="fw-semibold">{{ member.display_name }}</td>
                                 <td>
-                                    <span class="badge bg-{{ 'success' if member.points >= 80 else 'warning' if member.points >= 60 else 'danger' }}">
+                                    <span class="badge bg-{{ 'success' if member.points >= 8 else 'warning' if member.points >= 6 else 'danger' }}">
                                         {{ member.points }} điểm
                                     </span>
                                 </td>
