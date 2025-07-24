@@ -332,51 +332,48 @@
             <!-- Collapsible nav items -->
             <ul class="navbar-nav ms-auto d-flex align-items-center">
                 {% if session.user_id %}
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle text-white align-items-center gap-2" href="#" role="button" data-bs-toggle="dropdown">
-                        <i class="fas fa-user"></i>
-                    </a>
-                    <ul class="dropdown-menu dropdown-menu-end">
-                        <li class="dropdown-header">
-                            <strong>{{ session.display_name }}</strong>
-                        </li>
-                        <li><hr class="dropdown-divider"></li>
-                        <li>
-                            <a class="dropdown-item" href="{{ url_for('dashboard') }}">
-                                <i class="fas fa-tachometer-alt text-theme-primary"></i> Dashboard
+                <li class="nav-item">
+                    <div class="desktop-nav-menu">
+                        <a href="#" class="desktop-nav-toggle" id="desktopNavToggle">
+                            <i class="fas fa-user"></i>
+                        </a>
+                        
+                        <div class="desktop-nav-dropdown" id="desktopNavDropdown">
+                            <div class="desktop-nav-header">
+                                <strong>{{ session.display_name }}</strong>
+                            </div>
+                            
+                            <a href="{{ url_for('dashboard') }}" class="desktop-nav-item">
+                                <i class="fas fa-tachometer-alt"></i> Dashboard
                             </a>
-                        </li>
-                        <li>
-                            <a class="dropdown-item" href="{{ url_for('profile') }}">
-                                <i class="fas fa-user-cog text-secondary"></i> Thông tin cá nhân
+                            
+                            <a href="{{ url_for('profile') }}" class="desktop-nav-item">
+                                <i class="fas fa-user-cog"></i> Thông tin cá nhân
                             </a>
-                        </li>
-                        <li>
-                            <a class="dropdown-item" href="{{ url_for('change_theme') }}">
-                                <i class="fa-brands fa-ethereum text-secondary"></i> Thay đổi theme
+                            
+                            <a href="{{ url_for('change_theme') }}" class="desktop-nav-item">
+                                <i class="fa-brands fa-ethereum"></i> Thay đổi theme
                             </a>
-                        </li>
-                        {% if session.user_role == 'admin' and session.display_name == 'Administrator' %}
-                        <li>
-                            <a class="dropdown-item" href="{{ url_for('download_db') }}">
-                                <i class="fas fa-database text-warning"></i> Tải database
+                            
+                            {% if session.user_role == 'admin' and session.display_name == 'Administrator' %}
+                            <a href="{{ url_for('download_db') }}" class="desktop-nav-item">
+                                <i class="fas fa-database"></i> Tải database
                             </a>
-                        </li>
-                        {% endif %}
-                        {% if session.user_role == 'admin'%}
-                        <li>
-                            <a class="dropdown-item" href="#" id="showVersionBtn">
+                            {% endif %}
+                            
+                            {% if session.user_role == 'admin' %}
+                            <a href="#" id="showVersionDesktopBtn" class="desktop-nav-item">
                                 <i class="fa-solid fa-kaaba"></i> Version hệ thống
                             </a>
-                        </li>
-                        {% endif %}
-                        <li><hr class="dropdown-divider"></li>
-                        <li>
-                            <a class="dropdown-item text-danger" href="{{ url_for('logout') }}">
+                            {% endif %}
+                            
+                            <div class="desktop-nav-divider"></div>
+                            
+                            <a href="{{ url_for('logout') }}" class="desktop-nav-item danger">
                                 <i class="fas fa-sign-out-alt"></i> Đăng xuất
                             </a>
-                        </li>
-                    </ul>
+                        </div>
+                    </div>
                 </li>
                 {% endif %}
             </ul>
@@ -514,6 +511,11 @@
         const scrollToTop = document.getElementById('scrollToTop');
         const showVersionBtn = document.getElementById('showVersionBtn');
         const showVersionMobileBtn = document.getElementById('showVersionMobileBtn');
+
+        const desktopNavToggle = document.getElementById('desktopNavToggle');
+        const desktopNavDropdown = document.getElementById('desktopNavDropdown');
+        const desktopNavOverlay = document.getElementById('desktopNavOverlay');
+        const showVersionDesktopBtn = document.getElementById('showVersionDesktopBtn');
         
         let lastWidth = window.innerWidth;
         let resizeTimeout;
@@ -523,6 +525,13 @@
             const modal = new bootstrap.Modal(document.getElementById('versionModal'));
             modal.show();
             loadVersionData();
+
+            // Đóng desktop dropdown nếu đang mở
+            if (desktopNavDropdown && desktopNavDropdown.classList.contains('show')) {
+                desktopNavDropdown.classList.remove('show');
+                desktopNavOverlay.classList.remove('show');
+                desktopNavToggle.classList.remove('active');
+            }
         }
 
         function loadVersionData() {
@@ -723,6 +732,55 @@
                 setTimeout(function() {
                     lastWidth = window.innerWidth;
                 }, 200);
+            });
+        }
+
+        // Desktop Navigation
+        if (desktopNavToggle && desktopNavDropdown && desktopNavOverlay) {
+            desktopNavToggle.addEventListener('click', function(e) {
+                e.preventDefault();
+                const isOpen = desktopNavDropdown.classList.contains('show');
+                
+                if (isOpen) {
+                    desktopNavDropdown.classList.remove('show');
+                    desktopNavOverlay.classList.remove('show');
+                    desktopNavToggle.classList.remove('active');
+                } else {
+                    desktopNavDropdown.classList.add('show');
+                    desktopNavOverlay.classList.add('show');
+                    desktopNavToggle.classList.add('active');
+                }
+            });
+
+            desktopNavOverlay.addEventListener('click', function() {
+                desktopNavDropdown.classList.remove('show');
+                desktopNavOverlay.classList.remove('show');
+                desktopNavToggle.classList.remove('active');
+            });
+
+            // Đóng dropdown khi click vào item (trừ version button)
+            const desktopNavItems = desktopNavDropdown.querySelectorAll('.desktop-nav-item:not(#showVersionDesktopBtn)');
+            desktopNavItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    desktopNavDropdown.classList.remove('show');
+                    desktopNavOverlay.classList.remove('show');  
+                    desktopNavToggle.classList.remove('active');
+                });
+            });
+        }
+
+        // Desktop version button
+        if (showVersionDesktopBtn) {
+            showVersionDesktopBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                // Đóng desktop menu trước
+                if (desktopNavDropdown) {
+                    desktopNavDropdown.classList.remove('show');
+                    desktopNavOverlay.classList.remove('show');
+                    desktopNavToggle.classList.remove('active');
+                }
+                // Hiển thị modal
+                setTimeout(() => showVersionModal(), 300);
             });
         }
 

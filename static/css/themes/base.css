@@ -816,3 +816,152 @@ html {
     cursor: default;
 }
 
+/* Desktop Navigation Dropdown - Giống Mobile */
+.desktop-nav-menu {
+    position: relative;
+}
+
+.desktop-nav-toggle {
+    background: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 12px;
+    color: white;
+    padding: 0.8rem;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    z-index: 10000;
+    text-decoration: none;
+}
+
+.desktop-nav-toggle:focus,
+.desktop-nav-toggle:active {
+    outline: none;
+    box-shadow: 0 0 0 0.2rem rgba(255, 255, 255, 0.25);
+}
+
+.desktop-nav-toggle:hover {
+    background: rgba(255, 255, 255, 0.25);
+    transform: scale(1.05);
+}
+
+.desktop-nav-toggle.active {
+    background: rgba(255, 255, 255, 0.3);
+    transform: rotate(90deg);
+}
+
+.desktop-nav-dropdown {
+    position: absolute;
+    top: calc(100% + 15px);
+    right: 0;
+    background: var(--dropdown-bg);
+    border-radius: 16px;
+    box-shadow: var(--dropdown-shadow);
+    min-width: 280px;
+    overflow: hidden;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 1px solid var(--dropdown-border);
+    z-index: 99999;
+}
+
+.desktop-nav-dropdown.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.desktop-nav-header {
+    background: var(--dropdown-header-bg);
+    padding: 1rem 1.5rem;
+    text-align: center;
+    border-bottom: 1px solid var(--dropdown-divider);
+}
+
+.desktop-nav-header strong {
+    color: var(--dropdown-header-text);
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.desktop-nav-item {
+    display: block;
+    padding: 1rem 1.5rem;
+    color: var(--dropdown-item-text);
+    text-decoration: none;
+    transition: all 0.2s ease;
+    border-bottom: 1px solid var(--dropdown-divider);
+}
+
+.desktop-nav-item:last-child {
+    border-bottom: none;
+}
+
+.desktop-nav-item:hover {
+    background: var(--dropdown-item-hover-bg);
+    color: var(--dropdown-item-hover-text);
+    transform: translateX(5px);
+}
+
+.desktop-nav-item i {
+    width: 20px;
+    text-align: center;
+    margin-right: 0.75rem;
+    font-size: 1rem;
+    color: var(--dropdown-icon-color);
+}
+
+.desktop-nav-item:hover i {
+    color: var(--dropdown-item-hover-text);
+}
+
+.desktop-nav-item.danger {
+    color: var(--dropdown-danger-text);
+}
+
+.desktop-nav-item.danger:hover {
+    background: var(--dropdown-danger-hover-bg);
+    color: var(--dropdown-danger-text);
+}
+
+.desktop-nav-divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--dropdown-divider), transparent);
+    margin: 0.5rem 0;
+}
+
+/* Overlay cho desktop dropdown */
+.desktop-nav-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 9998;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+}
+
+.desktop-nav-overlay.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Hiển thị trên desktop (từ 992px trở lên) */
+@media (min-width: 992px) {
+    .desktop-nav-menu {
+        display: block;
+    }
+}
+
+/* Ẩn trên mobile */
+@media (max-width: 991.98px) {
+    .desktop-nav-menu {
+        display: none !important;
+    }
+}
