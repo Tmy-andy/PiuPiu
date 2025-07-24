@@ -478,6 +478,21 @@
         </div>
     </div>
 
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="flash-messages">
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ 'danger' if category == 'error' else category }} alert-dismissible fade show" role="alert">
+                        <i class="fas fa-{{ 'exclamation-triangle' if category == 'error' else 'check-circle' if category == 'success' else 'info-circle' }} me-2"></i>
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
     <!-- Toast Container -->
     <div aria-live="polite" aria-atomic="true" class="position-fixed bottom-0 end-0 p-3" style="z-index: 1080">
         <div id="toast-container"></div>
@@ -667,8 +682,10 @@
                 .catch(error => {
                     console.error('Error loading version data:', error);
                     document.getElementById('versionBadge').innerHTML = '<i class="fas fa-exclamation-triangle me-2"></i>Lỗi tải dữ liệu';
-                    document.getElementById('versionInfo').innerHTML = '<div class="alert alert-danger">Không thể tải thông tin phiên bản.</div>';
+                    document.getElementById('versionInfo').innerHTML = ''; // Xóa alert cũ
+                    showToast('Không thể tải thông tin phiên bản.', 'danger');
                 });
+
         }
 
         // Event listeners for version buttons
