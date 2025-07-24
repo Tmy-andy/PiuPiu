@@ -129,7 +129,7 @@ body.loading {
     }
 }
 
-/* ===== ENHANCED LOADING OVERLAY ===== */
+/* ===== ENHANCED LOADING OVERLAY =====
 #loading-overlay {
     position: fixed;
     top: 0;
@@ -150,7 +150,7 @@ body.loading {
 #loading-overlay.show {
     display: flex;
     opacity: 1;
-}
+} */
 
 /* Alternative elegant spinner (comment out above spinner styles and use this instead if preferred) */
 /*

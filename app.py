@@ -1773,3 +1773,27 @@ if os.path.exists(VERSION_FILE):
         APP_VERSION = f.read().strip()
 else:
     APP_VERSION = "v0.0.0"
+
+# Hàm lấy màu sắc dựa trên điểm
+def get_point_color(points):
+    # Giới hạn điểm từ 0 -> 10
+    p = max(0, min(points, 10))
+
+    # 0 -> 5: đỏ -> vàng
+    if p <= 5:
+        start = (220, 38, 38)   # đỏ (#dc2626)
+        end = (250, 204, 21)    # vàng (#facc15)
+        ratio = p / 5
+    else:
+        # 5 -> 10: vàng -> xanh
+        start = (250, 204, 21)  # vàng (#facc15)
+        end = (34, 197, 94)     # xanh (#22c55e)
+        ratio = (p - 5) / 5
+
+    r = int(start[0] + (end[0] - start[0]) * ratio)
+    g = int(start[1] + (end[1] - start[1]) * ratio)
+    b = int(start[2] + (end[2] - start[2]) * ratio)
+    return f"rgb({r},{g},{b})"
+
+# Đăng ký filter Jinja
+app.jinja_env.filters['point_color'] = get_point_color
