@@ -1027,7 +1027,7 @@ def kim_bai():
     no_kim_bai_count = counts.no_kim_bai_count or 0
 
     # 📄 Truy vấn danh sách người dùng (có phân trang)
-    members = User.query.order_by(User.display_name) \
+    members = User.query.order_by(User.member_id.asc()) \
         .offset((page - 1) * per_page).limit(per_page).all()
 
     total_pages = ceil(total / per_page)
