@@ -437,46 +437,54 @@ def dashboard():
         return render_template('member_dashboard.html', user=user, point_logs=point_logs)
 
 @cache.cached(timeout=120, query_string=True)
-@app.route('/members')
-@admin_required
-def members():
-    Admin = aliased(User)
+@app.route("/game_history")
+def game_history():
+    faction_order = {
+        "Phe Dân": 1,
+        "Phe Sói": 2,
+        "Phe Ba": 3,
+        "Đổi Phe": 4
+    }
 
+    # Pagination cho GameHistory
     per_page = 20
     page = int(request.args.get('page', 1))
-    offset = (page - 1) * per_page
+    games_query = GameHistory.query.order_by(GameHistory.created_at.desc())
+    total_games = games_query.count()
+    games = games_query.offset((page - 1) * per_page).limit(per_page).all()
+    total_pages = ceil(total_games / per_page)
 
-    total = User.query.filter_by(role='member').count()
-    total_pages = ceil(total / per_page)
+    # ✅ Lấy users và characters
+    users = User.query.with_entities(User.id, User.display_name, User.member_id) \
+                      .order_by(User.member_id.asc()).all()
 
-    results = db.session.query(
-        User,
-        Admin.display_name.label("admin_name")
-    ).outerjoin(Admin, User.assigned_admin_id == Admin.id) \
-     .filter(User.role == 'member') \
-     .order_by(User.member_id.asc()) \
-     .offset(offset).limit(per_page).all()
+    chars = CharacterAbility.query.with_entities(
+        CharacterAbility.id, CharacterAbility.name, CharacterAbility.faction
+    ).all()
+    chars_sorted = sorted(chars, key=lambda c: faction_order.get(c.faction, 999))
 
-    members = []
-    for user, admin_name in results:
-        user.admin_name = admin_name
-        members.append(user)
+    # ✅ Chuyển sang dict
+    user_dicts = [{"id": u.id, "display_name": u.display_name, "member_id": u.member_id} for u in users]
+    char_dicts = [{"id": c.id, "name": c.name, "faction": c.faction} for c in chars_sorted]
 
-    all_admins = User.query.filter_by(role='admin').order_by(User.display_name).all()
-
-    # Nếu là AJAX, trả về JSON
-    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-        rows_html = render_template('partials/_members_rows.html', members=members)
-        pagination_html = render_template('partials/_pagination.html', page=page, total_pages=total_pages)
-        return jsonify(rows=rows_html, pagination=pagination_html)
+    FACTION_ICONS = {
+        "Phe Dân": ("fa-users", "bg-success text-white"),
+        "Phe Sói": ("fa-brands fa-wolf-pack-battalion", "bg-danger-subtle text-danger"),
+        "Phe Ba": ("fa-user-secret", "bg-secondary-subtle text-dark"),
+        "Đổi Phe": ("fa-random", "bg-warning-subtle text-warning")
+    }
 
     return render_template(
-        'members.html',
-        members=members,
-        all_admins=all_admins,
-        total=total,
+        "game_history.html",
+        games=games,
+        users=users,
+        chars=chars_sorted,
+        FACTION_ICONS=FACTION_ICONS,
+        user_dicts=user_dicts,
+        char_dicts=char_dicts,
         page=page,
-        total_pages=total_pages
+        total_pages=total_pages,
+        total=total_games
     )
 
 @app.route('/assign_member/<int:user_id>', methods=['POST'])
@@ -1030,7 +1038,10 @@ def kim_bai():
     no_kim_bai_count = counts.no_kim_bai_count or 0
 
     # 📄 Lấy toàn bộ user, sắp xếp theo member_id
-    members = User.query.order_by(User.member_id.asc()).all()
+    members = User.query.with_entities(
+        User.id, User.display_name, User.member_id, User.has_kim_bai, User.death_count
+    ).order_by(User.member_id.asc()).all()
+
 
     return render_template(
         'kim_bai.html',
@@ -1149,7 +1160,7 @@ def top_tier():
         .join(KimBaiLog)
         .filter(func.extract('month', KimBaiLog.timestamp) == current_month)
         .filter(func.extract('year', KimBaiLog.timestamp) == current_year)
-        .group_by(User.id)
+        .group_by(User.display_name)
         .order_by(func.count(KimBaiLog.id).desc())
         .limit(3)
         .all()
@@ -1266,11 +1277,10 @@ def edit_blacklist_author(entry_id):
         flash('Không tìm thấy người dùng hoặc mục!', 'danger')
     return redirect(url_for('blacklist'))
 
+# Game history
 @cache.cached(timeout=120, query_string=True)
 @app.route("/game_history")
 def game_history():
-    from models import GameHistory, User, CharacterAbility
-
     faction_order = {
         "Phe Dân": 1,
         "Phe Sói": 2,
@@ -1278,12 +1288,25 @@ def game_history():
         "Đổi Phe": 4
     }
 
+    # Pagination cho GameHistory
     per_page = 20
     page = int(request.args.get('page', 1))
     games_query = GameHistory.query.order_by(GameHistory.created_at.desc())
-    games = games_query.offset((page - 1) * per_page).limit(per_page).all()
     total_games = games_query.count()
+    games = games_query.offset((page - 1) * per_page).limit(per_page).all()
     total_pages = ceil(total_games / per_page)
+
+    # Tối ưu query User và CharacterAbility với with_entities
+    users = User.query.with_entities(User.id, User.display_name, User.member_id) \
+                      .order_by(User.member_id.asc()).all()
+    chars = CharacterAbility.query.with_entities(CharacterAbility.id, CharacterAbility.name, CharacterAbility.faction).all()
+
+    # Sắp xếp chars theo faction
+    chars_sorted = sorted(chars, key=lambda c: faction_order.get(c.faction, 999))
+
+    # Chuyển users và chars sang dict cho JS (tojson trong template)
+    user_dicts = [{"id": u.id, "display_name": u.display_name, "member_id": u.member_id} for u in users]
+    char_dicts = [{"id": c.id, "name": c.name, "faction": c.faction} for c in chars_sorted]
 
     FACTION_ICONS = {
         "Phe Dân": ("fa-users", "bg-success text-white"),
@@ -1292,24 +1315,17 @@ def game_history():
         "Đổi Phe": ("fa-random", "bg-warning-subtle text-warning")
     }
 
-    # ✅ Chuyển users và chars sang dict để dùng với tojson trong template
-    user_dicts = [
-        {"id": u.id, "display_name": u.display_name, "member_id": u.member_id}
-        for u in users
-    ]
-    char_dicts = [
-        {"id": c.id, "name": c.name, "faction": c.faction}
-        for c in chars_sorted
-    ]
-
     return render_template(
         "game_history.html",
         games=games,
         users=users,
         chars=chars_sorted,
         FACTION_ICONS=FACTION_ICONS,
-        user_dicts=user_dicts,         # ✅ thêm
-        char_dicts=char_dicts          # ✅ thêm
+        user_dicts=user_dicts,
+        char_dicts=char_dicts,
+        page=page,
+        total_pages=total_pages,
+        total=total_games
     )
 
 
@@ -1521,7 +1537,8 @@ def frequency():
     today = vietnam_now.date()
 
     # 🔎 Tải tất cả user và map theo ID để tra nhanh
-    users = User.query.options(lazyload("*")).filter_by(role='member').all()
+    users = User.query.with_entities(User.id, User.display_name, User.member_id)\
+                      .filter_by(role='member').all()
     user_map = {u.id: u for u in users}
 
     # 📌 Lấy danh sách nghỉ (vẫn còn hiệu lực)
