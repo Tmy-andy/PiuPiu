@@ -389,6 +389,7 @@ def register():
 
     return render_template('register.html')
 
+@cache.cached(timeout=120, query_string=True)
 @app.route('/dashboard')
 @login_required
 def dashboard():
@@ -435,6 +436,7 @@ def dashboard():
 
         return render_template('member_dashboard.html', user=user, point_logs=point_logs)
 
+@cache.cached(timeout=120, query_string=True)
 @app.route('/members')
 @admin_required
 def members():
@@ -505,6 +507,7 @@ def assign_member(user_id):
         print("Lỗi ở /assign_member:", e)
         return jsonify(success=False, message='Lỗi máy chủ.'), 500
 
+@cache.cached(timeout=120, query_string=True)
 @app.route('/member_ids')
 @admin_required
 def member_ids():
@@ -733,6 +736,7 @@ def profile():
 
     return render_template('profile.html', user=user)
 
+@cache.cached(timeout=120, query_string=True)
 @app.route('/admins')
 @login_required
 @admin_required
@@ -853,6 +857,7 @@ def download_db():
     return send_file(zip_path, as_attachment=True, download_name="full_database_export.zip")
 
 # Luật sử dụng
+@cache.cached(timeout=120, query_string=True)
 @app.route('/rules', methods=['GET', 'POST'])
 @admin_required
 def rules():
@@ -1009,6 +1014,7 @@ def delete_ability(ability_id):
 from math import ceil
 from sqlalchemy import func, case
 
+@cache.cached(timeout=120, query_string=True)
 @app.route('/kim_bai')
 @login_required
 def kim_bai():
@@ -1260,6 +1266,7 @@ def edit_blacklist_author(entry_id):
         flash('Không tìm thấy người dùng hoặc mục!', 'danger')
     return redirect(url_for('blacklist'))
 
+@cache.cached(timeout=120, query_string=True)
 @app.route("/game_history")
 def game_history():
     from models import GameHistory, User, CharacterAbility
@@ -1428,6 +1435,7 @@ def delete_game(game_id):
     flash('Đã xóa ván chơi.', 'success')
     return redirect(url_for('game_history'))
 
+@cache.cached(timeout=120, query_string=True)
 @app.route("/day_off", methods=["GET", "POST"])
 @login_required
 def day_off():
@@ -1505,6 +1513,7 @@ from flask import render_template
 from sqlalchemy import func, union_all, select
 from sqlalchemy.orm import lazyload, joinedload
 
+@cache.cached(timeout=120, query_string=True)
 @app.route("/frequency")
 @login_required
 def frequency():
@@ -1702,6 +1711,7 @@ def get_theme(user):
     # Nếu user có theme cá nhân thì dùng
     return user.theme if user and user.theme else 'default'
 
+@cache.cached(timeout=120, query_string=True)
 @app.route('/change-theme', methods=['GET', 'POST'])
 def change_theme():
     if 'user_id' not in session:
