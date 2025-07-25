@@ -61,8 +61,437 @@
         overflow: hidden;
     }
 
-    /* Theme preview decorative elements */
-    .preview-box::before {
+    /* Enhanced Sakura Theme - Falling Petals */
+    .theme-sakura::before,
+    .theme-sakura::after {
+        content: '🌸';
+        position: absolute;
+        font-size: 1.2rem;
+        color: rgba(255, 182, 193, 0.8);
+        animation: sakura-fall 4s linear infinite;
+        z-index: 2;
+    }
+
+    .theme-sakura::before {
+        top: -20px;
+        left: 20%;
+        animation-delay: 0s;
+    }
+
+    .theme-sakura::after {
+        top: -20px;
+        right: 30%;
+        animation-delay: 2s;
+        animation-duration: 5s;
+    }
+
+    /* Create additional falling petals */
+    .theme-sakura {
+        position: relative;
+    }
+
+    .theme-sakura:hover::before {
+        animation-duration: 2s;
+    }
+
+    .theme-sakura:hover::after {
+        animation-duration: 2.5s;
+    }
+
+    /* Enhanced Galaxy Theme - Stars and Shooting Stars */
+    .theme-galaxy::before,
+    .theme-galaxy::after {
+        position: absolute;
+        z-index: 2;
+    }
+
+    .theme-galaxy::before {
+        content: '✨';
+        top: 15%;
+        left: 20%;
+        font-size: 0.8rem;
+        animation: twinkle 2s ease-in-out infinite;
+        color: rgba(255, 255, 255, 0.9);
+    }
+
+    .theme-galaxy::after {
+        content: '⭐';
+        top: 60%;
+        right: 25%;
+        font-size: 0.6rem;
+        animation: twinkle 3s ease-in-out infinite 1s;
+        color: rgba(255, 255, 255, 0.7);
+    }
+
+    /* Add shooting star effect */
+    .theme-galaxy {
+        position: relative;
+    }
+
+    .theme-galaxy:hover::before {
+        content: '💫';
+        animation: shooting-star 1.5s linear infinite;
+        font-size: 1rem;
+    }
+
+    /* Enhanced Forest Theme - Falling Leaves */
+    .theme-forest::before,
+    .theme-forest::after {
+        position: absolute;
+        font-size: 1rem;
+        z-index: 2;
+        animation: leaf-fall 6s linear infinite;
+    }
+
+    .theme-forest::before {
+        content: '🍃';
+        top: -15px;
+        left: 25%;
+        color: rgba(34, 139, 34, 0.8);
+        animation-delay: 0s;
+    }
+
+    .theme-forest::after {
+        content: '🌿';
+        top: -15px;
+        right: 35%;
+        color: rgba(60, 179, 113, 0.8);
+        animation-delay: 3s;
+        animation-duration: 7s;
+    }
+
+    /* Enhanced Ocean Theme - Bubbles and Waves */
+    .theme-ocean::before,
+    .theme-ocean::after {
+        position: absolute;
+        z-index: 2;
+    }
+
+    .theme-ocean::before {
+        content: '🫧';
+        bottom: 20%;
+        left: 30%;
+        font-size: 0.8rem;
+        animation: bubble-rise 4s ease-in-out infinite;
+        color: rgba(255, 255, 255, 0.8);
+    }
+
+    .theme-ocean::after {
+        content: '🌊';
+        bottom: 10px;
+        right: 10px;
+        font-size: 1.2rem;
+        animation: wave-motion 3s ease-in-out infinite;
+    }
+
+    /* Enhanced Sunset Theme - Sun Rays */
+    .theme-sunset::before,
+    .theme-sunset::after {
+        position: absolute;
+        z-index: 2;
+    }
+
+    .theme-sunset::before {
+        content: '☀️';
+        top: 15px;
+        right: 15px;
+        font-size: 1.3rem;
+        animation: sun-pulse 3s ease-in-out infinite;
+    }
+
+    .theme-sunset::after {
+        content: '';
+        top: 10px;
+        right: 10px;
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(255, 215, 0, 0.3) 0%, transparent 70%);
+        animation: sun-glow 4s ease-in-out infinite;
+    }
+
+    /* Enhanced Halloween Theme - Spooky Effects */
+    .theme-halloween::before,
+    .theme-halloween::after {
+        position: absolute;
+        z-index: 2;
+    }
+
+    .theme-halloween::before {
+        content: '🎃';
+        top: 10px;
+        right: 10px;
+        font-size: 1.2rem;
+        animation: spooky-bounce 2s ease-in-out infinite;
+    }
+
+    .theme-halloween::after {
+        content: '🦇';
+        top: 20%;
+        left: 20%;
+        font-size: 0.9rem;
+        animation: bat-fly 5s linear infinite;
+    }
+
+    /* Enhanced Christmas Theme - Snow Effect */
+    .theme-christmas::before,
+    .theme-christmas::after {
+        position: absolute;
+        z-index: 2;
+    }
+
+    .theme-christmas::before {
+        content: '❄️';
+        top: -10px;
+        left: 30%;
+        font-size: 0.8rem;
+        animation: snow-fall 4s linear infinite;
+        color: rgba(255, 255, 255, 0.9);
+    }
+
+    .theme-christmas::after {
+        content: '🎄';
+        bottom: 10px;
+        right: 10px;
+        font-size: 1.2rem;
+        animation: christmas-glow 2s ease-in-out infinite;
+    }
+
+    /* Enhanced New Year Theme - Fireworks */
+    .theme-newyear::before,
+    .theme-newyear::after {
+        position: absolute;
+        z-index: 2;
+    }
+
+    .theme-newyear::before {
+        content: '🎆';
+        top: 20%;
+        left: 25%;
+        font-size: 1rem;
+        animation: firework-burst 2s ease-in-out infinite;
+    }
+
+    .theme-newyear::after {
+        content: '🎉';
+        top: 10px;
+        right: 10px;
+        font-size: 1.2rem;
+        animation: celebration 1.8s ease-in-out infinite;
+    }
+
+    /* Enhanced Dark Theme - Digital Rain */
+    .theme-dark::before,
+    .theme-dark::after {
+        position: absolute;
+        z-index: 2;
+        font-family: 'Courier New', monospace;
+        color: rgba(0, 255, 0, 0.6);
+        font-size: 0.7rem;
+        animation: digital-rain 3s linear infinite;
+    }
+
+    .theme-dark::before {
+        content: '01010';
+        top: -10px;
+        left: 20%;
+        animation-delay: 0s;
+    }
+
+    .theme-dark::after {
+        content: '11001';
+        top: -10px;
+        right: 30%;
+        animation-delay: 1.5s;
+    }
+
+    /* Keyframe Animations */
+    @keyframes sakura-fall {
+        0% { 
+            transform: translateY(-20px) rotate(0deg); 
+            opacity: 1; 
+        }
+        100% { 
+            transform: translateY(120px) rotate(360deg); 
+            opacity: 0; 
+        }
+    }
+
+    @keyframes leaf-fall {
+        0% { 
+            transform: translateY(-20px) rotate(0deg); 
+            opacity: 1; 
+        }
+        100% { 
+            transform: translateY(120px) rotate(180deg); 
+            opacity: 0; 
+        }
+    }
+
+    @keyframes snow-fall {
+        0% { 
+            transform: translateY(-20px); 
+            opacity: 1; 
+        }
+        100% { 
+            transform: translateY(120px); 
+            opacity: 0; 
+        }
+    }
+
+    @keyframes digital-rain {
+        0% { 
+            transform: translateY(-20px); 
+            opacity: 1; 
+        }
+        100% { 
+            transform: translateY(120px); 
+            opacity: 0; 
+        }
+    }
+
+    @keyframes shooting-star {
+        0% { 
+            transform: translateX(-20px) translateY(-10px); 
+            opacity: 0; 
+        }
+        50% { 
+            opacity: 1; 
+        }
+        100% { 
+            transform: translateX(60px) translateY(40px); 
+            opacity: 0; 
+        }
+    }
+
+    @keyframes twinkle {
+        0%, 100% { 
+            opacity: 0.3; 
+            transform: scale(1); 
+        }
+        50% { 
+            opacity: 1; 
+            transform: scale(1.2); 
+        }
+    }
+
+    @keyframes bubble-rise {
+        0% { 
+            transform: translateY(20px); 
+            opacity: 0; 
+        }
+        50% { 
+            opacity: 1; 
+        }
+        100% { 
+            transform: translateY(-40px); 
+            opacity: 0; 
+        }
+    }
+
+    @keyframes wave-motion {
+        0%, 100% { 
+            transform: translateX(0px) rotate(0deg); 
+        }
+        50% { 
+            transform: translateX(5px) rotate(5deg); 
+        }
+    }
+
+    @keyframes sun-pulse {
+        0%, 100% { 
+            transform: scale(1); 
+            filter: brightness(1); 
+        }
+        50% { 
+            transform: scale(1.1); 
+            filter: brightness(1.3); 
+        }
+    }
+
+    @keyframes sun-glow {
+        0%, 100% { 
+            opacity: 0.3; 
+            transform: scale(1); 
+        }
+        50% { 
+            opacity: 0.7; 
+            transform: scale(1.2); 
+        }
+    }
+
+    @keyframes spooky-bounce {
+        0%, 100% { 
+            transform: translateY(0px) scale(1); 
+        }
+        50% { 
+            transform: translateY(-5px) scale(1.1); 
+        }
+    }
+
+    @keyframes bat-fly {
+        0% { 
+            transform: translateX(0px) translateY(0px); 
+        }
+        25% { 
+            transform: translateX(20px) translateY(-10px); 
+        }
+        50% { 
+            transform: translateX(40px) translateY(5px); 
+        }
+        75% { 
+            transform: translateX(20px) translateY(-5px); 
+        }
+        100% { 
+            transform: translateX(0px) translateY(0px); 
+        }
+    }
+
+    @keyframes firework-burst {
+        0% { 
+            transform: scale(0.5); 
+            opacity: 0; 
+        }
+        50% { 
+            transform: scale(1.2); 
+            opacity: 1; 
+        }
+        100% { 
+            transform: scale(0.8); 
+            opacity: 0.7; 
+        }
+    }
+
+    @keyframes christmas-glow {
+        0%, 100% { 
+            filter: hue-rotate(0deg) brightness(1); 
+        }
+        33% { 
+            filter: hue-rotate(120deg) brightness(1.2); 
+        }
+        66% { 
+            filter: hue-rotate(240deg) brightness(1.1); 
+        }
+    }
+
+    @keyframes celebration {
+        0%, 100% { 
+            transform: scale(1) rotate(0deg); 
+        }
+        25% { 
+            transform: scale(1.1) rotate(90deg); 
+        }
+        50% { 
+            transform: scale(1.2) rotate(180deg); 
+        }
+        75% { 
+            transform: scale(1.1) rotate(270deg); 
+        }
+    }
+
+    /* Base floating elements for themes without special effects */
+    .theme-base::before,
+    .theme-default::before {
         content: '';
         position: absolute;
         top: -50%;
@@ -74,7 +503,8 @@
         animation: float 6s ease-in-out infinite;
     }
 
-    .preview-box::after {
+    .theme-base::after,
+    .theme-default::after {
         content: '';
         position: absolute;
         bottom: -30%;
@@ -86,124 +516,13 @@
         animation: float 8s ease-in-out infinite reverse;
     }
 
-    /* Special effects for themes with effects */
-    .theme-sakura::before {
-        content: '🌸';
-        position: absolute;
-        top: 10px;
-        right: 10px;
-        font-size: 1.2rem;
-        animation: sakura-fall 3s ease-in-out infinite;
-    }
-
-    .theme-galaxy::before {
-        content: '✨';
-        position: absolute;
-        top: 15px;
-        right: 15px;
-        font-size: 1rem;
-        animation: twinkle 2s ease-in-out infinite;
-    }
-
-    .theme-ocean::before {
-        content: '🌊';
-        position: absolute;
-        top: 10px;
-        right: 10px;
-        font-size: 1.2rem;
-        animation: wave 2.5s ease-in-out infinite;
-    }
-
-    .theme-forest::before {
-        content: '🌿';
-        position: absolute;
-        top: 10px;
-        right: 10px;
-        font-size: 1.2rem;
-        animation: leaf-sway 3s ease-in-out infinite;
-    }
-
-    .theme-sunset::before {
-        content: '🌅';
-        position: absolute;
-        top: 10px;
-        right: 10px;
-        font-size: 1.2rem;
-        animation: glow 2s ease-in-out infinite;
-    }
-
-    .theme-halloween::before {
-        content: '🎃';
-        position: absolute;
-        top: 10px;
-        right: 10px;
-        font-size: 1.2rem;
-        animation: spooky 1.5s ease-in-out infinite;
-    }
-
-    .theme-christmas::before {
-        content: '🎄';
-        position: absolute;
-        top: 10px;
-        right: 10px;
-        font-size: 1.2rem;
-        animation: christmas-glow 2s ease-in-out infinite;
-    }
-
-    .theme-newyear::before {
-        content: '🎉';
-        position: absolute;
-        top: 10px;
-        right: 10px;
-        font-size: 1.2rem;
-        animation: celebration 1.8s ease-in-out infinite;
-    }
-
-    @keyframes sakura-fall {
-        0%, 100% { transform: translateY(0px) rotate(0deg); }
-        50% { transform: translateY(10px) rotate(180deg); }
-    }
-
-    @keyframes twinkle {
-        0%, 100% { opacity: 1; transform: scale(1); }
-        50% { opacity: 0.5; transform: scale(1.2); }
-    }
-
-    @keyframes wave {
-        0%, 100% { transform: translateX(0px); }
-        50% { transform: translateX(5px); }
-    }
-
-    @keyframes leaf-sway {
-        0%, 100% { transform: rotate(0deg); }
-        50% { transform: rotate(10deg); }
-    }
-
-    @keyframes glow {
-        0%, 100% { filter: brightness(1); }
-        50% { filter: brightness(1.3); }
-    }
-
-    @keyframes spooky {
-        0%, 100% { transform: scale(1); }
-        50% { transform: scale(1.1); }
-    }
-
-    @keyframes christmas-glow {
-        0%, 100% { filter: hue-rotate(0deg); }
-        50% { filter: hue-rotate(60deg); }
-    }
-
-    @keyframes celebration {
-        0%, 100% { transform: scale(1) rotate(0deg); }
-        25% { transform: scale(1.1) rotate(90deg); }
-        50% { transform: scale(1.2) rotate(180deg); }
-        75% { transform: scale(1.1) rotate(270deg); }
-    }
-
     @keyframes float {
-        0%, 100% { transform: translateY(0px) rotate(0deg); }
-        50% { transform: translateY(-20px) rotate(180deg); }
+        0%, 100% { 
+            transform: translateY(0px) rotate(0deg); 
+        }
+        50% { 
+            transform: translateY(-20px) rotate(180deg); 
+        }
     }
 
     /* Theme card hover effects */
@@ -232,6 +551,7 @@
         right: 0;
         height: 3px;
         background: linear-gradient(90deg, #28a745, #20c997);
+        z-index: 3;
     }
 
     /* Button styling */
@@ -318,11 +638,18 @@
         border-top: 2px solid transparent;
         border-radius: 50%;
         animation: spin 1s linear infinite;
+        z-index: 10;
     }
 
     @keyframes spin {
         0% { transform: rotate(0deg); }
         100% { transform: rotate(360deg); }
+    }
+
+    /* Enhance hover effects for better interactivity */
+    .theme-hover-effect:hover .preview-box::before,
+    .theme-hover-effect:hover .preview-box::after {
+        animation-duration: 1s !important;
     }
 </style>
 
@@ -335,7 +662,7 @@
     <!-- Main Content -->
     <div class="col-lg-9 col-md-8">
         <div class="card">
-            <div class="card-header  d-flex justify-content-between align-items-center">
+            <div class="card-header d-flex justify-content-between align-items-center">
                 <h5 class="card-title fw-bold mb-0">
                     <i class="fas fa-palette me-2 text-theme-primary"></i>
                     Đổi giao diện
@@ -401,6 +728,18 @@ document.addEventListener('DOMContentLoaded', function() {
             `;
             previewBox.style.position = 'relative';
             previewBox.appendChild(loadingText);
+        });
+    });
+
+    // Add extra interactivity - pause animations on hover for better visibility
+    const previewBoxes = document.querySelectorAll('.preview-box');
+    previewBoxes.forEach(box => {
+        box.addEventListener('mouseenter', function() {
+            this.style.animationPlayState = 'paused';
+        });
+        
+        box.addEventListener('mouseleave', function() {
+            this.style.animationPlayState = 'running';
         });
     });
 });
