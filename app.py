@@ -449,9 +449,9 @@ def members():
     total = User.query.filter_by(role='member').count()
     total_pages = ceil(total / per_page)
 
+    # Giữ nguyên User object và admin_name
     results = db.session.query(
-        User.id, User.display_name, User.member_id, User.points,
-        Admin.display_name.label("admin_name")
+        User, Admin.display_name.label("admin_name")
     ).outerjoin(Admin, User.assigned_admin_id == Admin.id) \
      .filter(User.role == 'member') \
      .order_by(User.member_id.asc()) \
