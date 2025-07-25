@@ -1271,10 +1271,12 @@ def game_history():
         "Đổi Phe": 4
     }
 
-    games = GameHistory.query.order_by(GameHistory.created_at.desc()).all()
-    chars = CharacterAbility.query.all()
-    chars_sorted = sorted(chars, key=lambda c: faction_order.get(c.faction, 999))
-    users = User.query.order_by(User.member_id.asc()).all()
+    per_page = 20
+    page = int(request.args.get('page', 1))
+    games_query = GameHistory.query.order_by(GameHistory.created_at.desc())
+    games = games_query.offset((page - 1) * per_page).limit(per_page).all()
+    total_games = games_query.count()
+    total_pages = ceil(total_games / per_page)
 
     FACTION_ICONS = {
         "Phe Dân": ("fa-users", "bg-success text-white"),
