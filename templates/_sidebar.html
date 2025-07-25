@@ -10,37 +10,49 @@
         <i class="fas fa-chevron-down sidebar-toggle-icon ms-auto"></i>
     </h5>
     <nav class="nav flex-column sidebar-nav" id="sidebarNav">
+        <!-- Dashboard -->
         <a class="nav-link {% if request.endpoint == 'dashboard' %}active{% endif %}" href="{{ url_for('dashboard') }}">
             <i class="fas fa-chart-bar"></i>Thống kê
         </a>
 
+        <!-- Separator -->
         {% if user.role == 'admin' %}
-            <a class="nav-link {% if request.endpoint == 'members' %}active{% endif %}" href="{{ url_for('members') }}">
-                <i class="fas fa-users"></i>Quản lý thành viên
-            </a>
-            <a class="nav-link {% if request.endpoint == 'member_ids' %}active{% endif %}" href="{{ url_for('member_ids') }}">
-                <i class="fas fa-id-card"></i>Mã thành viên
-            </a>
-            <a class="nav-link {% if request.endpoint == 'admins' %}active{% endif %}" href="{{ url_for('admins') }}">
-                <i class="fa-solid fa-user-tie"></i>Danh sách admin
-            </a>
+        <div class="sidebar-separator">
+            <span class="separator-text">Quản lý</span>
+        </div>
+        
+        <a class="nav-link {% if request.endpoint == 'members' %}active{% endif %}" href="{{ url_for('members') }}">
+            <i class="fas fa-users"></i>Quản lý thành viên
+        </a>
+        <a class="nav-link {% if request.endpoint == 'member_ids' %}active{% endif %}" href="{{ url_for('member_ids') }}">
+            <i class="fas fa-id-card"></i>Mã thành viên
+        </a>
+        <a class="nav-link {% if request.endpoint == 'admins' %}active{% endif %}" href="{{ url_for('admins') }}">
+            <i class="fa-solid fa-user-tie"></i>Danh sách admin
+        </a>
+        {% endif %}
+
+        <!-- Separator -->
+        <div class="sidebar-separator">
+            <span class="separator-text">Luật & Quy định</span>
+        </div>
+        
+        {% if user.role == 'admin' %}
             <a class="nav-link {% if request.endpoint == 'rules' %}active{% endif %}" href="{{ url_for('rules') }}">
                 <i class="fas fa-gavel"></i>Cập nhật luật
             </a>
-            <a class="nav-link {% if request.endpoint == 'activity_log' %}active{% endif %}" href="{{ url_for('activity_log') }}">
-                <i class="fas fa-clipboard-list"></i>Nhật ký hoạt động
-            </a>
         {% endif %}
-
         <a class="nav-link {% if request.endpoint == 'public_rules' %}active{% endif %}" href="{{ url_for('public_rules') }}">
             <i class="fas fa-gavel"></i>Luật
         </a>
 
+        <!-- Separator -->
+        <div class="sidebar-separator">
+            <span class="separator-text">Game</span>
+        </div>
+        
         <a class="nav-link {% if request.endpoint == 'abilities' %}active{% endif %}" href="{{ url_for('abilities') }}">
             <i class="fas fa-bolt"></i>Chức năng nhân vật
-        </a>
-        <a class="nav-link {% if request.endpoint == 'blacklist' %}active{% endif %}" href="{{ url_for('blacklist') }}">
-            <i class="fas fa-ban"></i>Blacklist
         </a>
         <a class="nav-link {% if request.endpoint == 'kim_bai' %}active{% endif %}" href="{{ url_for('kim_bai') }}">
             <i class="fa-solid fa-scroll-torah"></i>Kim Bài Miễn Tử
@@ -48,21 +60,44 @@
         <a class="nav-link {% if request.endpoint == 'top_tier' %}active{% endif %}" href="{{ url_for('top_tier') }}">
             <i class="fas fa-crown"></i> Top Tier
         </a>
+
+        <!-- Separator -->
+        <div class="sidebar-separator">
+            <span class="separator-text">Lịch sử & Báo cáo</span>
+        </div>
+        
         <a class="nav-link {% if request.endpoint == 'game_history' %}active{% endif %}" href="{{ url_for('game_history') }}">
             <i class="fas fa-history"></i>Lịch sử game
         </a>
+        {% if user.role == 'admin' %}
+            <a class="nav-link {% if request.endpoint == 'activity_log' %}active{% endif %}" href="{{ url_for('activity_log') }}">
+                <i class="fas fa-clipboard-list"></i>Nhật ký hoạt động
+            </a>
+            <a class="nav-link {% if request.endpoint == 'frequency' %}active{% endif %}" href="{{ url_for('frequency') }}">
+                <i class="fa-solid fa-chart-simple"></i> Tần suất chơi
+                {% if warning_count > 0 %}
+                <span class="badge bg-danger ms-2">{{ warning_count }}</span>
+                {% endif %}
+            </a>
+        {% endif %}
+
+        <!-- Separator -->
+        <div class="sidebar-separator">
+            <span class="separator-text">Cá nhân</span>
+        </div>
+        
         <a class="nav-link {% if request.endpoint == 'day_off' %}active{% endif %}" href="{{ url_for('day_off') }}">
             <i class="fas fa-calendar-times"></i>Xin off
         </a>
 
-        {% if user.role == 'admin' %}
-        <a class="nav-link {% if request.endpoint == 'frequency' %}active{% endif %}" href="{{ url_for('frequency') }}">
-            <i class="fa-solid fa-chart-simple"></i> Tần suất chơi
-            {% if warning_count > 0 %}
-            <span class="badge bg-danger ms-2">{{ warning_count }}</span>
-            {% endif %}
+        <!-- Separator -->
+        <div class="sidebar-separator warning">
+            <span class="separator-text">Hệ thống</span>
+        </div>
+        
+        <a class="nav-link {% if request.endpoint == 'blacklist' %}active{% endif %}" href="{{ url_for('blacklist') }}">
+            <i class="fas fa-ban"></i>Blacklist
         </a>
-        {% endif %}
     </nav>
 </div>
 
@@ -301,6 +336,48 @@ document.addEventListener('DOMContentLoaded', function() {
     color: var(--primary-color);
 }
 
+/* Sidebar separator */
+.sidebar-separator {
+    margin: 0.75rem 0 0.5rem 0;
+    padding: 0.5rem 0;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.sidebar-separator::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--form-border-color), transparent);
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.separator-text {
+    background: var(--sidebar-bg);
+    padding: 0 0.75rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    position: relative;
+    z-index: 1;
+}
+
+.sidebar-separator.warning .separator-text {
+    color: var(--danger-color);
+}
+
+.sidebar-separator.warning::before {
+    background: linear-gradient(90deg, transparent, var(--danger-color), transparent);
+    opacity: 0.3;
+}
+
 /* Mobile styles */
 @media (max-width: 991.98px) {
     .sidebar {
@@ -449,6 +526,4 @@ document.addEventListener('DOMContentLoaded', function() {
         --sidebar-header-mobile-hover: linear-gradient(135deg, #434190 0%, #4c3788 100%);
     }
 }
-</style>
-
 </style>
