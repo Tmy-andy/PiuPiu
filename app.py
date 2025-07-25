@@ -437,54 +437,46 @@ def dashboard():
         return render_template('member_dashboard.html', user=user, point_logs=point_logs)
 
 @cache.cached(timeout=120, query_string=True)
-@app.route("/game_history")
-def game_history():
-    faction_order = {
-        "Phe Dân": 1,
-        "Phe Sói": 2,
-        "Phe Ba": 3,
-        "Đổi Phe": 4
-    }
+@app.route('/members')
+@admin_required
+def members():
+    Admin = aliased(User)
 
-    # Pagination cho GameHistory
     per_page = 20
     page = int(request.args.get('page', 1))
-    games_query = GameHistory.query.order_by(GameHistory.created_at.desc())
-    total_games = games_query.count()
-    games = games_query.offset((page - 1) * per_page).limit(per_page).all()
-    total_pages = ceil(total_games / per_page)
+    offset = (page - 1) * per_page
 
-    # ✅ Lấy users và characters
-    users = User.query.with_entities(User.id, User.display_name, User.member_id) \
-                      .order_by(User.member_id.asc()).all()
+    total = User.query.filter_by(role='member').count()
+    total_pages = ceil(total / per_page)
 
-    chars = CharacterAbility.query.with_entities(
-        CharacterAbility.id, CharacterAbility.name, CharacterAbility.faction
-    ).all()
-    chars_sorted = sorted(chars, key=lambda c: faction_order.get(c.faction, 999))
+    results = db.session.query(
+        User.id, User.display_name, User.member_id, User.points,
+        Admin.display_name.label("admin_name")
+    ).outerjoin(Admin, User.assigned_admin_id == Admin.id) \
+     .filter(User.role == 'member') \
+     .order_by(User.member_id.asc()) \
+     .offset(offset).limit(per_page).all()
 
-    # ✅ Chuyển sang dict
-    user_dicts = [{"id": u.id, "display_name": u.display_name, "member_id": u.member_id} for u in users]
-    char_dicts = [{"id": c.id, "name": c.name, "faction": c.faction} for c in chars_sorted]
+    members = []
+    for user, admin_name in results:
+        user.admin_name = admin_name
+        members.append(user)
 
-    FACTION_ICONS = {
-        "Phe Dân": ("fa-users", "bg-success text-white"),
-        "Phe Sói": ("fa-brands fa-wolf-pack-battalion", "bg-danger-subtle text-danger"),
-        "Phe Ba": ("fa-user-secret", "bg-secondary-subtle text-dark"),
-        "Đổi Phe": ("fa-random", "bg-warning-subtle text-warning")
-    }
+    all_admins = User.query.filter_by(role='admin').order_by(User.display_name).all()
+
+    # Nếu là AJAX, trả về JSON
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        rows_html = render_template('partials/_members_rows.html', members=members)
+        pagination_html = render_template('partials/_pagination.html', page=page, total_pages=total_pages)
+        return jsonify(rows=rows_html, pagination=pagination_html)
 
     return render_template(
-        "game_history.html",
-        games=games,
-        users=users,
-        chars=chars_sorted,
-        FACTION_ICONS=FACTION_ICONS,
-        user_dicts=user_dicts,
-        char_dicts=char_dicts,
+        'members.html',
+        members=members,
+        all_admins=all_admins,
+        total=total,
         page=page,
-        total_pages=total_pages,
-        total=total_games
+        total_pages=total_pages
     )
 
 @app.route('/assign_member/<int:user_id>', methods=['POST'])
@@ -1296,15 +1288,16 @@ def game_history():
     games = games_query.offset((page - 1) * per_page).limit(per_page).all()
     total_pages = ceil(total_games / per_page)
 
-    # Tối ưu query User và CharacterAbility với with_entities
+    # ✅ Lấy users và characters
     users = User.query.with_entities(User.id, User.display_name, User.member_id) \
                       .order_by(User.member_id.asc()).all()
-    chars = CharacterAbility.query.with_entities(CharacterAbility.id, CharacterAbility.name, CharacterAbility.faction).all()
 
-    # Sắp xếp chars theo faction
+    chars = CharacterAbility.query.with_entities(
+        CharacterAbility.id, CharacterAbility.name, CharacterAbility.faction
+    ).all()
     chars_sorted = sorted(chars, key=lambda c: faction_order.get(c.faction, 999))
 
-    # Chuyển users và chars sang dict cho JS (tojson trong template)
+    # ✅ Chuyển sang dict
     user_dicts = [{"id": u.id, "display_name": u.display_name, "member_id": u.member_id} for u in users]
     char_dicts = [{"id": c.id, "name": c.name, "faction": c.faction} for c in chars_sorted]
 
