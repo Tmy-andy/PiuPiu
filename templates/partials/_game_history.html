@@ -101,11 +101,11 @@
             <form method="POST" action="{{ url_for('update_game_note', game_id=game.id) }}" class="mt-3">
                 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                 <div class="mb-2">
-                    <label for="note{{ game.id }}" class="form-label fw-semibold">Sửa ghi chú:</label>
+                    <label for="note{{ game.id }}" class="form-label fw-semibold" style="color: var(--secondary-color);">Sửa ghi chú:</label>
                     <textarea class="form-control" name="note" id="note{{ game.id }}" rows="2">{{ game.notes or '' }}</textarea>
                 </div>
                 <div class="mb-2">
-                    <label class="form-label fw-semibold">Chọn tag:</label><br>
+                    <label class="form-label fw-semibold" style="color: var(--secondary-color);">Chọn tag:</label><br>
                     {% set all_tags = ['Thường', 'Giáo án', 'Cấm chọn'] %}
                     {% for tag in all_tags %}
                     <div class="form-check form-check-inline">

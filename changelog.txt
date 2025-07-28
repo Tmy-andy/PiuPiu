@@ -1,1 +1,1 @@
-🚀 Fix xong lỗi. [minor]
+🚀 Thêm chức năng cho trang game history
