@@ -816,3 +816,10 @@ html {
     cursor: default;
 }
 
+/* Fix modal bị che bởi mobile-nav */
+.modal {
+    z-index: 11000 !important;
+}
+.modal-backdrop {
+    z-index: 10990 !important;
+}
