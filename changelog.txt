@@ -1,1 +1,1 @@
-🚀 Fix modal bị che bởi mobile-nav
+🚀 Fix thời gian hiển thị thời gian game history

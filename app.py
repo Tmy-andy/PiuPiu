@@ -1855,3 +1855,13 @@ def get_point_color(points):
 
 # Đăng ký filter Jinja
 app.jinja_env.filters['point_color'] = get_point_color
+
+@app.route('/init_is_public')
+def init_is_public():
+    try:
+        db.session.execute("ALTER TABLE game_history ADD COLUMN IF NOT EXISTS is_public BOOLEAN DEFAULT FALSE;")
+        db.session.commit()
+        return "✅ Cột is_public đã được thêm (hoặc đã tồn tại)."
+    except Exception as e:
+        db.session.rollback()
+        return f"❌ Lỗi: {e}"
