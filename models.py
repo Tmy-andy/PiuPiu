@@ -72,6 +72,7 @@ class GameHistory(db.Model):
     players = db.relationship('GamePlayer', backref='game', cascade="all, delete", lazy=True)
     notes = db.Column(db.Text, default='')
     tags = db.Column(db.String(255), default='')
+    is_public = db.Column(db.Boolean, default=False)
 
 class GamePlayer(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)

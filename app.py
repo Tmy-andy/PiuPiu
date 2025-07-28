@@ -1280,24 +1280,25 @@ def game_history():
         "Đổi Phe": 4
     }
 
-    # Pagination cho GameHistory
+    # Pagination
     per_page = 20
     page = int(request.args.get('page', 1))
-    games_query = GameHistory.query.order_by(GameHistory.created_at.desc())
+
+    # ✅ Admin thấy tất cả, user thường chỉ thấy game công khai
+    games_query = GameHistory.query
+    if session.get('user_role') != 'admin':
+        games_query = games_query.filter_by(is_public=True)
+
+    games_query = games_query.order_by(GameHistory.created_at.desc())
     total_games = games_query.count()
     games = games_query.offset((page - 1) * per_page).limit(per_page).all()
     total_pages = ceil(total_games / per_page)
 
-    # ✅ Lấy users và characters
-    users = User.query.with_entities(User.id, User.display_name, User.member_id) \
-                      .order_by(User.member_id.asc()).all()
-
-    chars = CharacterAbility.query.with_entities(
-        CharacterAbility.id, CharacterAbility.name, CharacterAbility.faction
-    ).all()
+    # Users và Characters
+    users = User.query.with_entities(User.id, User.display_name, User.member_id).order_by(User.member_id.asc()).all()
+    chars = CharacterAbility.query.with_entities(CharacterAbility.id, CharacterAbility.name, CharacterAbility.faction).all()
     chars_sorted = sorted(chars, key=lambda c: faction_order.get(c.faction, 999))
 
-    # ✅ Chuyển sang dict
     user_dicts = [{"id": u.id, "display_name": u.display_name, "member_id": u.member_id} for u in users]
     char_dicts = [{"id": c.id, "name": c.name, "faction": c.faction} for c in chars_sorted]
 
@@ -1326,6 +1327,7 @@ import random
 from flask import request, redirect, url_for, flash
 from models import GameHistory, GamePlayer, User, PointLog, db
 
+# Tạo ván chơi mới
 @app.route("/create_game", methods=["POST"])
 @login_required
 def create_game():
@@ -1345,7 +1347,7 @@ def create_game():
             flash("Số lượng người chơi và nhân vật phải bằng nhau và lớn hơn 0.", "danger")
             return redirect(url_for('game_history'))
 
-        new_game = GameHistory(host_id=session['user_id'])
+        new_game = GameHistory(host_id=session['user_id'], is_public=False)
         db.session.add(new_game)
         db.session.commit()
 
@@ -1386,7 +1388,7 @@ def create_game():
             flash("Số lượng người chơi và nhân vật phải bằng nhau và lớn hơn 0.", "danger")
             return redirect(url_for('game_history'))
 
-        new_game = GameHistory(host_id=session['user_id'])
+        new_game = GameHistory(host_id=session['user_id'], is_public=False)
         db.session.add(new_game)
         db.session.flush()
 
@@ -1417,6 +1419,7 @@ def create_game():
     flash("Dữ liệu không hợp lệ.", "danger")
     return redirect(url_for('game_history'))
 
+# Cập nhật ghi chú và tag cho ván chơi
 @app.route('/update_game_note/<int:game_id>', methods=['POST'])
 @admin_required
 def update_game_note(game_id):
@@ -1434,6 +1437,7 @@ def update_game_note(game_id):
     flash('Đã cập nhật ván chơi.', 'success')
     return redirect(url_for('game_history'))
 
+# Xóa ván chơi
 @app.route('/delete_game/<int:game_id>')
 @admin_required
 def delete_game(game_id):
@@ -1444,6 +1448,38 @@ def delete_game(game_id):
     flash('Đã xóa ván chơi.', 'success')
     return redirect(url_for('game_history'))
 
+# Cập nhật ngày chơi
+@app.route('/update_game_date/<int:game_id>', methods=['POST'])
+@admin_required
+def update_game_date(game_id):
+    game = GameHistory.query.get_or_404(game_id)
+    new_date = request.form.get('created_at')
+    if new_date:
+        try:
+            # Chuyển string 'YYYY-MM-DD' thành datetime
+            game.created_at = datetime.now(pytz.timezone('Asia/Ho_Chi_Minh'))
+            db.session.commit()
+            cache.delete_memoized(game_history)
+            log_activity("Cập nhật ngày", f"{current_user.display_name} chỉnh sửa ngày ván {game.id} thành {new_date}.")
+            flash('Đã cập nhật ngày chơi.', 'success')
+        except Exception:
+            flash('Ngày không hợp lệ.', 'danger')
+    return redirect(url_for('game_history'))
+
+# Toggle trạng thái công khai của ván chơi
+@app.route('/toggle_game_public/<int:game_id>', methods=['POST'])
+@admin_required
+def toggle_game_public(game_id):
+    game = GameHistory.query.get_or_404(game_id)
+    game.is_public = not game.is_public
+    db.session.commit()
+    cache.delete_memoized(game_history)  # Reset cache
+    log_activity("Cập nhật công khai", f"{current_user.display_name} đổi trạng thái công khai cho ván {game.id} ({'Công khai' if game.is_public else 'Ẩn'})")
+    flash(f"Trạng thái ván {game.id} đã được {'công khai' if game.is_public else 'ẩn'}.", "success")
+    return redirect(url_for('game_history'))
+
+
+# Yêu cầu nghỉ phép
 @cache.cached(timeout=120, query_string=True)
 @app.route("/day_off", methods=["GET", "POST"])
 @login_required
