@@ -68,17 +68,17 @@
                 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                 <div class="modal-body">
                     <div class="mb-3">
-                        <label class="form-label fw-semibold">Thành viên:</label>
+                        <label class="form-label fw-semibold text-theme-secondary">Thành viên:</label>
                         <p class="fw-bold text-theme-primary" id="memberName"></p>
                     </div>
                     <div class="mb-3">
-                        <label for="points_change" class="form-label fw-semibold">Thay đổi điểm:</label>
+                        <label for="points_change" class="form-label fw-semibold text-theme-secondary">Thay đổi điểm:</label>
                         <input type="number" class="form-control" id="points_change" name="points_change" 
                                placeholder="Nhập số điểm (âm để trừ điểm)" required>
                         <div class="form-text">Nhập số dương để cộng điểm, số âm để trừ điểm</div>
                     </div>
                     <div class="mb-3">
-                        <label for="reason" class="form-label fw-semibold">Lý do:</label>
+                        <label for="reason" class="form-label fw-semibold text-theme-secondary">Lý do:</label>
                         <textarea class="form-control" id="reason" name="reason" rows="3" 
                                   placeholder="Nhập lý do thay đổi điểm" required></textarea>
                     </div>
