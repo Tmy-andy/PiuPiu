@@ -950,3 +950,211 @@ input::placeholder {
         font-size: 16px !important; /* Tránh zoom trên iOS */
     }
 }
+
+/* ===== FIX MODAL GAME HISTORY CHO MOBILE ===== */
+/* Fix z-index cho modal game history */
+#newGameModal {
+    z-index: 99999 !important;
+}
+
+#newGameModal .modal-backdrop {
+    z-index: 99998 !important;
+}
+
+#newGameModal .modal-dialog {
+    z-index: 99999 !important;
+    position: relative;
+}
+
+#newGameModal .modal-content {
+    z-index: 99999 !important;
+    position: relative;
+}
+
+/* Fix dropdown trong modal trên mobile */
+@media (max-width: 991.98px) {
+    #newGameModal {
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        width: 100% !important;
+        height: 100% !important;
+        z-index: 99999 !important;
+        overflow-y: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+    }
+    
+    #newGameModal .modal-backdrop {
+        position: fixed !important;
+        z-index: 99998 !important;
+    }
+    
+    /* Modal dialog responsive cho mobile */
+    #newGameModal .modal-dialog {
+        margin: 0.5rem !important;
+        max-width: calc(100% - 1rem) !important;
+        height: auto !important;
+        max-height: calc(100vh - 1rem) !important;
+        display: flex !important;
+        align-items: flex-start !important;
+        justify-content: center !important;
+        min-height: auto !important;
+    }
+    
+    /* Modal content scrollable */
+    #newGameModal .modal-content {
+        touch-action: auto !important;
+        pointer-events: auto !important;
+        position: relative !important;
+        z-index: 99999 !important;
+        max-height: calc(100vh - 1rem) !important;
+        overflow: hidden !important;
+        display: flex !important;
+        flex-direction: column !important;
+    }
+    
+    /* Modal body scrollable */
+    #newGameModal .modal-body {
+        max-height: calc(100vh - 200px) !important;
+        overflow-y: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+        flex: 1 !important;
+    }
+    
+    /* Fix custom select dropdown trong modal */
+    #newGameModal .custom-select {
+        position: relative !important;
+        z-index: 100000 !important;
+    }
+    
+    #newGameModal .select-dropdown {
+        position: absolute !important;
+        z-index: 100001 !important;
+        max-height: 200px !important;
+        overflow-y: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+    }
+    
+    #newGameModal .select-dropdown.show {
+        display: block !important;
+        z-index: 100001 !important;
+    }
+    
+    /* Đảm bảo mobile nav không can thiệp */
+    body.modal-open .mobile-nav-dropdown {
+        display: none !important;
+        z-index: 0 !important;
+    }
+    
+    body.modal-open .mobile-nav-overlay {
+        display: none !important;
+        z-index: 0 !important;
+    }
+    
+    /* Fix form controls trong modal */
+    #newGameModal .form-control,
+    #newGameModal .form-select {
+        font-size: 16px !important; /* Tránh zoom trên iOS */
+        touch-action: manipulation !important;
+    }
+    
+    /* Fix tabs trong modal */
+    #newGameModal .nav-tabs {
+        border-bottom: 1px solid #dee2e6 !important;
+        margin-bottom: 1rem !important;
+    }
+    
+    #newGameModal .nav-tabs .nav-link {
+        font-size: 14px !important;
+        padding: 0.5rem 0.75rem !important;
+    }
+    
+    /* Fix selected items container */
+    #newGameModal .selected-items {
+        max-height: 100px !important;
+        overflow-y: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+    }
+    
+    /* Đảm bảo modal không bị ảnh hưởng bởi transform */
+    #newGameModal * {
+        -webkit-backface-visibility: hidden !important;
+        backface-visibility: hidden !important;
+    }
+}
+
+/* Fix cho iOS Safari */
+@supports (-webkit-touch-callout: none) {
+    #newGameModal {
+        -webkit-transform: translate3d(0, 0, 0) !important;
+        transform: translate3d(0, 0, 0) !important;
+    }
+    
+    #newGameModal .modal-dialog {
+        -webkit-transform: translate3d(0, 0, 0) !important;
+        transform: translate3d(0, 0, 0) !important;
+    }
+    
+    #newGameModal .select-dropdown {
+        -webkit-transform: translate3d(0, 0, 0) !important;
+        transform: translate3d(0, 0, 0) !important;
+    }
+}
+
+/* Fix cho Android */
+@media screen and (-webkit-min-device-pixel-ratio: 1) {
+    #newGameModal {
+        -webkit-backface-visibility: hidden !important;
+        backface-visibility: hidden !important;
+    }
+    
+    #newGameModal .custom-select,
+    #newGameModal .select-dropdown {
+        -webkit-backface-visibility: hidden !important;
+        backface-visibility: hidden !important;
+    }
+}
+
+/* Responsive cho màn hình rất nhỏ */
+@media (max-width: 480px) {
+    #newGameModal .modal-dialog {
+        margin: 0.25rem !important;
+        max-width: calc(100% - 0.5rem) !important;
+    }
+    
+    #newGameModal .modal-header h5 {
+        font-size: 1.1rem !important;
+    }
+    
+    #newGameModal .nav-tabs .nav-link {
+        font-size: 12px !important;
+        padding: 0.4rem 0.6rem !important;
+    }
+    
+    #newGameModal .btn {
+        padding: 0.5rem 1rem !important;
+        font-size: 14px !important;
+    }
+    
+    #newGameModal .select-option {
+        padding: 1rem 0.75rem !important;
+        min-height: 50px !important;
+    }
+    
+    #newGameModal .select-header {
+        min-height: 50px !important;
+        padding: 0.75rem !important;
+    }
+}
+
+/* Fix cho landscape mode */
+@media (max-width: 991.98px) and (orientation: landscape) {
+    #newGameModal .modal-dialog {
+        margin: 0.25rem !important;
+        max-height: calc(100vh - 0.5rem) !important;
+    }
+    
+    #newGameModal .modal-body {
+        max-height: calc(100vh - 150px) !important;
+    }
+}
