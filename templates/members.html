@@ -108,11 +108,11 @@
                 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                 <div class="modal-body">
                     <div class="mb-3">
-                        <label class="form-label fw-semibold">Thành viên:</label>
+                        <label class="form-label fw-semibold text-theme-secondary">Thành viên:</label>
                         <p class="fw-bold text-theme-primary" id="assignMemberName"></p>
                     </div>
                     <div class="mb-3">
-                        <label for="admin_id" class="form-label fw-semibold">Phân công cho Admin:</label>
+                        <label for="admin_id" class="form-label fw-semibold text-theme-secondary">Phân công cho Admin:</label>
                         <select class="form-select" id="admin_id" name="admin_id">
                         <option value="">-- Chưa phân công --</option>
                         {% for admin in all_admins %}

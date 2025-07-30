@@ -828,4 +828,8 @@ textarea::placeholder {
     color: var(--text-primary) !important;
     opacity: 1;
 }
+input::placeholder {
+    color: var(--text-primary) !important;
+    opacity: 1;
+}
 
