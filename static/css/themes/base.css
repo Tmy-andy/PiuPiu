@@ -823,3 +823,9 @@ html {
 .modal-backdrop {
     z-index: 10990 !important;
 }
+
+textarea::placeholder {
+    color: var(--text-primary) !important;
+    opacity: 1;
+}
+
