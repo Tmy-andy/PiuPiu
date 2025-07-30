@@ -32,7 +32,7 @@ class MemberID(db.Model):
 class PointLog(db.Model):
     __tablename__ = 'point_logs'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    member_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    member_id = db.Column(db.Integer, db.ForeignKey('users.id', ondelete="CASCADE"))
     points_change = db.Column(db.Integer, nullable=False)
     reason = db.Column(db.String(255), nullable=False)
     admin_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
@@ -77,7 +77,7 @@ class GameHistory(db.Model):
 class GamePlayer(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     game_id = db.Column(db.Integer, db.ForeignKey('game_history.id'))
-    player_id = db.Column(db.Integer, db.ForeignKey('users.id')) 
+    player_id = db.Column(db.Integer, db.ForeignKey('users.id', ondelete="SET NULL"), nullable=True)
     char_id = db.Column(db.Integer, db.ForeignKey('character_ability.id'))
 
     player = db.relationship('User', foreign_keys=[player_id], overlaps="player_info,played_games")

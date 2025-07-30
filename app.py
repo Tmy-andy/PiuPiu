@@ -1453,17 +1453,30 @@ def delete_game(game_id):
 @admin_required
 def update_game_date(game_id):
     game = GameHistory.query.get_or_404(game_id)
-    new_date = request.form.get('created_at')
+    new_date = request.form.get('created_at')  # YYYY-MM-DD
+
     if new_date:
         try:
-            # Chuyển string 'YYYY-MM-DD' thành datetime
-            game.created_at = datetime.now(pytz.timezone('Asia/Ho_Chi_Minh'))
+            # Parse từ string sang datetime (00:00 giờ VN)
+            vietnam_tz = pytz.timezone('Asia/Ho_Chi_Minh')
+            dt = datetime.strptime(new_date, '%Y-%m-%d')
+            dt = vietnam_tz.localize(dt)
+
+            # Lưu vào DB
+            game.created_at = dt
             db.session.commit()
+
+            # Xóa cache để cập nhật giao diện
             cache.delete_memoized(game_history)
-            log_activity("Cập nhật ngày", f"{current_user.display_name} chỉnh sửa ngày ván {game.id} thành {new_date}.")
+
+            log_activity(
+                "Cập nhật ngày",
+                f"{current_user.display_name} chỉnh sửa ngày ván {game.id} thành {new_date}."
+            )
             flash('Đã cập nhật ngày chơi.', 'success')
-        except Exception:
-            flash('Ngày không hợp lệ.', 'danger')
+        except Exception as e:
+            flash(f'Ngày không hợp lệ. Lỗi: {e}', 'danger')
+
     return redirect(url_for('game_history'))
 
 # Toggle trạng thái công khai của ván chơi
