@@ -1270,6 +1270,7 @@ def edit_blacklist_author(entry_id):
     return redirect(url_for('blacklist'))
 
 # Game history
+vietnam_tz = pytz.timezone('Asia/Ho_Chi_Minh')
 @cache.cached(timeout=120, query_string=True)
 @app.route("/game_history")
 def game_history():
@@ -1280,11 +1281,10 @@ def game_history():
         "Đổi Phe": 4
     }
 
-    # Pagination
     per_page = 20
     page = int(request.args.get('page', 1))
 
-    # ✅ Admin thấy tất cả, user thường chỉ thấy game công khai
+    # Admin thấy tất cả, user thường chỉ thấy game công khai
     games_query = GameHistory.query
     if session.get('user_role') != 'admin':
         games_query = games_query.filter_by(is_public=True)
@@ -1294,9 +1294,18 @@ def game_history():
     games = games_query.offset((page - 1) * per_page).limit(per_page).all()
     total_pages = ceil(total_games / per_page)
 
+    # ✅ Convert created_at sang VN timezone
+    for g in games:
+        if g.created_at:
+            if g.created_at.tzinfo is None:
+                g.created_at = pytz.utc.localize(g.created_at)
+            g.created_at = g.created_at.astimezone(vietnam_tz)
+
     # Users và Characters
     users = User.query.with_entities(User.id, User.display_name, User.member_id).order_by(User.member_id.asc()).all()
-    chars = CharacterAbility.query.with_entities(CharacterAbility.id, CharacterAbility.name, CharacterAbility.faction).all()
+    chars = CharacterAbility.query.with_entities(
+        CharacterAbility.id, CharacterAbility.name, CharacterAbility.faction
+    ).all()
     chars_sorted = sorted(chars, key=lambda c: faction_order.get(c.faction, 999))
 
     user_dicts = [{"id": u.id, "display_name": u.display_name, "member_id": u.member_id} for u in users]
@@ -1449,33 +1458,40 @@ def delete_game(game_id):
     return redirect(url_for('game_history'))
 
 # Cập nhật ngày chơi
+from pytz import timezone, utc
+vietnam_tz = timezone('Asia/Ho_Chi_Minh')
+
 @app.route('/update_game_date/<int:game_id>', methods=['POST'])
 @admin_required
 def update_game_date(game_id):
     game = GameHistory.query.get_or_404(game_id)
-    new_date = request.form.get('created_at')  # YYYY-MM-DD
+    new_date = request.form.get('created_at')  # Format: YYYY-MM-DD
 
     if new_date:
         try:
-            # Parse từ string sang datetime (00:00 giờ VN)
-            vietnam_tz = pytz.timezone('Asia/Ho_Chi_Minh')
-            dt = datetime.strptime(new_date, '%Y-%m-%d')
-            dt = vietnam_tz.localize(dt)
+            # Parse ngày VN
+            dt_vn = datetime.strptime(new_date, '%Y-%m-%d')
+            dt_vn = vietnam_tz.localize(dt_vn)
 
-            # Lưu vào DB
-            game.created_at = dt
+            # Giữ nguyên giờ cũ nếu có
+            dt_vn = dt_vn.replace(
+                hour=game.created_at.hour if game.created_at else 0,
+                minute=game.created_at.minute if game.created_at else 0,
+                second=game.created_at.second if game.created_at else 0
+            )
+
+            # Chuyển về UTC để lưu DB
+            game.created_at = dt_vn.astimezone(utc)
+
             db.session.commit()
-
-            # Xóa cache để cập nhật giao diện
             cache.delete_memoized(game_history)
 
-            log_activity(
-                "Cập nhật ngày",
-                f"{current_user.display_name} chỉnh sửa ngày ván {game.id} thành {new_date}."
-            )
+            log_activity("Cập nhật ngày", f"{current_user.display_name} chỉnh sửa ngày ván {game.id} thành {new_date}.")
             flash('Đã cập nhật ngày chơi.', 'success')
+
         except Exception as e:
-            flash(f'Ngày không hợp lệ. Lỗi: {e}', 'danger')
+            db.session.rollback()
+            flash(f'Ngày không hợp lệ: {e}', 'danger')
 
     return redirect(url_for('game_history'))
 
