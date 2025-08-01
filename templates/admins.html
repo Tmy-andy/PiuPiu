@@ -48,6 +48,7 @@
                                 <td>
                                     {% if can_edit %}
                                     <form method="POST" action="{{ url_for('update_admin_points', user_id=admin.id) }}" class="d-flex gap-1">
+                                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                                         <input type="number" name="points" value="{{ admin.points }}" class="form-control form-control-sm" style="width: 80px;" required>
                                         <button type="submit" class="btn btn-sm btn-primary">✔</button>
                                     </form>
