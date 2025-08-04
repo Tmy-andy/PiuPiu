@@ -831,6 +831,12 @@ def download_db():
         buffer.close()
 
     with ZipFile(zip_path, 'w') as zipf:
+        # ✅ Thêm bảng alembic_version (không có model)
+        result = db.session.execute(text("SELECT * FROM alembic_version")).fetchall()
+        if result:
+            add_csv_to_zip(zipf, 'alembic_version.csv', ['version_num'], result)
+
+        # ✅ Các bảng có model
         for mapper in db.Model.registry.mappers:
             model_class = mapper.class_
             if not hasattr(model_class, '__tablename__'):

@@ -359,7 +359,7 @@
                                 <i class="fa-brands fa-ethereum text-secondary"></i> Thay đổi theme
                             </a>
                         </li>
-                        {% if session.user_role == 'admin' and session.display_name == 'Administrator' %}
+                        {% if session.user_role == 'admin'%}
                         <li>
                             <a class="dropdown-item" href="{{ url_for('download_db') }}">
                                 <i class="fas fa-database text-warning"></i> Tải database
@@ -419,7 +419,7 @@
                         <i class="fa-brands fa-ethereum"></i> Thay đổi theme
                     </a>
 
-                    {% if session.user_role == 'admin' and session.display_name == 'Administrator' %}
+                    {% if session.user_role == 'admin'%}
                     <a href="{{ url_for('download_db') }}" class="mobile-nav-item">
                         <i class="fas fa-database"></i>
                         Tải database
