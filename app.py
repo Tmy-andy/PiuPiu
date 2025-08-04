@@ -811,6 +811,8 @@ def update_admin_points(user_id):
 
 from sqlalchemy.inspection import inspect
 
+# Tải xuống toàn bộ cơ sở dữ liệu
+from sqlalchemy import text
 @app.route('/download_db')
 @admin_required
 def download_db():

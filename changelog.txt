@@ -1,1 +1,1 @@
-🚀 Fix lỗi cập nhật điểm admin
+🚀 Cập nhật chức năng tải database
